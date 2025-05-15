@@ -1,0 +1,103 @@
+core_systems_design_task:
+  description: >
+    Design the core systems for the HTML5 game based on the provided game design document and technical architecture.
+    Your design should include:
+    
+    • Detailed specifications for each core system (rendering, input, physics, game loop, etc.)
+    • Class/module structure with clear responsibilities
+    • Key algorithms and data structures
+    • Performance considerations specific to HTML5/browser environment
+    • Memory management approach
+    • Error handling strategies
+    • Specific design for the programming skill progression system
+    • Technical approach for implementing coding puzzles
+    
+    Base your design on the game concept: {game_concept}
+    
+    Include support for these gameplay mechanics: {mechanic_names}
+    
+    Your design must specifically address the architecture provided: {technical_architecture}
+    
+    Ensure your systems can handle these game levels: {level_names}
+  expected_output: >
+    A comprehensive technical design document for the core systems, with detailed specifications, 
+    class/module structures, algorithms, and implementation considerations. The document should be well-structured, 
+    with clear diagrams (described textually) and explanations that will guide the implementation team.
+  agent: core_systems_designer
+
+interface_definition_task:
+  description: >
+    Define the interfaces between all major components of the game based on the core systems design.
+    Your interface definitions should include:
+    
+    • Public API specifications for each component
+    • Data formats for inter-component communication
+    • Event systems and message passing protocols
+    • Dependency management between components
+    • Extension points for future features
+    • Interface documentation standards
+    • APIs for the three game environments ({level_names})
+    • Interfaces for the coding puzzle system and technical interview boss battles
+    
+    Be sure to define interfaces for these game systems: {system_names}
+    
+    Include interfaces to handle these enemy types: {enemy_names}
+    
+    Ensure your interfaces enable loose coupling between components while maintaining cohesion within each system.
+    Consider both synchronous and asynchronous communication patterns as appropriate.
+  expected_output: >
+    A detailed interface specification document that defines how all game components will communicate. 
+    Include TypeScript-style interface definitions, event specifications, and communication protocols. 
+    The document should serve as a contract between different development teams working on separate components.
+  agent: interface_designer
+
+design_validation_task:
+  description: >
+    Thoroughly validate the core systems design and interface definitions. Your validation should check for:
+    
+    • Completeness: Are all required systems covered?
+    • Consistency: Do systems work together harmoniously?
+    • Performance: Are there potential bottlenecks?
+    • Maintainability: Is the design clear and evolvable?
+    • Browser compatibility: Will it work across target browsers?
+    • Technical feasibility: Can it be implemented with the specified technologies?
+    • Specific validation for the programming skill progression system
+    • Assessment of the coding puzzle implementation approach
+    
+    Carefully validate the interfaces for these game systems: {system_names}
+    
+    Validate that the design properly handles these game environments: {level_names}
+    
+    Verify that all required gameplay mechanics are supported: {mechanic_names}
+    
+    Identify any issues, risks, or improvements in the design. Be constructive but thorough in your critique.
+  expected_output: >
+    A validation report that assesses the strengths and weaknesses of the technical design. 
+    For each issue identified, provide a clear explanation of the problem, its potential impact, 
+    and a suggested approach for resolution. Rank issues by severity to help prioritize refinement efforts.
+  agent: design_validator
+
+design_refinement_task:
+  description: >
+    Refine the core systems design and interface definitions based on the validation feedback.
+    Your refinement should:
+    
+    • Address all critical issues identified in the validation
+    • Enhance areas that were noted as weak or incomplete
+    • Optimize elements with performance concerns
+    • Improve documentation where clarity was lacking
+    • Ensure all systems work together cohesively
+    • Pay special attention to refining the programming skill progression system
+    • Improve the technical design for the game environments ({level_names}) and boss battle mechanics
+    
+    Make sure your refined design fully supports these gameplay mechanics: {mechanic_names}
+    
+    Ensure it adequately handles all enemy types: {enemy_names}
+    
+    Focus on pragmatic improvements that maintain the original design intent while resolving 
+    the identified issues. Document your changes and the rationale behind them.
+  expected_output: >
+    A refined technical design document that incorporates all the necessary improvements. 
+    Include a change log that explains what was modified and why. The final document should 
+    be implementation-ready, with all major issues addressed and clear guidance for the development teams.
+  agent: design_refiner

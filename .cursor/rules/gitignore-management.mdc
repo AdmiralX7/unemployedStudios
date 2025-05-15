@@ -1,0 +1,32 @@
+---
+description: Maintaining appropriate gitignore patterns throughout development
+globs: 
+alwaysApply: false
+---
+# GitIgnore Management
+
+I will ensure the project's .gitignore file is properly maintained throughout development.
+
+## GitIgnore Best Practices
+
+1. **Regular Updates**:
+   - Review and update .gitignore when adding new tools or frameworks
+   - Add patterns for generated files, build artifacts, and dependencies
+   - Ensure sensitive data (API keys, credentials) is excluded
+
+2. **Common Patterns to Include**:
+   - Environment variables: `.env`, `.env.local`
+   - Dependencies: `node_modules/`, `venv/`, `__pycache__/`
+   - Build artifacts: `dist/`, `build/`, `*.pyc`, `*.o`
+   - Editor files: `.vscode/`, `.idea/`, `*.swp`, `.DS_Store`
+   - Logs and temporary files: `*.log`, `tmp/`
+
+3. **Project-Specific Patterns**:
+   - Game assets that should be generated, not stored in git
+   - Large binary files that shouldn't be in version control
+   - Test output directories
+
+4. **Structure**:
+   - Organize the gitignore file with clear section headers
+   - Add comments explaining non-obvious patterns
+   - Keep related patterns grouped together

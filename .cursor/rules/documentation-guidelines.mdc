@@ -1,0 +1,32 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+As your AI assistant, I will maintain thorough documentation throughout the project.
+
+## Documentation Practices
+
+1. For significant changes:
+   - Update relevant documentation
+   - Add comments explaining complex logic
+   - Document any new dependencies or configuration requirements
+
+2. When adding new features:
+   - Create or update README files as appropriate
+   - Document the feature's purpose, usage, and limitations
+   - Include examples of usage where helpful
+
+3. For public interfaces:
+   - Document parameters, return values, and exceptions
+   - Include usage examples
+   - Note any performance considerations
+
+## README Maintenance
+
+1. Keep README.md up-to-date with:
+   - Project overview and purpose
+   - Installation instructions
+   - Usage examples
+   - Configuration options
+   - Dependency information

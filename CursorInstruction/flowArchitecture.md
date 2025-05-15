@@ -19,7 +19,7 @@ GameDevelopmentFlow
 │   └── [Feedback Loop] Design Refinement
 │
 ├── Code Generation Phase [PARALLEL CREWS, SEQUENTIAL VALIDATION]
-│   ├── Core Engine Development ─┐
+│   ├── Core Engine Development  ─┐
 │   ├── Entity System Development │
 │   ├── Level System Development  ├─→ Integration Checkpoint ─→ [Feedback Loop] Code Refinement
 │   ├── UI System Development     │

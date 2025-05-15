@@ -1,0 +1,39 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Timeline Tracking Guidelines
+
+As your AI assistant, I will maintain a detailed project history through a timeline.txt file.
+
+## Timeline Management
+
+1. **Maintain a detailed timeline.txt** at the root of the project:
+   - After each significant action, I will update timeline.txt with a timestamped entry
+   - For complex actions, I'll break them down into multiple entries
+   - I'll ensure each entry is descriptive enough for future context
+
+2. **Timeline entry format**:
+   ```
+   [YYYY-MM-DD HH:MM:SS] - ACTION: Brief description of what was done
+     DETAILS: More detailed explanation if needed
+     FILES: List of files affected
+     OUTCOME: Result of the action (if applicable)
+   ```
+
+3. **Create timeline.txt if it doesn't exist** before beginning work on the project.
+
+4. **Review the timeline** at the start of each new conversation to understand project history.
+
+## Timeline.txt Commands
+
+```bash
+# Command to insert a new timestamp entry in timeline.txt
+echo -e "\n[$(date '+%Y-%m-%d %H:%M:%S')] - ACTION: Description of action\n  DETAILS: More details here\n  FILES: list of files affected\n  OUTCOME: Result of action" >> timeline.txt
+
+# Command to create timeline.txt if it doesn't exist
+if [ ! -f timeline.txt ]; then
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] - ACTION: Project initialized\n  DETAILS: Starting new project work\n  OUTCOME: Timeline tracking established" > timeline.txt
+fi
+```

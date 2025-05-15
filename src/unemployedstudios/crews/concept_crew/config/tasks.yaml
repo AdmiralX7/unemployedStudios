@@ -1,0 +1,117 @@
+concept_expansion_task:
+  description: >
+    Expand the initial game concept {game_concept} into a comprehensive game idea. Your analysis should include:
+    • Core gameplay mechanics and loops
+    • Target audience and platform considerations
+    • Unique selling points and market differentiation
+    • Thematic elements and narrative hooks
+    • Potential monetization strategies suitable for HTML5 games
+    • Detailed character designs for player and NPCs
+    • Enemy designs with difficulty levels and attack patterns
+    • Level designs with themes, objectives, and progression
+    
+    Your output MUST follow the structured format defined by the ConceptExpansion Pydantic model, which includes
+    fields for all the elements mentioned above. Be specific and detailed in your descriptions to ensure your
+    output meets the requirements of the model.
+    
+    Critical requirements:
+    1. You must define at least 3 distinct levels (University, Internship, Job Hunt)
+    2. You must define at least 3 different enemy types with varying difficulties
+    3. Each level must have clear objectives and challenges
+    4. The player character must have defined abilities related to programming skills
+    5. All monetization strategies must be suitable for HTML5 games
+    
+    Consider current gaming trends and player preferences. Focus on creating a concept that is 
+    both creative and commercially viable in the HTML5 game market.
+  expected_output: >
+    A detailed expansion of the initial game concept in the structured format of the ConceptExpansion model.
+    This will include the game title, high concept, gameplay mechanics, characters, enemies, levels, 
+    monetization strategies, and technical considerations. The output will be structured as a JSON object
+    matching the ConceptExpansion schema with all required fields populated.
+  agent: concept_expander
+
+gdd_creation_task:
+  description: >
+    Create a comprehensive Game Design Document (GDD) based on the expanded game concept. Your GDD should include:
+    • Game overview and vision statement
+    • Detailed gameplay mechanics explanation
+    • Core systems and subsystems
+    • User interface design principles
+    • Level/environment design guidelines for the three environments (University, Internship, Job Hunt)
+    • Character specifications and progression system
+    • Asset requirements (visual and audio)
+    • Technical requirements and constraints for HTML5
+    
+    Your output MUST follow the structured format defined by the GameDesignDocument Pydantic model.
+    Make sure to convert the expanded concept into a proper design document that can guide development.
+    
+    Be sure to include:
+    1. A detailed player character specification matching the Character model
+    2. At least 4 game systems with clear purposes and interactions
+    3. Comprehensive UI element definitions including states and purposes
+    4. A development roadmap with at least 3 milestones
+    5. Clear control mappings and asset requirements
+    
+    Ensure the GDD is structured logically and provides clear guidance for all development teams.
+  expected_output: >
+    A complete Game Design Document in the structured format of the GameDesignDocument model.
+    This will include all required fields in the model with comprehensive information organized
+    in a logical manner. The output will be a JSON object matching the GameDesignDocument schema.
+  agent: gdd_writer
+
+architecture_planning_task:
+  description: >
+    Design a technical architecture for the HTML5 game based on the GDD and expanded concept. Your architecture plan should include:
+    • Core engine components and their relationships
+    • Entity system design
+    • Level system architecture
+    • UI system structure
+    • Asset management approach
+    • Audio system design
+    • Performance optimization strategies specific to web browsers
+    
+    Your output MUST follow the structured format defined by the TechnicalArchitecture Pydantic model.
+    Be specific about component relationships and implementation approaches.
+    
+    Your architecture must include:
+    1. Detailed specifications for all seven required systems (rendering, input, physics, entity, level, UI, audio)
+    2. Clear definitions of public interfaces for each system
+    3. Specific browser compatibility considerations
+    4. A complete technology stack appropriate for HTML5 games
+    5. Optimization strategies for both desktop and mobile browsers
+    
+    Focus on creating a modular, maintainable architecture that will scale appropriately for the game's needs.
+  expected_output: >
+    A detailed technical architecture document in the structured format of the TechnicalArchitecture model.
+    This will include engine components, system relationships, and all other required fields in the model.
+    The output will be a JSON object matching the TechnicalArchitecture schema.
+  agent: architecture_planner
+
+style_guide_task:
+  description: >
+    Create a comprehensive style guide for the game based on the GDD and expanded concept. Your style guide should include:
+    • Visual aesthetic principles and mood boards (described textually) for the pixel art style
+    • Color palette specifications (with hex codes) that reflect programming themes
+    • Typography guidelines and font selections
+    • UI component styling and layout principles
+    • Animation style guidelines
+    • Audio design guidelines (music and sound effects)
+    • Asset creation standards and technical constraints for HTML5
+    
+    Your output MUST follow the structured format defined by the StyleGuide Pydantic model.
+    Be specific about colors, visual styles, and asset requirements.
+    
+    Your style guide must include:
+    1. A complete color palette with primary, secondary, accent, and UI colors (with hex codes)
+    2. At least 3 asset style guidelines for different asset types (characters, environments, UI)
+    3. Specific animation guidelines for character movement, UI interactions, and effects
+    4. Clear typography specifications suitable for both desktop and mobile screens
+    5. Technical constraints that ensure assets work well in HTML5 environments
+    
+    Ensure the style guide establishes a consistent, cohesive visual and audio identity that aligns with the 
+    computer science education theme while remaining accessible and engaging.
+  expected_output: >
+    A detailed style guide document in the structured format of the StyleGuide model.
+    This will include visual style, color palette, and all other required fields in the model.
+    The output will be a JSON object matching the StyleGuide schema.
+  agent: style_guide_creator

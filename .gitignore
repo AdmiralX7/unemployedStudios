@@ -22,5 +22,4 @@ instance/
 .ipynb_checkpoints
 profile_default/
 ipython_config.py
-poetry.lock
-poem.txt
+*.lock
