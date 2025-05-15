@@ -1,0 +1,58 @@
+﻿A0: Create Your First Game
+
+
+Objective: Work in groups to design and create your first game. This assignment encourages creativity, collaboration, and technical application in AI-powered game development.
+
+
+Step 1: Choose a Genre
+Select a genre from the provided list or propose your own. Some popular options with sample games listed here. 
+You are HIGHLY encouraged to create entirely new game genres, for example by fusing 2 game genres together: 
+Example: A mashup of card games (solitaire), poker, and roguelikes: Balatro 
+
+
+Step 2: Form a Group:
+
+
+* Groups should consist of 2 -- 4  members
+* Use Discord server for group formation, find other students with common interest in game genre who are able to complement your skills and expertise 
+
+
+
+
+Step 3: Game Development
+
+
+Use tools like ChatGPT or your choice of large language models (LLMs) to:
+
+
+* Brainstorm game ideas.
+* Generate storylines, dialogues, or scripts.
+* Write code snippets.
+* Create visual or thematic elements.
+* Develop the game for the HTML5 platform.
+
+
+
+
+Step 4: Submission Deliverables
+
+
+* A playable prototype of the game (HTML files, sounds/*.wav, images/*.png | jpg, etc.) as a ZIP file 
+* Video demo of game in action 
+* A one-page description of your game, including:
+   * Group members: Names and netids 
+   * Game genre selection
+   * Instructions on how to play 
+   * Novel features and mechanics 
+   * Class goals: How will you incrementally build on top of this game genre during this semester ? What novel feature or game mechanic will you develop ? How will you push the boundaries of generative AI ? Will you focus on depth (single, sophisticated game) or breadth (variety of games) ? 
+________________
+
+
+
+
+Evaluation Criteria:
+
+
+* Creativity: How innovative is the concept?
+* Gameplay: Is the game engaging and functional?
+* Presentation: How well was the game idea communicated?

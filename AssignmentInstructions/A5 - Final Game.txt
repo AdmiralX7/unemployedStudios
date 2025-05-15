@@ -1,0 +1,65 @@
+﻿Assignment 5: Final Game Project
+Objective: As the culminating assignment of this course, students are required to deliver a final game project that showcases a complete, innovative, and technically sophisticated game, created collaboratively with your group mates using CrewAI and LLM-powered agents. This final submission should reflect the cumulative knowledge and skills acquired throughout the semester—including prompt engineering, multi-agent coordination, and advanced game mechanics.
+The game must demonstrate:
+* Innovative design
+* Sophisticated game mechanics
+* High-quality visuals and sound
+* Clear contribution from CrewAI agents in all phases of development
+
+
+Instructions
+* Final Game Requirements
+   * The game concept must be original and significantly more ambitious than earlier assignments.
+   * The game should feature:
+      * Engaging and challenging mechanics
+      * Appealing and dynamic visuals
+      * A clear progression or scoring system
+      * Responsive controls (keyboard and/or touch-based)
+      * A mobile-friendly UI and gameplay experience
+
+
+* Game Design Document
+   * Prepare a concise design document covering:
+      * Game concept and objectives
+      * Core mechanics and features
+      * Target audience and platform considerations
+      * Screenshots or sketches (optional but encouraged)
+
+
+* CrewAI Integration
+   * You must utilize CrewAI with specialized agents:
+      * Example roles: Game Logic Developer, UI/UX Designer, Asset Integrator, Prompt Engineer, Debugging & QA Tester, Etc.
+      * Each agent must use refined, role-specific GPT prompts informed by previous assignments.
+      * Agents should communicate and coordinate to collaboratively build and improve the game.
+
+
+* Version Control and Repository Management
+   * Maintain your full project on a GitHub repository:
+      * Include a README.md describing the project and setup instructions
+      * Maintain a clean and traceable commit history
+      * Include a .gitignore file to manage non-essential files
+
+
+* Game Implementation Guidelines
+   * Ensure the game adheres to the HTML5 game structure and the provided game template:
+      * game.html, game.css, game.js
+      * Place assets in folders: images/<image-files>, sounds/<sound-files>, data/<other-game-assets>, etc.
+      * Responsive Design:
+         * Generate images with multiple aspect ratios to accommodate different device screen sizes.
+         * Implement CSS media queries to switch between image versions based on device dimensions.
+      * Touch-Friendly Controls:
+         * Optimize UI elements and controls for touch interactions on mobile devices.
+      * Performance Optimization:
+         * Compress and optimize image and audio files to ensure quick load times and smooth performance on mobile devices.
+________________
+
+
+Deliverables:
+New game files (HTML, CSS, JavaScript) with images (images/PNGs, images/JPGs, etc.), sounds.
+Video Demo (.mp4): A recorded demo of the game in action.
+Link to updated Github repository with all of your latest code changes and game material.
+A report including:
+* List of Image Assets Generated: Screenshots and their usage purposes.
+* List of Audio Assets Integrated: Descriptions of each audio asset and its role in the game.
+* Agent Roles and Interactions: Explanation of how different agents contributed to asset generation and integration.
+* Challenges Faced and Solutions Implemented: Insight into any difficulties encountered during asset integration and the strategies used to overcome them.

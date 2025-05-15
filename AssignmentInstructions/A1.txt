@@ -1,0 +1,55 @@
+﻿A1: Game Creation Using Provided Game Template and Custom GPTs
+Due Date: Week 4
+Objective: Familiarize yourself with using a provided game template and custom GPTs to create games in HTML5, understanding its capabilities and limitations. This assignment will build on your A0 submission, allowing you to refine and improve your existing game concepts.
+Instructions:
+* Build on Your A0 Submission
+   * Continue working with the same group and same game genre used for A0.
+   * Ideally, enhance and improve the game you developed in A0, building upon its existing code and mechanics.
+* Use the Provided HTML Game Template
+   * Strictly adhere to this template when developing your game to ensure consistency and compatibility.
+* Leverage Custom GPTs for Code Generation
+   * Utilize the provided custom GPTs to generate the necessary code for your game.
+   * Make sure to incorporate the generated code effectively to build a functional and cohesive game experience.
+* Design a Simple but Functional Game
+   * Start with something simple yet fully functional. And then build complex game mechanics on top of it.
+   * Ensure that the chosen game type allows for clear demonstration of core mechanics without unnecessary complexity.
+* Ensure Mobile Device Compatibility
+   * Your game must be mobile-friendly and operate correctly on mobile devices. This includes responsive design elements and touch-friendly controls to enhance the user experience on smaller screens.
+* Testing on Mobile Devices
+   * No physical mobile device is required for testing your game. Instead, use your web browser's developer tools:
+      * Right-click on the game in your browser and select "Inspect".
+      * Navigate to the "Responsive Design Mode" or similar option.
+      * Choose different mobile device dimensions to simulate and evaluate how well your game looks and functions on various mobile devices.
+* Documentation and Reporting
+   * Document User-Prompts Used:
+      * Clearly list all the prompts you provided to the custom GPTs during the game development process.
+   * Detail Modifications:
+      * Explain any changes or adjustments you made to the GPT-generated code to achieve the desired functionality.
+   * Use Placeholders for Assets:
+      * Use placeholders wherever needed for any missing assets.
+Attachments: 
+* Game Template
+* Custom GPTs
+Deliverables:
+* Game files:
+   * index.html
+   * Game.css (this could be part of index.html)
+   * game.js (this could be part of index.html)
+   * images/* .png or .jpg
+   * sounds/* .mp3 or .wav
+* A brief report (1-2 pages) detailing:
+   * Group members: Names and netids 
+   * Game genre selection
+   * The prompts used.
+   * Instructions on how to play 
+   * Novel features and mechanics 
+* Video:
+   * Recorded video demo of game in action
+Total Points:
+* 10 points
+________________
+Evaluation Criteria:
+* Gameplay: Is the game engaging and functional?
+* Template matching: Follows the provided game template?
+* Mobile friendliness: Game is mobile device friendly?
+* Utilization of Custom GPTs: Is the game code significantly generated using provided custom GPTs? User prompts are documented?
