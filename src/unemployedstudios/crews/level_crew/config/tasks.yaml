@@ -1,0 +1,148 @@
+integration_planning_task:
+  description: >
+    Analyze the HTML5 game template and plan integration points for level system functionality. Your analysis should include:
+    
+    1. Detailed review of the Game and GameLogic classes in the template
+    2. Identification of specific methods and properties to extend
+    3. Assessment of how level system features can be integrated into the template
+    4. Planning for integrating level generation, progression, and balancing systems
+    5. Potential conflicts or issues to address
+    
+    The template can be found at: {game_template_path}
+    
+    Review the template_analysis provided by the Technical Design crew for additional insights.
+    
+    Base your planning on the core_systems_design and component_interfaces documents.
+  expected_output: >
+    A comprehensive integration plan that maps specific level system functionality to template insertion points.
+    Include recommendations for method extensions, new properties, and integration approach for each
+    component of the level system.
+  agent: template_integrator
+
+level_system_task:
+  description: >
+    Design the core level system as an extension to the template's GameLogic and Game classes. Your implementation should include:
+    
+    1. Level data structures that integrate with the template
+    2. Level loading and management that works with GameLogic
+    3. Level lifecycle hooks that integrate with the game loop
+    4. Integration points with the existing template code
+    5. Level serialization/deserialization
+    
+    Ensure your level system extends the template's code rather than replacing it based on the integration plan.
+    Your code should follow the structure, naming conventions, and patterns established in the template.
+    
+    Review the template analysis and integration mapping provided by the Technical Design crew.
+  expected_output: >
+    Clean, well-documented JavaScript code designed to extend the template classes with level handling.
+    Include clear comments indicating where each block should be inserted and how it extends the
+    existing functionality.
+  agent: level_design_architect
+
+map_generation_task:
+  description: >
+    Based on the integration plan and level system, create a map generation and management system that extends the template. Your implementation should include:
+    
+    1. Map data structures designed to work with the template's existing patterns
+    2. Map element placement integrated with GameLogic
+    3. Map rendering mechanisms that work with the template
+    4. Map data loading tied to the template's game loop
+    5. Background/foreground layer implementations that extend existing functionality
+    
+    Ensure your map generation system integrates properly with the template and the level system.
+    Your extensions should be carefully designed to avoid conflicts with the existing code.
+  expected_output: >
+    Well-structured JavaScript code ready to be inserted into the template classes.
+    Include clear comments marking insertion points and explaining how map generation interacts with
+    the existing template code.
+  agent: map_generator
+
+progression_system_task:
+  description: >
+    Create a progression system that extends the template's existing game state handling. Your implementation should:
+    
+    1. Integrate with the template's update cycle in Game and GameLogic
+    2. Extend player state to include progression tracking
+    3. Support level unlocking while maintaining template compatibility
+    4. Enhance the template's state management properties
+    5. Ensure proper interaction with the template's game loop timing
+    
+    Your progression system should enhance the template's capabilities without replacing its core functionality.
+    Base your implementation on the integration plan, level system, and map generation system.
+  expected_output: >
+    Progression system extensions for the template classes that improve level progression capabilities
+    while maintaining compatibility with the template structure.
+  agent: progress_system_developer
+
+challenge_balancing_task:
+  description: >
+    Implement challenge balancing systems that extend the template's logic for game difficulty. Your implementation should:
+    
+    1. Create difficulty components that integrate with the template's update cycle
+    2. Implement difficulty scaling that works within the template's structure
+    3. Design patterns for level challenges that leverage the template's existing systems
+    4. Ensure difficulty can be adjusted by the template's event system
+    5. Optimize difficulty calculations to work with the template's performance patterns
+    
+    Pay special attention to implementing appropriate difficulty progression for levels while maintaining compatibility with the template.
+    Your code should enhance the template's capabilities without replacing its core functionality.
+  expected_output: >
+    Challenge balancing extensions that enhance the template classes with additional
+    difficulty management and progression features.
+  agent: challenge_balancing_expert
+
+game_logic_extensions:
+  description: >
+    Finalize all extensions for the GameLogic class by combining level system, map generation, progression, and challenge balancing code. Your task includes:
+    
+    1. Integrating all level system components into a cohesive set of GameLogic class additions
+    2. Ensuring all extensions work together correctly
+    3. Organizing the code for clear insertion into the template
+    4. Adding comments to indicate insertion points and dependencies
+    5. Verifying compatibility with the template structure
+    
+    The final output should be ready for insertion into the GameLogic class of the template at the
+    specified insertion point: {template_game_logic_insertion_point}
+    
+    Format the output as a single JavaScript code block with clear integration instructions.
+  expected_output: >
+    A complete, well-organized set of GameLogic class extensions for the level system ready for template integration.
+    Include clear comments marking each extension and explaining its integration with the template.
+  agent: level_design_architect
+
+game_class_extensions:
+  description: >
+    Finalize all extensions for the Game class by combining level system components that need to be added to the Game class. Your task includes:
+    
+    1. Integrating level management functions into the Game class
+    2. Adding level switching and initialization code to Game
+    3. Organizing the code for clear insertion into the template
+    4. Adding comments to indicate insertion points and dependencies
+    5. Verifying compatibility with the template structure
+    
+    The final output should be ready for insertion into the Game class of the template at the
+    specified insertion point: {template_game_class_insertion_point}
+    
+    Format the output as a single JavaScript code block with clear integration instructions.
+  expected_output: >
+    A complete, well-organized set of Game class extensions for the level system ready for template integration.
+    Include clear comments marking each extension and explaining its integration with the template.
+  agent: level_design_architect
+
+legacy_integration_task:
+  description: >
+    For backward compatibility, create a standalone game_levels.js file that combines all the level system extensions
+    and could function if directly included in an HTML page. Your task includes:
+    
+    1. Combining all level system code
+    2. Adding any necessary wrapper code or context
+    3. Ensuring the file could work independently if needed
+    4. Providing clear documentation on how this file relates to the template integration
+    5. Including fallback approaches for critical functionality
+    
+    This file is primarily for reference and backward compatibility, as the actual implementation
+    will use the template integration approach with Game and GameLogic extensions.
+  expected_output: >
+    A complete game_levels.js file that contains all level system functionality in a standalone format.
+    Include clear documentation explaining how the code relates to the template integration approach.
+  agent: template_integrator

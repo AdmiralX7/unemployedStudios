@@ -13,10 +13,10 @@ class TechnicalDesignCrew():
     Technical Design Phase Crew for Game Development
     
     This crew handles the technical design phase of game development, including:
-    - Core Systems Design
+    - Template Analysis
+    - Integration Planning
     - Component Interface Definition
-    - Design Validation
-    - Design Refinement (feedback loop)
+    - Design Validation and Refinement
     """
 
     agents: List[BaseAgent]
@@ -28,6 +28,15 @@ class TechnicalDesignCrew():
     # --------------------------------------------------
     # AGENTS
     # --------------------------------------------------
+    
+    @agent
+    def template_analyzer(self) -> Agent:
+        """Template analyzer for HTML5 game template"""
+        return Agent(
+            config=self.agents_config['template_analyzer'],
+            llm=self.llm,
+            verbose=True
+        )
     
     @agent
     def core_systems_designer(self) -> Agent:
@@ -70,28 +79,46 @@ class TechnicalDesignCrew():
     # --------------------------------------------------
     
     @task
+    def template_analysis_task(self) -> Task:
+        """Analyze the HTML5 game template to identify integration points"""
+        return Task(
+            config=self.tasks_config['template_analysis_task'],
+            output_file='template_analysis.md'
+        )
+    
+    @task
     def core_systems_design_task(self) -> Task:
-        """Design the core systems for the HTML5 game"""
+        """Design the core systems for integration with the HTML5 game template"""
         return Task(
             config=self.tasks_config['core_systems_design_task'],
+            context=[self.template_analysis_task()],
             output_file='core_systems_design.md'
         )
 
     @task
     def interface_definition_task(self) -> Task:
-        """Define interfaces between all major game components"""
+        """Define interfaces for template integration between game components"""
         return Task(
             config=self.tasks_config['interface_definition_task'],
-            context=[self.core_systems_design_task()],
+            context=[self.template_analysis_task(), self.core_systems_design_task()],
             output_file='component_interfaces.md'
+        )
+    
+    @task
+    def integration_mapping_task(self) -> Task:
+        """Create a detailed mapping of where each game component integrates with the template"""
+        return Task(
+            config=self.tasks_config['integration_mapping_task'],
+            context=[self.template_analysis_task(), self.core_systems_design_task(), self.interface_definition_task()],
+            output_file='integration_mapping.md'
         )
 
     @task
     def design_validation_task(self) -> Task:
-        """Validate the technical design for completeness and feasibility"""
+        """Validate the template integration design for completeness and feasibility"""
         return Task(
             config=self.tasks_config['design_validation_task'],
-            context=[self.core_systems_design_task(), self.interface_definition_task()],
+            context=[self.core_systems_design_task(), self.interface_definition_task(), self.integration_mapping_task()],
             output_file='design_validation.md'
         )
 
@@ -100,7 +127,8 @@ class TechnicalDesignCrew():
         """Refine the technical design based on validation feedback"""
         return Task(
             config=self.tasks_config['design_refinement_task'],
-            context=[self.core_systems_design_task(), self.interface_definition_task(), self.design_validation_task()],
+            context=[self.core_systems_design_task(), self.interface_definition_task(), 
+                    self.integration_mapping_task(), self.design_validation_task()],
             output_file='refined_technical_design.md'
         )
 
@@ -130,11 +158,13 @@ class TechnicalDesignCrew():
                 - 'game_design_document': The GDD from concept phase (required)
                 - 'concept_expansion': The expanded concept from concept phase (required)
                 - 'style_guide': The style guide from concept phase (optional)
+                - 'game_template_path': Path to the HTML5 game template file (required)
             
         Returns:
             The results of the crew execution
         """
-        required_inputs = ['game_concept', 'technical_architecture', 'game_design_document', 'concept_expansion']
+        required_inputs = ['game_concept', 'technical_architecture', 'game_design_document', 
+                          'concept_expansion', 'game_template_path']
         for input_name in required_inputs:
             if not inputs or input_name not in inputs:
                 raise ValueError(f"The '{input_name}' input is required to start the Technical Design Crew")

@@ -1,6 +1,16 @@
 # Game Development Flow Architecture
 
-This document outlines the high-level architecture for our game development flow using CrewAI. This flow orchestrates multiple specialized crews to create a complete HTML5 game.
+This document outlines the high-level architecture for our game development flow using CrewAI. This flow orchestrates multiple specialized crews to create a complete HTML5 game based on the provided template.
+
+## Template Integration Strategy
+
+Our game development now follows a template-based approach, where all code must integrate with the provided HTML5 game template. The template provides three main classes:
+
+1. **Game** - Main class that initializes and coordinates game functionality
+2. **GameLogic** - Handles game rules, mechanics, and state
+3. **GameUI** - Manages rendering and user interface elements
+
+All crews will generate code that extends or enhances these existing classes rather than creating separate JS files.
 
 ## Flow Structure with Execution Model
 
@@ -13,18 +23,16 @@ GameDevelopmentFlow
 │   └── Style Guide Definition
 │
 ├── Technical Design Phase [SEQUENTIAL]
-│   ├── Core Systems Design
+│   ├── Template Analysis
+│   ├── Integration Planning
 │   ├── Component Interface Definition
-│   ├── Design Validation
 │   └── [Feedback Loop] Design Refinement
 │
-├── Code Generation Phase [PARALLEL CREWS, SEQUENTIAL VALIDATION]
-│   ├── Core Engine Development  ─┐
-│   ├── Entity System Development │
-│   ├── Level System Development  ├─→ Integration Checkpoint ─→ [Feedback Loop] Code Refinement
-│   ├── UI System Development     │
-│   ├── Asset System Development  │
-│   └── Audio System Development ─┘
+├── Code Generation Phase [PARALLEL CREWS, SEQUENTIAL INTEGRATION]
+│   ├── Engine Crew Development   ─┐
+│   ├── Entity Crew Development   │
+│   ├── Level Crew Development    ├─→ Template Integration ─→ [Feedback Loop] Code Refinement
+│   └── UI Crew Development       │
 │
 ├── Asset Generation Phase [PARALLEL]
 │   ├── Asset Specification
@@ -43,128 +51,120 @@ GameDevelopmentFlow
 
 This flow uses a mix of sequential and parallel execution patterns:
 1. **Sequential Phases**: Each major phase must complete before the next begins
-2. **Parallel Execution**: Within the Code Generation and Asset Generation phases, crews operate in parallel
-3. **Synchronization Points**: Integration Checkpoint and Asset Integration synchronize parallel work
+2. **Parallel Execution**: Within the Code Generation phase, crews operate in parallel
+3. **Integration Point**: Template Integration combines all crew outputs into a single HTML file
 4. **Feedback Loops**: Allow for iterative refinement based on validation results
 
-## Dedicated Crews for Core Files
+## Dedicated Crews with Template Integration
 
 ### 1. Engine Crew
-**Purpose**: Develop the core game loop, rendering pipeline, and input handling
-**Core File**: `game_engine.js`
+**Purpose**: Enhance the Game class with core game loop, rendering, and input handling
+**Integration Point**: Game.update() and initialization methods
 **Agents**:
 - Game Loop Architect
 - Rendering Engine Developer
 - Input System Specialist
 - Performance Optimizer
 
-### 2. Entity System Crew
-**Purpose**: Design and implement game objects, entities, and their interactions
-**Core File**: `game_entities.js`
+### 2. Entity Crew
+**Purpose**: Extend GameLogic with entity system, components, physics, and behaviors
+**Integration Point**: GameLogic class methods and properties
 **Agents**:
 - Entity Framework Developer
 - Entity Behavior Specialist
 - Physics Implementation Expert
 - Component System Designer
 
-### 3. Level System Crew
-**Purpose**: Create level definitions, loading systems, and gameplay progression
-**Core File**: `game_levels.js`
+### 3. Level Crew
+**Purpose**: Add level system, map generation, and progression to GameLogic
+**Integration Point**: GameLogic initialization and level management methods
 **Agents**:
 - Level Design Architect
 - Progress System Developer
 - Challenge Balancing Expert
 - Map Generator
 
-### 4. UI System Crew
-**Purpose**: Develop UI components, screens, and player feedback systems
-**Core File**: `game_ui.js`
+### 4. UI Crew
+**Purpose**: Extend GameUI with advanced UI components, screens, and animations
+**Integration Point**: GameUI rendering and interface methods
 **Agents**:
 - UI Framework Developer
 - User Experience Designer
 - Responsive Design Expert
 - Animation Specialist
 
-### 5. Asset System Crew
-**Purpose**: Create asset loading, management, and optimization systems
-**Core File**: `game_assets.js`
-**Agents**:
-- Asset Pipeline Engineer
-- Resource Manager Developer
-- Cache Optimization Expert
-- Asset Validation Specialist
-
-### 6. Audio System Crew
-**Purpose**: Implement audio playback, effects, and management
-**Core File**: `game_audio.js`
-**Agents**:
-- Audio Engine Developer
-- Sound Effect Manager
-- Music System Engineer
-- Audio Synchronization Expert
-
-### 7. Integration & Testing Crew
-**Purpose**: Validate inter-system compatibility and fix issues
-**Cross-cutting Responsibility**
+### 5. Integration Crew
+**Purpose**: Combine all crew outputs into the template structure
+**Core File**: final_game.html
 **Agents**:
 - Integration Specialist
-- Interface Validator
-- Dependency Manager
-- Bug Analysis Engineer
+- Code Consolidation Expert
+- Template Compliance Validator
+- Performance Optimization Engineer
 
-## Core File Strategy
+## Template Integration Strategy
 
-Each dedicated crew is responsible for generating and maintaining a specific core file:
+Instead of generating separate JS files, each crew will:
 
-1. **game_engine.js** (Engine Crew) - Core game loop, rendering, input handling
-   - Game initialization and setup
-   - Main game loop logic
-   - Rendering pipeline
-   - Input handling system
-   - Time management
+1. **Analyze the Template** - Understand existing classes and methods
+2. **Extend Functionality** - Generate code that extends the template's capabilities
+3. **Follow Class Structure** - Work within the Game, GameLogic, and GameUI classes
+4. **Generate Code Segments** - Create code blocks that will be integrated into the template
 
-2. **game_entities.js** (Entity System Crew) - Game objects and entities
-   - Entity base classes
-   - Component system
-   - Entity factory
-   - Collision detection
-   - Physics and movement
+The Integration Crew will then:
+1. **Combine All Segments** - Merge code from all crews
+2. **Resolve Conflicts** - Ensure no naming conflicts or overlapping functionality
+3. **Optimize** - Remove redundancies and optimize for performance
+4. **Validate** - Ensure the final game runs correctly in the template structure
 
-3. **game_levels.js** (Level System Crew) - Level definitions and loading
-   - Level data structures
-   - Level loading and unloading
-   - Progression system
-   - Objective management
-   - Enemy placement
+## Integration Points in Template
 
-4. **game_ui.js** (UI System Crew) - UI components and screens
-   - UI component framework
-   - Screen management
-   - HUD elements
-   - Menu systems
-   - Responsive layout
+```javascript
+// Example integration points in the template
 
-5. **game_assets.js** (Asset System Crew) - Asset loading and management
-   - Asset loading pipeline
-   - Resource management
-   - Asset caching
-   - Image processing helpers
-   - Preloading system
+// 1. Engine Crew integration in Game class
+class Game {
+  constructor() {
+    // ENGINE CREW: Game initialization code inserted here
+  }
+  
+  update() {
+    // ENGINE CREW: Game loop logic inserted here
+    this.logic.update();
+    this.ui.render();
+  }
+}
 
-6. **game_audio.js** (Audio System Crew) - Audio system and sound effects
-   - Audio engine initialization
-   - Sound effect playback
-   - Music system
-   - Volume controls
-   - Audio event system
+// 2. Entity Crew integration in GameLogic class
+class GameLogic {
+  constructor(game) {
+    // ENTITY CREW: Entity system initialization here
+  }
+  
+  update() {
+    // ENTITY CREW: Entity update logic here
+    // LEVEL CREW: Level management logic here
+  }
+}
+
+// 3. UI Crew integration in GameUI class
+class GameUI {
+  constructor(game) {
+    // UI CREW: UI system initialization here
+  }
+  
+  render() {
+    // UI CREW: Rendering logic here
+  }
+}
+```
 
 ## State Management
 
 The flow maintains comprehensive state across all phases, tracking:
 - Game concept details and GDD
-- Technical design specifications
-- Interface contracts between systems
-- Generated code for each core file
+- Template structure and integration points
+- Generated code segments for each crew
 - Asset references and metadata
 - Testing results
 - Error reports and remediation status
@@ -182,14 +182,11 @@ def initiate_code_generation(self):
     self.entity_crew_generation()
     self.level_crew_generation()
     self.ui_crew_generation()
-    self.asset_crew_generation()
-    self.audio_crew_generation()
 
-@listen(and_(engine_crew_generation, entity_crew_generation, level_crew_generation, 
-          ui_crew_generation, asset_crew_generation, audio_crew_generation))
-def integration_checkpoint(self):
+@listen(and_(engine_crew_generation, entity_crew_generation, level_crew_generation, ui_crew_generation))
+def template_integration(self):
     # This runs only after ALL code generation crews have completed
-    # Validate that all systems work together
+    # Integrate all crew outputs into the template
 ```
 
 ## Routing with Conditional Logic
