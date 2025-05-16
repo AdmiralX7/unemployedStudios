@@ -155,13 +155,13 @@ def test_audio(audio_tool, audio_dir, results):
         },
         {
             "name": "background_music",
-            "query": "8-bit university campus background music loop",
+            "query": "8-bit music loop",
             "filename": "background_music.mp3",
             "description": "Longer background music"
         },
         {
             "name": "collect_item",
-            "query": "coin collect sound effect pixel game",
+            "query": "coin collect 8-bit",
             "filename": "collect_item.mp3",
             "description": "Very short collection sound"
         },
@@ -173,7 +173,7 @@ def test_audio(audio_tool, audio_dir, results):
         },
         {
             "name": "menu_click",
-            "query": "ui menu click sound minimal clean",
+            "query": "ui click",
             "filename": "menu_click.mp3",
             "description": "Extremely short UI interaction sound"
         }

@@ -2284,14 +2284,18 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
             # Import the tools
             from unemployedstudios.tools.custom_tool import GenerateAndDownloadImageTool, SearchAndSaveSoundTool
             
-            # Test if API keys are available
+            # Check for required environment variables
             print(f"OPENAI_API_KEY available: {bool(os.getenv('OPENAI_API_KEY'))}")
-            # Check for both Freesound credentials - both may be needed depending on API access method
-            print(f"FREESOUND_API_KEY available: {bool(os.getenv('FREESOUND_API_KEY'))}")
-            print(f"FREESOUND_CLIENT_ID available: {bool(os.getenv('FREESOUND_CLIENT_ID'))}")
+            
+            # Check for both Freesound credentials - both may be needed for successful API access
+            freesound_api_key = os.getenv('FREESOUND_API_KEY')
+            freesound_client_id = os.getenv('FREESOUND_CLIENT_ID')
+            
+            print(f"FREESOUND_API_KEY available: {bool(freesound_api_key)}")
+            print(f"FREESOUND_CLIENT_ID available: {bool(freesound_client_id)}")
             
             # Note about Freesound credentials
-            if not os.getenv('FREESOUND_API_KEY') or not os.getenv('FREESOUND_CLIENT_ID'):
+            if not freesound_api_key or not freesound_client_id:
                 print("WARNING: One or both Freesound credentials missing. Both FREESOUND_API_KEY and FREESOUND_CLIENT_ID may be required for audio asset generation.")
             
             # Initialize the tools
@@ -2345,38 +2349,25 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
             
             # Process and store the asset specifications
             try:
-                # Access the structured output
-                if hasattr(asset_output, 'compile_asset_specifications'):
-                    asset_specs = asset_output.compile_asset_specifications
-                    print(f"Successfully extracted asset specifications directly from crew output")
-                elif hasattr(asset_output, 'raw'):
-                    # Try to parse the raw output as JSON
-                    try:
-                        asset_specs_data = json.loads(asset_output.raw)
-                        asset_specs = AssetSpecCollection(**asset_specs_data)
-                        print(f"Successfully parsed asset specifications from raw JSON")
-                    except Exception as parse_err:
-                        print(f"Error parsing asset specs JSON: {parse_err}")
-                        # Try to extract JSON from markdown code blocks
-                        import re
-                        json_match = re.search(r'```json\n(.*?)\n```', asset_output.raw, re.DOTALL)
-                        if json_match:
-                            try:
-                                json_content = json_match.group(1)
-                                asset_specs_data = json.loads(json_content)
-                                asset_specs = AssetSpecCollection(**asset_specs_data)
-                                print(f"Successfully parsed asset specifications from markdown code block")
-                            except Exception as e2:
-                                print(f"Error parsing asset specs from markdown: {e2}")
-                                # Create fallback specifications
-                                asset_specs = self._create_fallback_asset_specs()
-                        else:
-                            # Create fallback specifications
-                            asset_specs = self._create_fallback_asset_specs()
-                else:
-                    print("Warning: No structured asset specifications found in crew output")
-                    # Create fallback specifications
-                    asset_specs = self._create_fallback_asset_specs()
+                # Create an instance to use its helper methods for extraction and validation
+                asset_crew = AssetGenerationCrew()
+                
+                # Extract asset specifications using the improved extraction method
+                asset_specs = asset_crew.extract_asset_specs_from_output(asset_output)
+                
+                # Validate the asset specifications
+                validation_results = asset_crew.validate_asset_specifications(asset_specs)
+                print(f"Asset specification validation: {validation_results['valid']}")
+                
+                if validation_results["errors"]:
+                    print(f"Found {len(validation_results['errors'])} errors in asset specifications:")
+                    for i, error in enumerate(validation_results["errors"]):
+                        print(f"  Error {i+1}: {error}")
+                
+                if validation_results["warnings"]:
+                    print(f"Found {len(validation_results['warnings'])} warnings in asset specifications:")
+                    for i, warning in enumerate(validation_results["warnings"]):
+                        print(f"  Warning {i+1}: {warning}")
                 
                 # Save the specifications to a file
                 with open(self._get_output_path("asset_specifications.json"), "w") as f:
@@ -2387,6 +2378,9 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 
                 # Generate the actual assets
                 self._generate_assets_with_retry(asset_specs, image_tool, audio_tool)
+                
+                # Organize generated assets
+                self._organize_generated_assets()
                 
             except Exception as e:
                 print(f"Error processing asset specifications: {str(e)}")
@@ -2451,30 +2445,50 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                             result = image_tool._run(
                                 prompt=img_spec.prompt,
                                 file_name=full_path,
-                                size=getattr(img_spec, 'size', "1024x1024")
+                                size=getattr(img_spec, 'size', "1024x1024"),
+                                model=getattr(img_spec, 'model', "dall-e-3")
                             )
                             
-                            # Store the result
-                            generated_images[img_spec.asset_id] = {
-                                "filename": img_spec.filename,
-                                "full_path": full_path,
-                                "result": result
-                            }
-                            
-                            print(f"Generated image: {img_spec.asset_id}")
-                            success = True
+                            # Check if file was actually created
+                            if os.path.exists(full_path) and os.path.getsize(full_path) > 0:
+                                # Store the result
+                                generated_images[img_spec.asset_id] = {
+                                    "filename": img_spec.filename,
+                                    "full_path": full_path,
+                                    "size": img_spec.size,
+                                    "prompt": img_spec.prompt,
+                                    "result": result
+                                }
+                                
+                                print(f"Generated image: {img_spec.asset_id}")
+                                success = True
+                            else:
+                                raise Exception(f"Image file was not created or is empty: {full_path}")
                             
                         except Exception as retry_error:
                             retry_count += 1
-                            if "429" in str(retry_error) and retry_count < max_retries:
+                            error_str = str(retry_error).lower()
+                            
+                            # Check for specific error types
+                            if "429" in error_str or "rate limit" in error_str:
                                 # Rate limit error, wait longer and retry
                                 wait_time = 5 * retry_count  # Progressive backoff
                                 print(f"Rate limit encountered. Waiting {wait_time}s before retry {retry_count}/{max_retries}...")
                                 import time
                                 time.sleep(wait_time)
+                            elif "content policy" in error_str or "security" in error_str:
+                                # Content policy violation - don't retry with same prompt
+                                print(f"Content policy violation: {retry_error}")
+                                print("Skipping this image and moving on.")
+                                break
                             else:
                                 print(f"Error generating image (attempt {retry_count}/{max_retries}): {str(retry_error)}")
-                                if retry_count >= max_retries:
+                                if retry_count < max_retries:
+                                    wait_time = 2 * retry_count
+                                    print(f"Waiting {wait_time}s before retry...")
+                                    import time
+                                    time.sleep(wait_time)
+                                else:
                                     print(f"Failed to generate image after {max_retries} attempts")
                                     break
                     
@@ -2496,7 +2510,6 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 print("WARNING: FREESOUND_CLIENT_ID not found in environment. Audio generation may fail.")
             
             # Limit to a reasonable number of audio files during testing
-            # Limit to a reasonable number of audio files during testing
             max_audio_to_generate = min(5, len(asset_specs.audio_assets))
             
             for i, audio_spec in enumerate(asset_specs.audio_assets[:max_audio_to_generate]):
@@ -2512,10 +2525,18 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                     full_path = f"GameGenerationOutput/{audio_spec.filename}"
                     os.makedirs(os.path.dirname(full_path), exist_ok=True)
                     
-                    # Determine the search query
-                    query = getattr(audio_spec, 'search_terms', None) or getattr(audio_spec, 'query', None)
+                    # Determine the search query - prioritize query field if available
+                    query = audio_spec.query or audio_spec.search_terms
                     if not query:
-                        query = f"game sound {audio_spec.asset_id} {audio_spec.asset_type}"
+                        # Construct a more effective search query based on our testing
+                        if audio_spec.asset_type == "effect":
+                            query = f"game sound effect {audio_spec.asset_id} 8-bit"
+                        elif audio_spec.asset_type == "music":
+                            query = f"8-bit {audio_spec.asset_id} loop game music"
+                        else:
+                            query = f"game sound {audio_spec.asset_id} {audio_spec.asset_type}"
+                    
+                    print(f"Using search query: '{query}'")
                     
                     # Add retry logic
                     retry_count = 0
@@ -2531,36 +2552,80 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                             if freesound_client_id:
                                 extra_params['client_id'] = freesound_client_id
                                 
-                            # Note: The SearchAndSaveSoundTool may not directly use these parameters
-                            # in its current implementation, but we're providing them for future compatibility
-                            
                             result = audio_tool._run(
                                 query=query,
                                 output_path=full_path,
                                 **extra_params  # Pass any additional parameters
                             )
                             
-                            # Store the result
-                            generated_audio[audio_spec.asset_id] = {
-                                "filename": audio_spec.filename,
-                                "full_path": full_path,
-                                "result": result
-                            }
-                            
-                            print(f"Downloaded audio: {audio_spec.asset_id}")
-                            success = True
+                            # Verify file was actually created
+                            if os.path.exists(full_path) and os.path.getsize(full_path) > 0:
+                                # Store the result
+                                generated_audio[audio_spec.asset_id] = {
+                                    "filename": audio_spec.filename,
+                                    "full_path": full_path,
+                                    "query": query,
+                                    "result": result
+                                }
+                                
+                                print(f"Downloaded audio: {audio_spec.asset_id}")
+                                print(f"File size: {os.path.getsize(full_path) / 1024:.2f} KB")
+                                success = True
+                            else:
+                                # Check for "no results found" in the result
+                                if isinstance(result, dict) and result.get("message") == "No results found":
+                                    print(f"No audio results found for query: '{query}'")
+                                    # Try a more general query on retry
+                                    if retry_count < max_retries - 1:
+                                        if "8-bit" in query:
+                                            query = query.replace("8-bit", "").strip()
+                                        elif audio_spec.asset_type in query:
+                                            # Make query more general
+                                            query = f"game {audio_spec.asset_type} sound"
+                                        else:
+                                            query = "game sound effect"
+                                        print(f"Retrying with more general query: '{query}'")
+                                    else:
+                                        print("Exhausted all retry attempts with different queries")
+                                        break
+                                else:
+                                    raise Exception(f"Audio file was not created or is empty: {full_path}")
                             
                         except Exception as retry_error:
                             retry_count += 1
-                            if retry_count < max_retries:
-                                # Any error, wait and retry
-                                wait_time = 3 * retry_count  # Progressive backoff
-                                print(f"Error encountered. Waiting {wait_time}s before retry {retry_count}/{max_retries}...")
+                            error_str = str(retry_error).lower()
+                            
+                            # Different retry strategy based on error
+                            if "429" in error_str or "rate limit" in error_str:
+                                # Rate limit error, wait longer
+                                wait_time = 5 * retry_count
+                                print(f"Rate limit encountered. Waiting {wait_time}s before retry...")
                                 import time
                                 time.sleep(wait_time)
+                            elif "no results found" in error_str or "no sounds found" in error_str:
+                                # Try a more general query
+                                if retry_count < max_retries - 1:
+                                    if "8-bit" in query:
+                                        query = query.replace("8-bit", "").strip()
+                                    else:
+                                        # Make query more general
+                                        query = f"game sound {audio_spec.asset_type}"
+                                    print(f"No results found. Retrying with more general query: '{query}'")
+                                    import time
+                                    time.sleep(1)
+                                else:
+                                    print("Exhausted all retry attempts with different queries")
+                                    break
                             else:
-                                print(f"Failed to download audio after {max_retries} attempts")
-                                break
+                                wait_time = 3 * retry_count
+                                print(f"Error downloading audio (attempt {retry_count}/{max_retries}): {str(retry_error)}")
+                                print(f"Waiting {wait_time}s before retry...")
+                                import time
+                                time.sleep(wait_time)
+                                
+                                if retry_count >= max_retries:
+                                    print(f"Failed to download audio after {max_retries} attempts")
+                                    break
                     
                 except Exception as e:
                     print(f"Error downloading audio {audio_spec.asset_id}: {str(e)}")

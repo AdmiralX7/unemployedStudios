@@ -166,82 +166,104 @@ class SearchAndSaveSoundTool(BaseTool):
                 api_key = api_key or os.getenv("FREESOUND_API_KEY")
                 client_id = client_id or os.getenv("FREESOUND_CLIENT_ID")
                 
-                if not api_key:
-                    return json.dumps({"error": "FREESOUND_API_KEY not set in environment or parameters."})
-                
-                # Log availability of credentials
-                print(f"Using Freesound API Key: {'Available' if api_key else 'Not Available'}")
-                print(f"Using Freesound Client ID: {'Available' if client_id else 'Not Available'}")
-                
-                # Direct API request to search
-                search_url = f"https://freesound.org/apiv2/search/text/"
-                headers = {
-                    "Authorization": f"Token {api_key}"
-                }
-                
-                # Add client_id to headers if available
+                if api_key:
+                    print(f"Using Freesound API Key: Available")
                 if client_id:
-                    headers["X-API-Client"] = client_id
+                    print(f"Using Freesound Client ID: Available")
                 
+                # Search for sounds
+                search_url = f"https://freesound.org/apiv2/search/text/"
                 params = {
                     "query": query,
-                    "page_size": max_results,
-                    "fields": "id,name,previews,url"
+                    "sort": "score",
+                    "fields": "id,name,previews,download,duration,username,license",
+                    "page_size": max_results
                 }
+                headers = {"Authorization": f"Token {api_key}"}
                 
-                response = requests.get(search_url, headers=headers, params=params, timeout=15)
+                print(f"Sending search request with query: '{query}'")
+                response = requests.get(search_url, params=params, headers=headers)
                 response.raise_for_status()
                 results = response.json()
                 
-                if "results" not in results or len(results["results"]) == 0:
-                    return json.dumps({"error": "No results found."})
+                if not results.get("results"):
+                    print("No results found")
+                    return {"success": False, "message": "No results found"}
                 
+                print(f"Found {len(results.get('results', []))} results")
+                
+                # Debug: Print first few results with key details
+                for i, sound in enumerate(results.get("results", [])[:3]):
+                    print(f"Result {i+1}:")
+                    print(f"  Name: {sound.get('name')}")
+                    print(f"  Duration: {sound.get('duration', 'unknown')} seconds")
+                    print(f"  User: {sound.get('username')}")
+                    print(f"  License: {sound.get('license')}")
+                    if "previews" in sound:
+                        print(f"  Preview types: {list(sound['previews'].keys())}")
+                
+                # Get the first result
                 sound = results["results"][0]
                 
-                # Extract the preview URL from the sound object
+                # Extract the preview URL (prefer MP3 preview if available)
                 preview_url = None
                 if "previews" in sound:
-                    previews = sound["previews"]
-                    if isinstance(previews, dict):
-                        preview_url = previews.get("preview-hq-mp3") or previews.get("preview-lq-mp3")
-                    elif isinstance(previews, list):
-                        # If it's a list of preview objects
-                        for preview in previews:
-                            if isinstance(preview, dict) and "url" in preview:
-                                preview_url = preview["url"]
-                                break
-                
-                # If we still don't have a URL, try a different approach
-                if not preview_url and "id" in sound:
-                    sound_id = sound["id"]
-                    # Try to get the sound directly by ID
-                    sound_url = f"https://freesound.org/apiv2/sounds/{sound_id}/"
-                    sound_response = requests.get(sound_url, headers=headers, timeout=15)
-                    if sound_response.status_code == 200:
-                        sound_data = sound_response.json()
-                        if "previews" in sound_data:
-                            previews = sound_data["previews"]
-                            if isinstance(previews, dict):
-                                preview_url = previews.get("preview-hq-mp3") or previews.get("preview-lq-mp3")
+                    preview_types = list(sound["previews"].keys())
+                    print(f"Available preview types: {preview_types}")
+                    
+                    # Try to get the best quality preview
+                    if "preview-hq-mp3" in preview_types:
+                        preview_url = sound["previews"]["preview-hq-mp3"]
+                    elif "preview-lq-mp3" in preview_types:
+                        preview_url = sound["previews"]["preview-lq-mp3"]
+                    elif "preview-hq-ogg" in preview_types:
+                        preview_url = sound["previews"]["preview-hq-ogg"]
+                    elif "preview-lq-ogg" in preview_types:
+                        preview_url = sound["previews"]["preview-lq-ogg"]
+                    elif preview_types:
+                        # Take the first available preview type if none of the preferred ones are available
+                        preview_url = sound["previews"][preview_types[0]]
                 
                 if not preview_url:
-                    return json.dumps({"error": "No preview audio found for this sound."})
+                    print("No preview URL found in the response")
+                    return {"success": False, "message": "No preview URL found in the response", "sound_id": sound.get("id", "unknown")}
                 
-                audio_data = requests.get(preview_url, timeout=15)
+                print(f"Downloading audio from: {preview_url}")
+                
+                # Download the preview
+                audio_data = requests.get(preview_url)
                 audio_data.raise_for_status()
-                os.makedirs(os.path.dirname(output_path), exist_ok=True)
+                
+                # Write to file
+                os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
                 with open(output_path, "wb") as f:
                     f.write(audio_data.content)
                 
-                return json.dumps({
-                    "file": output_path,
-                    "original_url": sound.get("url", ""),
+                file_size = os.path.getsize(output_path)
+                print(f"Downloaded audio file. Size: {file_size / 1024:.2f} KB")
+                
+                if file_size == 0:
+                    raise Exception("Downloaded file has zero size")
+                
+                # Create a metadata structure to return
+                filename = os.path.basename(output_path)
+                result = {
+                    "success": True,
+                    "sound_id": sound["id"],
+                    "filename": filename,
+                    "duration": sound.get("duration", "unknown"),
+                    "path": output_path,
                     "preview_url": preview_url,
-                    "message": f"Audio saved as {output_path}"
-                }, indent=2)
+                    "license": sound.get("license", "unknown"),
+                    "file_size_bytes": file_size
+                }
                 
+                return result
+            
             except Exception as e:
-                return json.dumps({"error": f"Failed to fetch or save audio: {e}"})
+                print(f"Error during Freesound API request: {e}")
+                raise e
                 
-        except Exception as outer_e:
-            return json.dumps({"error": f"Outer exception: {outer_e}"})
+        except Exception as e:
+            print(f"Exception: {str(e)}")
+            return {"error": str(e)}
