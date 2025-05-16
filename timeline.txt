@@ -126,3 +126,43 @@
   DETAILS: Fixed indentation in crew generation methods and added CSS marker verification
   FILES: src/unemployedstudios/main.py
   OUTCOME: Improved robustness of template integration process
+
+[2025-05-15 19:14:40] - ACTION: Updated engine crew for template integration
+  DETAILS: Transformed engine_crew.py to use a template integration approach instead of generating standalone JS files
+  FILES: src/unemployedstudios/crews/engine_crew/engine_crew.py, src/unemployedstudios/crews/engine_crew/config/agents.yaml, src/unemployedstudios/crews/engine_crew/config/tasks.yaml
+  OUTCOME: Engine Crew now produces code segments that extend the Game and GameLogic classes
+
+[2025-05-15 19:15:49] - ACTION: Updated entity crew for template integration
+  DETAILS: Modified entity_crew.py to use the template integration approach with a new template_integrator agent and integration_planning_task
+  FILES: src/unemployedstudios/crews/entity_crew/entity_crew.py, src/unemployedstudios/crews/entity_crew/config/agents.yaml, src/unemployedstudios/crews/entity_crew/config/tasks.yaml
+  OUTCOME: Entity Crew now produces GameLogic extensions instead of standalone entity JS file
+
+[2025-05-15 19:15:55] - ACTION: Updated level crew for template integration
+  DETAILS: Refactored level_crew.py to follow the template integration pattern with integration_planning_task and game_logic/game_class extensions
+  FILES: src/unemployedstudios/crews/level_crew/level_crew.py, src/unemployedstudios/crews/level_crew/config/agents.yaml, src/unemployedstudios/crews/level_crew/config/tasks.yaml
+  OUTCOME: Level Crew now produces extensions for both Game and GameLogic classes
+
+[2025-05-15 19:16:01] - ACTION: Updated UI crew for template integration
+  DETAILS: Modified ui_crew.py to use the template integration approach with GameUI extensions and CSS/audio insertion points
+  FILES: src/unemployedstudios/crews/ui_crew/ui_crew.py, src/unemployedstudios/crews/ui_crew/config/agents.yaml, src/unemployedstudios/crews/ui_crew/config/tasks.yaml
+  OUTCOME: UI Crew now produces GameUI extensions, CSS styles, and audio tags for the template
+
+[2025-05-15 19:17:14] - ACTION: Implemented parallel code generation with template integration
+  DETAILS: Updated main.py to run all code generation crews in parallel and added template_integration to combine all code segments
+  FILES: src/unemployedstudios/main.py
+  OUTCOME: Game development system now executes all crews in parallel and integrates their outputs into the HTML5 template
+
+[2025-05-15 19:17:19] - ACTION: Added template verification and improved insertion logic
+  DETAILS: Updated template_integration in main.py to verify template markers exist and improved insertion handling for different types (CSS, HTML, JS)
+  FILES: src/unemployedstudios/main.py
+  OUTCOME: More robust template integration with appropriate handling for different code types
+
+[2025-05-16 10:45:27] - ACTION: Fixed UI Crew configuration
+  DETAILS: Added missing task and agent configurations in the UI Crew files to resolve the 'integration_planning_task' KeyError. Specifically added template_integrator agent to agents.yaml and integration_planning_task, game_ui_extensions, css_extensions, audio_extensions, and legacy_integration_task configurations to tasks.yaml.
+  FILES: src/unemployedstudios/crews/ui_crew/config/agents.yaml, src/unemployedstudios/crews/ui_crew/config/tasks.yaml
+  OUTCOME: UI Crew can now properly execute its template integration tasks
+
+[2025-05-15 19:38:59] - ACTION: Created detailed main.py breakdown
+  DETAILS: Created main_detailed.txt with section-by-section English explanation of main.py functionality
+  FILES: main_detailed.txt
+  OUTCOME: Comprehensive plain-language documentation of the game development system implementation

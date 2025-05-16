@@ -89,3 +89,86 @@ final_integration_task:
     A finalized game_ui.js file that integrates all UI components into a cohesive system. Include API documentation
     explaining how to use the UI system, create new UI elements, and integrate with the game flow.
   agent: ui_framework_developer
+
+integration_planning_task:
+  description: >
+    Analyze the HTML5 game template structure to identify UI integration points and plan the approach for extending the UI system.
+    Your task includes:
+    
+    1. Identifying the GameUI class structure and methods
+    2. Locating insertion points for UI components and styles
+    3. Planning how to extend existing UI functionality
+    4. Determining dependencies between UI components
+    5. Creating a clear integration strategy for all UI extensions
+    
+    The output should provide a detailed plan for how the UI system will be integrated into the template,
+    including specific insertion points for GameUI extensions, CSS styles, and audio elements.
+  expected_output: >
+    A comprehensive integration plan with detailed mapping of UI components to template insertion points,
+    clear extension strategies, and guidelines for maintaining template compatibility.
+  agent: template_integrator
+
+game_ui_extensions:
+  description: >
+    Finalize the GameUI class extensions for the UI system. Your task includes:
+    
+    1. Combining all UI framework components into coherent GameUI extensions
+    2. Enhancing the GameUI class with new methods and properties
+    3. Ensuring compatibility with the existing template structure
+    4. Adding proper documentation for all extensions
+    5. Creating a clean, maintainable code structure
+    
+    The output should be ready for insertion into the GameUI class in the template at the specified insertion point.
+  expected_output: >
+    A complete set of GameUI class extensions that implement all UI functionality required by the game,
+    properly formatted for template integration.
+  agent: ui_framework_developer
+
+css_extensions:
+  description: >
+    Create the CSS style extensions needed for the UI system. Your task includes:
+    
+    1. Defining styles for all UI components and screens
+    2. Following the visual guidelines from the style guide
+    3. Creating responsive styles for different screen sizes
+    4. Optimizing styles for performance
+    5. Ensuring compatibility with the template's existing styles
+    
+    The output should be ready for insertion into the template's CSS section at the specified insertion point.
+  expected_output: >
+    A complete set of CSS style definitions for all UI components, properly formatted for template integration.
+  agent: user_experience_designer
+
+audio_extensions:
+  description: >
+    Create the audio element extensions needed for UI sound effects. Your task includes:
+    
+    1. Defining audio elements for UI interactions
+    2. Creating loading and management code for audio resources
+    3. Linking audio effects to UI components
+    4. Ensuring proper audio handling across browsers
+    5. Optimizing audio loading and playback
+    
+    The output should be ready for insertion into the template's audio section at the specified insertion point.
+  expected_output: >
+    A complete set of audio element definitions and handling code for UI sound effects,
+    properly formatted for template integration.
+  agent: animation_specialist
+
+legacy_integration_task:
+  description: >
+    For backward compatibility, create a standalone game_ui.js file that combines all the UI system
+    extensions and could function if directly included in an HTML page. Your task includes:
+    
+    1. Combining all UI system code
+    2. Adding any necessary wrapper code or context
+    3. Ensuring the file could work independently if needed
+    4. Providing clear documentation on how this file relates to the template integration
+    5. Including fallback approaches for critical functionality
+    
+    This file is primarily for reference and backward compatibility, as the actual implementation
+    will use the template integration approach with GameUI, CSS, and audio extensions.
+  expected_output: >
+    A standalone game_ui.js file that combines all UI system functionality and could work
+    independently of the template integration approach.
+  agent: template_integrator
