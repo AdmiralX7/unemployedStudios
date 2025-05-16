@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
+    <title>Code Quest: CS Student Journey</title>
+    <style>
+      body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Orbitron', sans-serif;
+            background-color: #1a1a2e;
+            color: #ffffff;
+        }
+        .screen {
+            display: none;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+        button {
+            background: linear-gradient(135deg, #283c86 0%, #45a247 100%);
+            border: 2px solid #fff;
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            text-transform: uppercase;
+            text-align: center;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            padding: 12px 30px;
+            margin: 20px auto 0;
+            display: block;
+            width: 215.15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #45a247 0%, #283c86 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        #game-title {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            color: #e94560;
+        }
+        #game-controls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(26, 26, 46, 0.8);
+            padding: 10px 0;
+            z-index: 101;
+            display: none;
+            text-align: center;
+        }
+        #game-controls button {
+            display: inline-block;
+            width: auto;
+            padding: 8px 15px;
+            margin: 0 5px;
+            font-size: 14px;
+        }
+        #hud {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            background-color: rgba(26, 26, 46, 0.8);
+            color: #ffffff;
+            padding: 10px;
+            z-index: 100;
+            display: none;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: calc(100% - 100px);
+            overflow: hidden;
+            background-color: #0f3460;
+            border: 2px solid #e94560;
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #game-screen {
+            background: none;
+        }
+        #instructions-screen {
+            z-index: 200;
+        }
+        #instructions-screen.overlay {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        #instructions-screen .container {
+            background: #1a1a2e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+        }
+        @media (max-width: 600px) {
+            #game-title {
+                font-size: 2em;
+            }
+            button {
+                width: 80%;
+                font-size: 16px;
+            }
+            #game-controls button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+        
+        /* Default CSS extensions */
+        .hud-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .hud-item {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        
+        .game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            z-index: 100;
+            transition: opacity 0.5s;
+        }
+        
+        .fade-out {
+            opacity: 0;
+        }
+        
+        /* Game object styles */
+        .player {
+            background-color: #45a247;
+            border: 2px solid #fff;
+        }
+        
+        .enemy {
+            background-color: #e94560;
+            border: 2px solid #fff;
+        }
+        
+        .collectible {
+            background-color: #ffcc00;
+            border: 2px solid #fff;
+            border-radius: 50%;
+        }
+        
+        .platform {
+            background-color: #283c86;
+            border: 1px solid #fff;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="game-controls">
+        <button id="game-menu-button">Menu</button>
+        <button id="game-restart-button">Restart</button>
+        <button id="game-instructions-button">Instructions</button>
+    </div>
+    <!-- Use HUD for Score, High Score, and Other Game Information -->
+    <div id="hud"></div>
+
+    <div id="start-menu-screen" class="active screen">
+        <div class="container">
+            <h1 id="game-title">Code Quest: CS Student Journey</h1>
+            <button id="play-button">Play</button>
+            <button id="settings-button">Settings</button>
+            <button id="instructions-button">Instructions</button>
+        </div>
+    </div>
+
+    <div id="settings-screen" class="screen">
+        <div class="container">
+            <h2>Settings</h2>
+            <!-- Add settings options here -->
+            <button id="settings-back-button">Back</button>
+        </div>
+    </div>
+
+    <div id="instructions-screen" class="screen">
+        <div class="container">
+            <h2>Instructions</h2>
+            <h3>How to Play:</h3>
+            <ul>
+                <li>Collect all the items to complete each level</li>
+                <li>Avoid enemies to stay healthy</li>
+                <li>Complete all levels to win the game</li>
+            </ul>
+            <h3>Controls:</h3>
+            <ul>
+                <li>Left/Right Arrows: Move the player</li>
+                <li>Up Arrow or Space: Jump</li>
+            </ul>
+            <button id="instructions-back-button">Back</button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div id="game-container"></div>
+    </div>
+
+    <div id="game-over-screen" class="screen">
+        <div class="container">
+            <h2>Game Over</h2>
+            <div id="game-over-message">Thanks for playing!</div>
+            <button id="play-again-button">Play Again</button>
+            <button id="main-menu-button">Main Menu</button>
+        </div>
+    </div>
+    
+    <audio autoplay id="background-music" loop>
+      <source src="background-music.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="start-game-sound">
+      <source src="start-game-sound.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="jump-sound">
+      <source src="jump-sound.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="collect-sound">
+      <source src="collect-sound.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="hit-sound">
+      <source src="hit-sound.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="level-complete-sound">
+      <source src="level-complete-sound.mp3" type="audio/mpeg" />
+    </audio>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        class GameUI {
+          constructor() {
+            this.startMenuScreen = document.getElementById('start-menu-screen');
+            this.settingsScreen = document.getElementById('settings-screen');
+            this.instructionsScreen = document.getElementById('instructions-screen');
+            this.gameContainer = document.getElementById('game-screen');
+            this.gameOverScreen = document.getElementById('game-over-screen');
+            this.gameControls = document.getElementById('game-controls');
+            this.hud = document.getElementById('hud');
+            
+            // Game state variables for UI
+            this.score = 0;
+            this.health = 100;
+            this.currentLevel = 1;
+          }
+          
+          swapToScreen(screen) {
+            this.startMenuScreen.classList.remove('active');
+            this.settingsScreen.classList.remove('active');
+            this.instructionsScreen.classList.remove('active');
+            this.gameContainer.classList.remove('active');
+            this.gameOverScreen.classList.remove('active');
+            screen.classList.add('active');			
+            
+            if (screen.id === 'game-screen') {
+                this.hud.style.display = 'block';
+                this.gameControls.style.display = 'block';
+            } else {
+                this.hud.style.display = 'none';
+                this.gameControls.style.display = 'none';
+            }
+          }
+          
+          startGame() {
+            const startGameSound = document.getElementById('start-game-sound');
+            this.swapToScreen(this.gameContainer);
+            startGameSound.play();
+          }
+          
+          endGame() {
+            const levelCompleteSound = document.getElementById('level-complete-sound');
+            this.swapToScreen(this.gameOverScreen);
+            if (levelCompleteSound) levelCompleteSound.play();
+            
+            const gameOverMessage = document.getElementById('game-over-message');
+            if (gameOverMessage) {
+                if (this.health <= 0) {
+                    gameOverMessage.innerText = "Game Over! Your health reached zero.";
+                } else {
+                    gameOverMessage.innerText = "Congratulations! You completed the game!";
+                }
+            }
+          }
+          
+          mainMenu() {
+            this.swapToScreen(this.startMenuScreen);
+          }
+          
+          playAgain() {
+            this.swapToScreen(this.gameContainer);
+          }
+          
+          settings() {
+            this.swapToScreen(this.settingsScreen);
+          }
+          
+          instructions() {
+            this.swapToScreen(this.instructionsScreen);
+          }
+          
+          updateHUD() {
+              const hud = document.getElementById('hud');
+              if (hud) {
+                  hud.innerHTML = `
+                      <div class="hud-container">
+                          <div class="hud-item">Level: ${this.currentLevel}</div>
+                          <div class="hud-item">Score: ${this.score}</div>
+                          <div class="hud-item">Health: ${this.health}</div>
+                      </div>
+                  `;
+              }
+          }
+          
+          showMessage(message, duration = 3000) {
+              const messageElement = document.createElement('div');
+              messageElement.className = 'game-message';
+              messageElement.textContent = message;
+              document.getElementById('game-container').appendChild(messageElement);
+              
+              setTimeout(() => {
+                  messageElement.classList.add('fade-out');
+                  setTimeout(() => {
+                      messageElement.remove();
+                  }, 500);
+              }, duration);
+          }
+        }
+
+        class GameLogic {
+          constructor() {
+            // Player setup
+            this.player = {
+              x: 100,
+              y: 450,
+              width: 30,
+              height: 30,
+              speed: 5,
+              jumpForce: 15,
+              velocityY: 0,
+              isJumping: false,
+              health: 100,
+              score: 0
+            };
+            
+            // Game world physics
+            this.gravity = 0.8;
+            this.groundLevel = 480;
+            
+            // Game state
+            this.enemies = [];
+            this.collectibles = [];
+            this.gameObjects = [this.player];
+            this.levels = [1, 2, 3];
+            this.currentLevel = 1;
+            
+            // Initialize level
+            this.loadLevel(this.currentLevel);
+          }
+          
+          loadLevel(level) {
+              console.log(`Loading level ${level}`);
+              // Clear existing entities
+              this.enemies = [];
+              this.collectibles = [];
+              
+              // Create enemies based on level
+              const enemyCount = level + 1;
+              for (let i = 0; i < enemyCount; i++) {
+                  this.enemies.push({
+                      x: 200 + i * 150,
+                      y: 300,
+                      width: 32,
+                      height: 32,
+                      speed: 2 + level * 0.5,
+                      direction: i % 2 === 0 ? 1 : -1
+                  });
+              }
+              
+              // Create collectibles based on level
+              const collectibleCount = 5;
+              for (let i = 0; i < collectibleCount; i++) {
+                  this.collectibles.push({
+                      x: 150 + i * 120,
+                      y: 400 - level * 30,
+                      width: 20,
+                      height: 20,
+                      collected: false
+                  });
+              }
+              
+              // Update game objects
+              this.gameObjects = [this.player, ...this.enemies, ...this.collectibles];
+              
+              // Reset player position
+              this.player.x = 100;
+              this.player.y = 450;
+              this.player.velocityY = 0;
+              this.player.isJumping = false;
+          }
+          
+          nextLevel() {
+              if (this.currentLevel < this.levels.length) {
+                  this.currentLevel++;
+                  this.loadLevel(this.currentLevel);
+                  return true;
+              }
+              return false;
+          }
+          
+          handleInput(input) {
+              // Handle key presses
+              if (input.keysPressed['ArrowLeft']) {
+                  this.player.x = Math.max(0, this.player.x - this.player.speed);
+              }
+              if (input.keysPressed['ArrowRight']) {
+                  this.player.x = Math.min(800 - this.player.width, this.player.x + this.player.speed);
+              }
+              if ((input.keysPressed['ArrowUp'] || input.keysPressed[' ']) && !this.player.isJumping) {
+                  this.player.velocityY = -this.player.jumpForce;
+                  this.player.isJumping = true;
+                  const jumpSound = document.getElementById('jump-sound');
+                  if (jumpSound) jumpSound.play();
+              }
+          }
+          
+          update(deltaTime) {
+              // Apply gravity to player
+              if (this.player.y < this.groundLevel - this.player.height) {
+                  this.player.velocityY += this.gravity;
+                  this.player.isJumping = true;
+              } else {
+                  this.player.y = this.groundLevel - this.player.height;
+                  this.player.velocityY = 0;
+                  this.player.isJumping = false;
+              }
+              
+              // Update player position
+              this.player.y += this.player.velocityY;
+              
+              // Enemy movement and collisions
+              for (let enemy of this.enemies) {
+                  enemy.x += enemy.speed * enemy.direction;
+                  
+                  // Boundary check
+                  if (enemy.x <= 0 || enemy.x >= 800 - enemy.width) {
+                      enemy.direction *= -1;
+                  }
+                  
+                  // Collision with player
+                  if (this.checkCollision(this.player, enemy)) {
+                      this.player.health -= 10;
+                      const hitSound = document.getElementById('hit-sound');
+                      if (hitSound) hitSound.play();
+                  }
+              }
+              
+              // Collectible collision
+              for (let collectible of this.collectibles) {
+                  if (!collectible.collected && this.checkCollision(this.player, collectible)) {
+                      collectible.collected = true;
+                      this.player.score += 10;
+                      const collectSound = document.getElementById('collect-sound');
+                      if (collectSound) collectSound.play();
+                  }
+              }
+              
+              // Clean up collected items
+              this.collectibles = this.collectibles.filter(c => !c.collected);
+              
+              // Update game objects
+              this.gameObjects = [this.player, ...this.enemies, ...this.collectibles];
+          }
+          
+          checkCollision(objA, objB) {
+              return objA.x < objB.x + objB.width &&
+                     objA.x + objA.width > objB.x &&
+                     objA.y < objB.y + objB.height &&
+                     objA.y + objA.height > objB.y;
+          }
+        }
+        
+        class InputController {
+          constructor() {
+            this.keysPressed = {};
+          }
+        
+          init() {
+            window.addEventListener('keydown', this.handleKeyDown.bind(this));
+            window.addEventListener('keyup', this.handleKeyUp.bind(this));
+          }
+        
+          handleKeyDown(event) {
+            this.keysPressed[event.key] = true;
+          }
+        
+          handleKeyUp(event) {
+            delete this.keysPressed[event.key];
+          }
+        }
+        
+        class Game {
+          constructor() {
+            this.ui = new GameUI();
+            this.logic = new GameLogic();
+            this.input = new InputController();
+            this.lastFrameTime = 0;
+            this.updateInterval = 1000 / 60; // 60 FPS
+            this.done = false;
+            this.isPaused = false;
+            this.animationFrameId = null;
+            
+            // Set up game canvas
+            this.canvas = document.createElement('canvas');
+            this.canvas.width = 800;
+            this.canvas.height = 600;
+            this.canvas.id = 'gameCanvas';
+            this.canvas.style.border = '2px solid #fff';
+            this.ctx = this.canvas.getContext('2d');
+          }
+          
+          prepareGame() {
+            const gameContainer = document.getElementById('game-container');
+            
+            // Clear any existing content
+            gameContainer.innerHTML = '';
+            
+            // Add the canvas to the game container
+            gameContainer.appendChild(this.canvas);
+            
+            // Initialize input controller
+            this.input.init();
+            
+            // Set up UI with game state
+            this.updateUIState();
+            
+            // Connect DOM elements
+            this.assignButtons();
+          }
+          
+          startGame() {
+            this.ui.startGame();
+            
+            // Reset game state
+            this.logic = new GameLogic();
+            
+            // Update UI state
+            this.updateUIState();
+            
+            // Start game loop
+            if(this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+            }
+            this.lastFrameTime = performance.now();
+            this.isPaused = false;
+            this.done = false;
+            this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
+          }
+          
+          updateUIState() {
+            // Update UI with game state
+            this.ui.score = this.logic.player.score;
+            this.ui.health = this.logic.player.health;
+            this.ui.currentLevel = this.logic.currentLevel;
+            this.ui.updateHUD();
+          }
+          
+          updateGame() {
+            // Process input
+            this.logic.handleInput(this.input);
+            
+            // Update game state
+            this.logic.update(this.updateInterval);
+            
+            // Update UI
+            this.updateUIState();
+            
+            // Check game conditions
+            if (this.logic.player.health <= 0) {
+                this.ui.endGame();
+                this.resetGame();
+            }
+            
+            // Check level completion
+            if (this.logic.collectibles.length === 0) {
+                const levelCompleteSound = document.getElementById('level-complete-sound');
+                if (levelCompleteSound) levelCompleteSound.play();
+                
+                if (!this.logic.nextLevel()) {
+                    // Game completed
+                    this.ui.endGame();
+                    this.resetGame();
+                } else {
+                    this.ui.showMessage(`Level ${this.logic.currentLevel} Complete!`, 2000);
+                    this.updateUIState();
+                }
+            }
+            
+            // Render game
+            this.render();
+          }
+          
+          render() {
+            // Clear canvas
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            
+            // Draw background
+            this.ctx.fillStyle = '#0f3460';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            
+            // Draw ground
+            this.ctx.fillStyle = '#283c86';
+            this.ctx.fillRect(0, this.logic.groundLevel, this.canvas.width, this.canvas.height - this.logic.groundLevel);
+            
+            // Draw player
+            this.ctx.fillStyle = '#45a247';
+            this.ctx.fillRect(this.logic.player.x, this.logic.player.y, this.logic.player.width, this.logic.player.height);
+            
+            // Draw enemies
+            for (let enemy of this.logic.enemies) {
+                this.ctx.fillStyle = '#e94560';
+                this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+            }
+            
+            // Draw collectibles
+            for (let collectible of this.logic.collectibles) {
+                this.ctx.fillStyle = '#ffcc00';
+                this.ctx.beginPath();
+                this.ctx.arc(collectible.x + collectible.width/2, collectible.y + collectible.height/2, collectible.width/2, 0, Math.PI*2);
+                this.ctx.fill();
+            }
+            
+            // Draw level info
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.font = '20px Arial';
+            this.ctx.fillText(`Level ${this.logic.currentLevel}`, 10, 30);
+          }
+          
+          resetGame() {
+            this.done = true;
+            this.isPaused = false;
+            if (this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+                this.animationFrameId = null;
+            }
+          }
+          
+          pause() {
+            this.isPaused = true;
+            if (this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+                this.animationFrameId = null;
+            }
+          }
+          
+          resume() {
+            if (this.isPaused) {
+                this.isPaused = false;
+                this.lastFrameTime = performance.now();
+                this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
+            }
+          }
+          
+          gameLoop(timestamp) {
+            if (this.done || this.isPaused) return;
+            
+            const deltaTime = timestamp - this.lastFrameTime;
+            if (deltaTime > this.updateInterval) {
+              this.updateGame();
+              this.lastFrameTime = timestamp;
+            }
+            
+            this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
+          }
+          
+          assignButtons() {
+            const playButton = document.getElementById('play-button');
+            const settingsButton = document.getElementById('settings-button');
+            const instructionsButton = document.getElementById('instructions-button');
+            const playAgainButton = document.getElementById('play-again-button');
+            const settingsBackButton = document.getElementById('settings-back-button');
+            const instructionsBackButton = document.getElementById('instructions-back-button');
+            const gameMenuButton = document.getElementById('game-menu-button');
+            const gameRestartButton = document.getElementById('game-restart-button');
+            const gameInstructionsButton = document.getElementById('game-instructions-button');
+            const mainMenuButton = document.getElementById('main-menu-button');
+    
+            playButton.addEventListener('click', this.startGame.bind(this));
+            
+            if (settingsButton) {
+                settingsButton.addEventListener('click', this.ui.settings.bind(this.ui));
+            }
+            
+            if (instructionsButton) {
+                instructionsButton.addEventListener('click', this.ui.instructions.bind(this.ui));
+            }
+            
+            if (playAgainButton) {
+                playAgainButton.addEventListener('click', this.startGame.bind(this));
+            }
+            
+            if (settingsBackButton) {
+                settingsBackButton.addEventListener('click', this.ui.mainMenu.bind(this.ui));
+            }
+            
+            if (instructionsBackButton) {
+                instructionsBackButton.addEventListener('click', this.ui.mainMenu.bind(this.ui));
+            }
+            
+            if (mainMenuButton) {
+                mainMenuButton.addEventListener('click', this.ui.mainMenu.bind(this.ui));
+            }
+            
+            if (gameMenuButton) {
+                gameMenuButton.addEventListener('click', this.ui.mainMenu.bind(this.ui));
+            }
+            
+            if (gameRestartButton) {
+                gameRestartButton.addEventListener('click', this.startGame.bind(this));
+            }
+            
+            if (gameInstructionsButton) {
+                gameInstructionsButton.addEventListener('click', () => {
+                    this.pause();
+                    this.ui.swapToScreen(this.ui.instructionsScreen);
+                    
+                    const handleBack = () => {
+                        this.ui.swapToScreen(this.ui.gameContainer);
+                        this.resume();
+                        instructionsBackButton.removeEventListener('click', handleBack);
+                    };
+                    
+                    instructionsBackButton.addEventListener('click', handleBack);
+                });
+            }
+          }
+        }
+        
+        // Initialize the game
+        const game = new Game();
+        game.prepareGame();
+      });
+    </script>
+  </body>
+</html> 

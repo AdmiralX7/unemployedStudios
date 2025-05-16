@@ -1,57 +1,58 @@
-# unemployedStudios
-# {{crew_name}} Crew
+# Unemployed Studios Game Project
 
-Welcome to the {{crew_name}} Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+Welcome to our Final Game Project, developed by Unemployed Studios using CrewAI-powered agents for collaborative game development.
 
-## Installation
+## Game Overview
 
-Ensure you have Python >=3.10 <3.13 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+Our game is an HTML5-based interactive experience featuring:
+- Engaging and challenging mechanics
+- Appealing and dynamic visuals
+- Clear progression system
+- Responsive controls for both desktop and mobile
+- Mobile-friendly UI and gameplay experience
 
-First, if you haven't already, install uv:
+## Installation & Setup
 
-```bash
-pip install uv
-```
+### Running the Game Locally
 
-Next, navigate to your project directory and install the dependencies:
+1. Clone this repository to your local machine
+2. Navigate to the GameGenerationOutput directory
+3. Run a local web server using Python:
+   ```bash
+   cd GameGenerationOutput
+   python -m http.server 8000
+   ```
+4. Open your browser and visit http://localhost:8000/final_game.html
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
+### Requirements
 
-### Customizing
+- Modern web browser with HTML5 support
+- No additional libraries or dependencies required for playing the game
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
+## Project Structure
 
-- Modify `src/unemployedstudios/config/agents.yaml` to define your agents
-- Modify `src/unemployedstudios/config/tasks.yaml` to define your tasks
-- Modify `src/unemployedstudios/crew.py` to add your own logic, tools and specific args
-- Modify `src/unemployedstudios/main.py` to add custom inputs for your agents and tasks
+- `/GameGenerationOutput/` - Contains the playable game files
+  - `final_game.html` - Main game file
+  - `assets/` - Game assets (images and audio)
+  - Various JavaScript modules for game functionality
 
-## Running the Project
+## Development Process
 
-To kickstart your flow and begin execution, run this from the root folder of your project:
+This game was developed using CrewAI with specialized agents:
+- Game Logic Developer
+- UI/UX Designer
+- Asset Integrator
+- Prompt Engineer
+- Debugging & QA Tester
 
-```bash
-crewai run
-```
+Each agent contributed to different aspects of the game development process, from conceptualization to implementation.
 
-This command initializes the unemployedStudios Flow as defined in your configuration.
+## Game Controls
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+- Desktop: Use keyboard controls (details in-game)
+- Mobile: Touch-optimized controls for mobile gameplay
 
-## Understanding Your Crew
+## Acknowledgments
 
-The unemployedStudios Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
-
-## Support
-
-For support, questions, or feedback regarding the {{crew_name}} Crew or crewAI.
-
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
-
-Let's create wonders together with the power and simplicity of crewAI.
+- Created as part of a course assignment
+- Developed using CrewAI and LLM-powered agents

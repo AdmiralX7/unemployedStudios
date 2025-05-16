@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
-    <title>Generated Game</title>
+    <title>Code Quest: CS Student Journey</title>
     <style>
       body, html {
             margin: 0;
@@ -69,16 +69,16 @@
             left: 0;
             width: 100%;
             background-color: rgba(26, 26, 46, 0.8);
-            padding: 10px 0; /* Changed padding */
+            padding: 10px 0;
             z-index: 101;
             display: none;
-            text-align: center; /* Center align the content */
+            text-align: center;
         }
         #game-controls button {
             display: inline-block;
             width: auto;
             padding: 8px 15px;
-            margin: 0 5px; /* Reduced side margins */
+            margin: 0 5px;
             font-size: 14px;
         }
         #hud {
@@ -86,8 +86,8 @@
             top: 50px;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #1a1a2e;
+            background-color: rgba(26, 26, 46, 0.8);
+            color: #ffffff;
             padding: 10px;
             z-index: 100;
             display: none;
@@ -102,6 +102,9 @@
             background-color: #0f3460;
             border: 2px solid #e94560;
             box-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         #game-screen {
             background: none;
@@ -131,10 +134,6 @@
                 padding: 6px 12px;
             }
         }
-		
-		/*Your style goes here */
-
-/* GENERATED CSS EXTENSIONS */
 
                 /* Default CSS extensions */
                 .hud-container {
@@ -192,11 +191,118 @@
                     border: 1px solid #fff;
                 }
                 
-
-
-// CSS_INSERTION_MARKER - DO NOT REMOVE
-
-		
+        /* Game visual effects */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0) translateY(0); }
+            10% { transform: translateX(-7px) translateY(-2px); }
+            20% { transform: translateX(7px) translateY(2px); }
+            30% { transform: translateX(-7px) translateY(0); }
+            40% { transform: translateX(7px) translateY(-2px); }
+            50% { transform: translateX(-5px) translateY(2px); }
+            60% { transform: translateX(5px) translateY(0); }
+            70% { transform: translateX(-3px) translateY(-1px); }
+            80% { transform: translateX(3px) translateY(1px); }
+            90% { transform: translateX(-1px) translateY(0); }
+            100% { transform: translateX(0) translateY(0); }
+        }
+        
+        /* Add shake animation class */
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        /* Parallax background layers */
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-repeat: repeat-x;
+            background-size: auto 100%;
+            z-index: 1;
+        }
+        
+        .bg-layer-1 {
+            background-image: linear-gradient(to bottom, #0a1940 0%, #16213e 100%);
+            z-index: 1;
+        }
+        
+        .bg-layer-2 {
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            z-index: 2;
+        }
+        
+        .bg-layer-3 {
+            background-image: linear-gradient(transparent 80%, #283c86 100%);
+            z-index: 3;
+        }
+        
+        /* Particle system container */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+        
+        /* Particle element */
+        .particle {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        
+        /* Mobile Touch Controls */
+        .touch-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: none;
+            justify-content: space-around;
+            z-index: 1000;
+        }
+        
+        .touch-button {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(40, 60, 134, 0.7);
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            user-select: none;
+        }
+        
+        /* Show touch controls on mobile devices */
+        @media (max-width: 768px) {
+            .touch-controls {
+                display: flex;
+            }
+        }
     </style>
   </head>
   <body>
@@ -210,7 +316,7 @@
 
     <div id="start-menu-screen" class="active screen">
         <div class="container">
-            <h1 id="game-title">Your Game Title</h1>
+            <h1 id="game-title">Code Quest: CS Student Journey</h1>
             <button id="play-button">Play</button>
             <button id="settings-button">Settings</button>
             <button id="instructions-button">Instructions</button>
@@ -230,13 +336,14 @@
             <h2>Instructions</h2>
             <h3>How to Play:</h3>
             <ul>
-                <li>Instruction 1</li>
-                <li>Instruction 2</li>
+                <li>Collect all the items to complete each level</li>
+                <li>Avoid enemies to stay healthy</li>
+                <li>Complete all levels to win the game</li>
             </ul>
             <h3>Controls:</h3>
             <ul>
-                <li>Control 1</li>
-                <li>Control 2</li>
+                <li>Left/Right Arrows: Move the player</li>
+                <li>Up Arrow or Space: Jump</li>
             </ul>
             <button id="instructions-back-button">Back</button>
         </div>
@@ -244,46 +351,54 @@
 
     <div id="game-screen" class="screen">
         <div id="game-container"></div>
+        <div class="touch-controls">
+            <div class="touch-button" id="left-button">←</div>
+            <div class="touch-button" id="jump-button">↑</div>
+            <div class="touch-button" id="right-button">→</div>
+        </div>
     </div>
 
     <div id="game-over-screen" class="screen">
         <div class="container">
-            <div id="game-over-message"></div>
+            <h2>Game Over</h2>
+            <div id="game-over-message">Thanks for playing!</div>
             <button id="play-again-button">Play Again</button>
             <button id="main-menu-button">Main Menu</button>
         </div>
     </div>
-    <audio autoplay="" id="background-music" loop="">
-      <source src="background-music.mp3" type="audio/mpeg" />
+    
+    <audio autoplay id="background-music" loop>
+      <source src="assets/audio/university_music.mp3" type="audio/mpeg" />
     </audio>
     <audio id="start-game-sound">
-      <source src="start-game-sound.mp3" type="audio/mpeg" />
+      <source src="assets/audio/internship_music.mp3" type="audio/mpeg" />
     </audio>
-    <!--Extra audio tags for sound effects-->
-
-<!-- GENERATED AUDIO EXTENSIONS -->
-
-                <audio id="jump-sound">
-                    <source src="jump-sound.mp3" type="audio/mpeg">
-                </audio>
-                <audio id="collect-sound">
-                    <source src="collect-sound.mp3" type="audio/mpeg">
-                </audio>
-                <audio id="hit-sound">
-                    <source src="hit-sound.mp3" type="audio/mpeg">
-                </audio>
-                <audio id="level-complete-sound">
-                    <source src="level-complete-sound.mp3" type="audio/mpeg">
-                </audio>
+    <audio id="jump-sound">
+      <source src="assets/audio/jump_sound.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="collect-sound">
+      <source src="assets/audio/collect_item_sound.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="hit-sound">
+      <source src="assets/audio/enemy_defeat_sound.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="level-complete-sound">
+      <source src="assets/audio/internship_music.mp3" type="audio/mpeg" />
+    </audio>
                 
-
-
-// AUDIO_INSERTION_MARKER - DO NOT REMOVE
-
-	
-	<!--You will create your own scripts in the following files-->    
     <script>
+      // Enable debug mode to log important events
+      const DEBUG_MODE = true;
+      
+      function debug(...args) {
+        if (DEBUG_MODE) {
+          console.log("[DEBUG]", ...args);
+        }
+      }
+      
       document.addEventListener('DOMContentLoaded', () => {
+        debug("DOM loaded, initializing game");
+        
         class GameUI {
           constructor() {
             this.startMenuScreen = document.getElementById('start-menu-screen');
@@ -293,8 +408,12 @@
             this.gameOverScreen = document.getElementById('game-over-screen');
 			this.gameControls = document.getElementById('game-controls');
 			this.hud = document.getElementById('hud');
-          };
 		  
+            // Game state variables for UI
+            this.score = 0;
+            this.health = 100;
+            this.currentLevel = 1;
+          }
 		  
           swapToScreen(screen) {
             this.startMenuScreen.classList.remove('active');
@@ -311,20 +430,27 @@
 				this.hud.style.display = 'none';
 				this.gameControls.style.display = 'none';
 			}
-          };
+          }
 		  
           startGame() {
             const startGameSound = document.getElementById('start-game-sound');
             this.swapToScreen(this.gameContainer);
             startGameSound.play();
-            // Your start game code here;
           }
 		  
           endGame() {
-            const endGameSound = document.getElementById('end-game-sound');
+            const levelCompleteSound = document.getElementById('level-complete-sound');
             this.swapToScreen(this.gameOverScreen);
-            endGameSound.play();
-            // Your end game code here;
+            if (levelCompleteSound) levelCompleteSound.play();
+            
+            const gameOverMessage = document.getElementById('game-over-message');
+            if (gameOverMessage) {
+                if (this.health <= 0) {
+                    gameOverMessage.innerText = "Game Over! Your health reached zero.";
+                } else {
+                    gameOverMessage.innerText = "Congratulations! You completed the game!";
+                }
+            }
           }
 		  
           mainMenu() {
@@ -343,19 +469,14 @@
             this.swapToScreen(this.instructionsScreen);
           }		  
           
-          // Your UI functions here;
-    // GAME_UI EXTENSIONS
-    
-                    // Default UI extensions
                     updateHUD() {
-                        console.log("Updating HUD with fallback implementation");
                         const hud = document.getElementById('hud');
                         if (hud) {
                             hud.innerHTML = `
                                 <div class="hud-container">
-                                    <div class="hud-item">Level: ${this.currentLevel || 1}</div>
-                                    <div class="hud-item">Score: ${this.score || 0}</div>
-                                    <div class="hud-item">Health: ${this.health || 100}</div>
+                          <div class="hud-item">Level: ${this.currentLevel}</div>
+                          <div class="hud-item">Score: ${this.score}</div>
+                          <div class="hud-item">Health: ${this.health}</div>
                                 </div>
                             `;
                         }
@@ -374,813 +495,1396 @@
                             }, 500);
                         }, duration);
                     }
-                    
-                    updateUI() {
-                        this.updateHUD();
-                    }
-                    
-    
-    
-    // GAME_UI_INSERTION_MARKER - DO NOT REMOVE
-    
-		  
         }
+        
         class GameLogic {
           constructor() {
+            // Player setup
+            this.player = {
+              x: 100,
+              y: 450,
+              width: 30,
+              height: 30,
+              speed: 5,
+              jumpForce: 15,
+              velocityY: 0,
+              isJumping: false,
+              jumpCooldown: false,
+              health: 100,
+              score: 0,
+              direction: 1, // 1 = right, -1 = left
+              state: 'idle', // idle, running, jumping
+              animationFrame: 0,
+              frameCount: 0,
+              powerups: [] // Active powerups
+            };
+            
+            // Game world physics
+            this.gravity = 0.8;
+            this.groundLevel = 480;
+            
+            // Game state
+            this.enemies = [];
+            this.collectibles = [];
+            this.powerups = [];
+            this.particles = [];
+            this.gameObjects = [this.player];
+            this.levels = [1, 2, 3];
+            this.currentLevel = 1;
+            
+            // Debug
+            this.debug = true;
+            
+            // Initialize level
+            this.loadLevel(this.currentLevel);
           }
-          // Your game logic here;
-    // GAME_LOGIC EXTENSIONS
-    // game_engine.js
-    // Combines Game class and GameLogic class with extensions and wrappers for standalone functionality.
-    // Requires HTML5 canvas integration and works independently with fallback functionality for key features.
-    
-    // Main Game Class with integrated extensions
-    class Game {
-      constructor() {
-        this.state = {};
-        this.settings = {};
-        this.inputHandler = new InputHandler(this);
-        this.physicsEngine = new PhysicsEngine();
-        this.layers = {};
-        this.screenResolution = { width: 800, height: 600 };
-        this.scaleFactor = 1;
-    
-        this.initializeLayers();
-      }
-    
-      initialize() {
-        this.setupPhysics();
-        this.inputHandler.setupEventListeners();
-        this.startPerformanceMonitoring();
-      }
-    
-      setupPhysics() {
-        this.physicsEngine.initialize();
-      }
-    
-      initializeLayers() {
-        this.layers.background = this.createLayer();
-        this.layers.gameplay = this.createLayer();
-        this.layers.ui = this.createLayer();
-      }
-    
-      createLayer() {
-        const canvas = document.createElement('canvas');
-        canvas.width = this.screenResolution.width;
-        canvas.height = this.screenResolution.height;
-        return {
-          context: canvas.getContext('2d'),
-          canvas: canvas
-        };
-      }
-    
-      startGameLoop() {
-        let lastTimestamp = 0;
-    
-        const gameLoop = (currentTimestamp) => {
-          const delta = (currentTimestamp - lastTimestamp) / 1000; 
-          lastTimestamp = currentTimestamp;
-    
-          this.updateGame(delta);
-          this.render();
-    
-          requestAnimationFrame(gameLoop);
-        };
-    
-        requestAnimationFrame(gameLoop);
-      }
-    
-      updateGame(delta) {
-        this.inputHandler.update(delta);
-        this.physicsEngine.update(delta);
-        this.updateGameState(delta);
-      }
-    
-      stopGameLoop() {
-        this.inputHandler.unsubscribeAll();
-      }
-    
-      updateGameState(delta) {
-        // Placeholder for game-specific logic
-      }
-    
-      render() {
-        this.clearAllLayers();
-        this.renderBackground();
-        this.renderGameplay();
-        this.renderUI();
-        this.combineLayers();
-      }
-    
-      clearAllLayers() {
-        for (let key in this.layers) {
-          const { context } = this.layers[key];
-          context.clearRect(0, 0, this.screenResolution.width, this.screenResolution.height);
+          
+          loadLevel(level) {
+              this.currentLevel = level;
+              const levelIndex = level - 1;
+              
+              // Reset game objects
+              this.enemies = [];
+              this.collectibles = [];
+              this.powerups = [];
+              this.particles = [];
+              
+              // Create platforms and obstacles based on level
+              const platformCount = 3 + level;
+              this.platforms = [];
+              for (let i = 0; i < platformCount; i++) {
+                  this.platforms.push({
+                      x: 100 + i * 150,
+                      y: 450 - i * 50, 
+                      width: 100,
+                      height: 20
+                  });
+              }
+              
+              // Create enemies based on level
+              const enemyCount = Math.min(2 + level, 7); // Cap at 7 enemies to prevent overcrowding
+              for (let i = 0; i < enemyCount; i++) {
+                  // Basic enemy
+                  this.enemies.push({
+                      x: 200 + i * 150,
+                      y: 300,
+                      width: 48,
+                      height: 48,
+                      speed: 2 + level * 0.5,
+                      direction: i % 2 === 0 ? 1 : -1,
+                      type: 'basic',
+                      animationFrame: 0,
+                      frameCount: 0,
+                      hitCooldown: false,
+                      health: 2
+                  });
+              }
+              
+              // Add some advanced enemies in higher levels
+              if (level >= 2) {
+                  for (let i = 0; i < level - 1; i++) {
+                      // Advanced enemies - they jump!
+                      this.enemies.push({
+                          x: 300 + i * 200,
+                          y: 300,
+                          width: 64,
+                          height: 64,
+                          speed: 3 + level * 0.3,
+                          direction: i % 2 === 0 ? 1 : -1,
+                          type: 'advanced',
+                          animationFrame: 0,
+                          frameCount: 0,
+                          jumpCooldown: false,
+                          isJumping: false,
+                          velocityY: 0,
+                          jumpTimer: Math.floor(Math.random() * 100),
+                          hitCooldown: false,
+                          health: 3
+                      });
+                  }
+              }
+              
+              // Add flying enemies in higher levels
+              if (level >= 3) {
+                  for (let i = 0; i < Math.floor(level/2); i++) {
+                      // Flying enemies - they move in a wave pattern
+                      this.enemies.push({
+                          x: 250 + i * 180,
+                          y: 150 + Math.sin(i) * 50,
+                          width: 40,
+                          height: 40,
+                          speed: 2 + level * 0.4,
+                          direction: i % 2 === 0 ? 1 : -1,
+                          type: 'flying',
+                          animationFrame: 0,
+                          frameCount: 0,
+                          waveOffset: i * Math.PI / 4, // Phase offset for the wave pattern
+                          waveAmplitude: 40 + level * 5, // Height of the wave
+                          hitCooldown: false,
+                          health: 2
+                      });
+                  }
+              }
+              
+              // Create collectibles based on level
+              const collectibleCount = 5;
+              for (let i = 0; i < collectibleCount; i++) {
+                  this.collectibles.push({
+                      x: 150 + i * 120,
+                      y: 400 - level * 30,
+                      width: 25,
+                      height: 25,
+                      collected: false,
+                      value: 10,
+                      type: 'coin'
+                  });
+              }
+              
+              // Add powerups based on level
+              if (level >= 1) {
+                  // Health powerup
+                  this.powerups.push({
+                      x: 350,
+                      y: 200,
+                      width: 32,
+                      height: 32,
+                      collected: false,
+                      type: 'health',
+                      effect: {
+                          type: 'instant',
+                          value: 25
+                      }
+                  });
+              }
+              
+              if (level >= 2) {
+                  // Speed powerup
+                  this.powerups.push({
+                      x: 550,
+                      y: 250,
+                      width: 32,
+                      height: 32,
+                      collected: false,
+                      type: 'speed',
+                      effect: {
+                          type: 'timed',
+                          duration: 5000,
+                          value: 3
+                      }
+                  });
+              }
+              
+              if (level >= 3) {
+                  // Jump powerup
+                  this.powerups.push({
+                      x: 250,
+                      y: 150,
+                      width: 32,
+                      height: 32,
+                      collected: false,
+                      type: 'jump',
+                      effect: {
+                          type: 'timed',
+                          duration: 5000,
+                          value: 5
+                      }
+                  });
+              }
+              
+              // Update game objects
+              this.gameObjects = [
+                  this.player, 
+                  ...this.enemies, 
+                  ...this.collectibles,
+                  ...this.powerups
+              ];
+              
+              // Reset player position and update size
+              this.player.width = 64;
+              this.player.height = 64;
+              this.player.x = 100;
+              this.player.y = this.groundLevel - this.player.height;
+              this.player.velocityY = 0;
+              this.player.isJumping = false;
+              
+              if (this.debug) console.log("Level loaded with", this.enemies.length, "enemies and", this.collectibles.length, "collectibles", this.powerups.length, "powerups");
+          }
+          
+          nextLevel() {
+              if (this.currentLevel < this.levels.length) {
+                  this.currentLevel++;
+                  this.loadLevel(this.currentLevel);
+                  return true;
+              }
+              return false;
+          }
+          
+          handleInput(input) {
+              debug("Handling input, keysPressed:", input.keysPressed);
+              
+              // Update player state
+              let wasMoving = this.player.state === 'running';
+              let newState = 'idle';
+              
+              // Handle key presses
+              if (input.keysPressed['ArrowLeft'] || input.keysPressed['a'] || input.keysPressed['A']) {
+                  this.player.x = Math.max(0, this.player.x - this.player.speed);
+                  this.player.direction = -1;
+                  newState = 'running';
+              }
+              if (input.keysPressed['ArrowRight'] || input.keysPressed['d'] || input.keysPressed['D']) {
+                  this.player.x = Math.min(800 - this.player.width, this.player.x + this.player.speed);
+                  this.player.direction = 1;
+                  newState = 'running';
+              }
+              
+              // Handle jumping - crucial to check before updating state
+              if ((input.keysPressed['ArrowUp'] || input.keysPressed[' '] || input.keysPressed['w'] || input.keysPressed['W']) && 
+                  !this.player.isJumping && !this.player.jumpCooldown) {
+                  debug("Jump key detected, initiating jump");
+                  this.jump();
+              }
+              
+              // If jumping, override state
+              if (this.player.isJumping) {
+                  newState = 'jumping';
+              }
+              
+              // Update state if changed
+              if (this.player.state !== newState) {
+                  this.player.state = newState;
+                  this.player.animationFrame = 0;
+              }
+          }
+          
+          jump() {
+              debug("JUMP method called, current velocityY =", this.player.velocityY);
+              this.player.velocityY = -this.player.jumpForce;
+              this.player.isJumping = true;
+              this.player.jumpCooldown = true;
+              this.player.state = 'jumping';
+              
+              // Create jump particles
+              this.createParticles(this.player.x + this.player.width/2, this.player.y + this.player.height, 10, '#ffffff', 1);
+              
+              // Reset jump cooldown after a short delay
+              setTimeout(() => {
+                  this.player.jumpCooldown = false;
+                  debug("Jump cooldown reset");
+              }, 300);
+              
+              // Play jump sound
+              const jumpSound = document.getElementById('jump-sound');
+              if (jumpSound) {
+                  jumpSound.currentTime = 0; // Reset sound to start
+                  jumpSound.volume = 0.3; // Lower volume slightly
+                  const playPromise = jumpSound.play();
+                  
+                  // Handle play promise to avoid uncaught exceptions
+                  if (playPromise !== undefined) {
+                      playPromise.catch(e => {
+                          console.error("Jump sound error:", e);
+                      });
+                  }
+              }
+              
+              debug("Jump initiated, velocityY =", this.player.velocityY);
+          }
+          
+          update(deltaTime) {
+              // Update animation frames
+              this.updateAnimations(deltaTime);
+              
+              // Apply gravity to player
+              if (this.player.y < this.groundLevel - this.player.height) {
+                  this.player.velocityY += this.gravity;
+                  this.player.isJumping = true;
+                  this.player.state = 'jumping';
+                  if (Math.random() < 0.01) debug("In air, velocityY =", this.player.velocityY);
+              } else {
+                  this.player.y = this.groundLevel - this.player.height;
+                  this.player.velocityY = 0;
+                  this.player.isJumping = false;
+                  // State will be set by handleInput
+                  if (Math.random() < 0.01) debug("On ground");
+              }
+              
+              // Update player position
+              const oldY = this.player.y;
+              this.player.y += this.player.velocityY;
+              
+              // Check platform collisions
+              let onPlatform = false;
+              for (let platform of this.platforms) {
+                  // Only check if player is falling down onto platform (not jumping up through it)
+                  if (this.player.velocityY > 0) {
+                      // Check if player was above platform before update and is now inside or below
+                      const wasAbovePlatform = oldY + this.player.height <= platform.y;
+                      const isOnPlatform = this.player.y + this.player.height >= platform.y && 
+                                          this.player.y < platform.y + platform.height &&
+                                          this.player.x + this.player.width > platform.x && 
+                                          this.player.x < platform.x + platform.width;
+                      
+                      if (wasAbovePlatform && isOnPlatform) {
+                          // Place player on top of platform
+                          this.player.y = platform.y - this.player.height;
+                          this.player.velocityY = 0;
+                          this.player.isJumping = false;
+                          onPlatform = true;
+                          
+                          // Create small landing particles
+                          if (Math.abs(oldY - this.player.y) > 2) {
+                              this.createParticles(
+                                  this.player.x + this.player.width/2,
+                                  platform.y, 
+                                  5, 
+                                  '#ffffff', 
+                                  1
+                              );
+                          }
+                      }
+                  }
+              }
+              
+              // Only set player to jumping if not on a platform and not on ground
+              if (!onPlatform && this.player.y < this.groundLevel - this.player.height) {
+                  this.player.isJumping = true;
+                  this.player.state = 'jumping';
+              }
+              
+              // Update particles
+              this.updateParticles();
+              
+              // Update powerups
+              this.updatePowerups();
+              
+              // Enemy movement and collisions
+              this.updateEnemies();
+              
+              // Collectible collision
+              this.updateCollectibles();
+              
+              // Powerup collision
+              this.updatePowerupCollisions();
+              
+              // Update game objects
+              this.gameObjects = [
+                  this.player, 
+                  ...this.enemies, 
+                  ...this.collectibles,
+                  ...this.powerups
+              ];
+          }
+          
+          updateAnimations(deltaTime) {
+              // Update frame counter
+              this.player.frameCount++;
+              
+              // Update animation frame every 5 frames
+              if (this.player.frameCount % 5 === 0) {
+                  // Increment animation frame
+                  this.player.animationFrame = (this.player.animationFrame + 1) % 4; // 4 frames per animation
+              }
+          }
+          
+          createParticles(x, y, count, color, size) {
+              for (let i = 0; i < count; i++) {
+                  this.particles.push({
+                      x: x,
+                      y: y,
+                      size: size + Math.random() * 2,
+                      color: color,
+                      velocityX: (Math.random() - 0.5) * 5,
+                      velocityY: (Math.random() - 0.5) * 5,
+                      life: 30 + Math.random() * 20
+                  });
+              }
+          }
+          
+          updateParticles() {
+              // Update particle positions and life
+              for (let i = 0; i < this.particles.length; i++) {
+                  let p = this.particles[i];
+                  p.x += p.velocityX;
+                  p.y += p.velocityY;
+                  p.life--;
+                  
+                  // Remove dead particles
+                  if (p.life <= 0) {
+                      this.particles.splice(i, 1);
+                      i--;
+                  }
+              }
+          }
+          
+          checkCollision(objA, objB) {
+              return objA.x < objB.x + objB.width &&
+                     objA.x + objA.width > objB.x &&
+                     objA.y < objB.y + objB.height &&
+                     objA.y + objA.height > objB.y;
+          }
+          
+          updatePowerups() {
+              // Update active powerups on player
+              for (let i = 0; i < this.player.powerups.length; i++) {
+                  let powerup = this.player.powerups[i];
+                  
+                  // Decrease duration
+                  if (powerup.duration > 0) {
+                      powerup.duration -= 1000 / 60; // Assuming 60 FPS
+                      
+                      // Remove expired powerups
+                      if (powerup.duration <= 0) {
+                          // Remove effects
+                          if (powerup.type === 'speed') {
+                              this.player.speed -= powerup.value;
+                          } else if (powerup.type === 'jump') {
+                              this.player.jumpForce -= powerup.value;
+                          }
+                          
+                          // Remove from array
+                          this.player.powerups.splice(i, 1);
+                          i--;
+                          
+                          if (this.debug) console.log("Powerup expired:", powerup.type);
+                      }
+                  }
+              }
+          }
+          
+          updatePowerupCollisions() {
+              let collectedPowerup = false;
+              
+              for (let powerup of this.powerups) {
+                  if (!powerup.collected && this.checkCollision(this.player, powerup)) {
+                      powerup.collected = true;
+                      collectedPowerup = true;
+                      
+                      // Apply powerup effect
+                      if (powerup.type === 'health') {
+                          // Instant health boost
+                          this.player.health = Math.min(100, this.player.health + powerup.effect.value);
+                          if (this.debug) console.log("Health powerup collected, health =", this.player.health);
+                      } else if (powerup.type === 'speed') {
+                          // Timed speed boost
+                          this.player.speed += powerup.effect.value;
+                          this.player.powerups.push({
+                              type: 'speed',
+                              duration: powerup.effect.duration,
+                              value: powerup.effect.value
+                          });
+                          if (this.debug) console.log("Speed powerup collected, speed =", this.player.speed);
+                      } else if (powerup.type === 'jump') {
+                          // Timed jump boost
+                          this.player.jumpForce += powerup.effect.value;
+                          this.player.powerups.push({
+                              type: 'jump',
+                              duration: powerup.effect.duration,
+                              value: powerup.effect.value
+                          });
+                          if (this.debug) console.log("Jump powerup collected, jumpForce =", this.player.jumpForce);
+                      }
+                      
+                      // Create particles
+                      this.createParticles(powerup.x + powerup.width/2, powerup.y + powerup.height/2, 15, '#ffffff', 2);
+                      
+                      // Play sound
+                      const collectSound = document.getElementById('collect-sound');
+                      if (collectSound) {
+                          collectSound.currentTime = 0;
+                          collectSound.play().catch(e => console.log("Collect sound error:", e));
+                      }
+                  }
+              }
+              
+              // Clean up collected powerups
+              if (collectedPowerup) {
+                  this.powerups = this.powerups.filter(p => !p.collected);
+              }
+          }
+          
+          updateEnemies() {
+              for (let enemy of this.enemies) {
+                  // Different appearance based on enemy type
+                  if (enemy.type === 'basic') {
+                      this.ctx.fillStyle = '#e94560';
+                      
+                      // Draw enemy body
+                      this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                      
+                      // Add eyes
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.fillRect(enemy.x + 5, enemy.y + 8, 6, 6);
+                      this.ctx.fillRect(enemy.x + enemy.width - 11, enemy.y + 8, 6, 6);
+                      
+                      // Draw angry eyebrows
+                      this.ctx.fillStyle = '#000000';
+                      this.ctx.fillRect(enemy.x + 3, enemy.y + 5, 8, 2);
+                      this.ctx.fillRect(enemy.x + enemy.width - 11, enemy.y + 5, 8, 2);
+                      
+                      // Straight angry mouth
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.fillRect(enemy.x + 8, enemy.y + 20, 16, 2);
+                      
+                  } else if (enemy.type === 'advanced') {
+                      this.ctx.fillStyle = '#9c2542'; // Darker red for advanced enemies
+                      
+                      // Draw enemy body
+                      this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                      
+                      // Add eyes
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.fillRect(enemy.x + 5, enemy.y + 8, 6, 6);
+                      this.ctx.fillRect(enemy.x + enemy.width - 11, enemy.y + 8, 6, 6);
+                      
+                      // Draw angry eyebrows
+                      this.ctx.fillStyle = '#000000';
+                      this.ctx.fillRect(enemy.x + 3, enemy.y + 5, 8, 2);
+                      this.ctx.fillRect(enemy.x + enemy.width - 11, enemy.y + 5, 8, 2);
+                      
+                      // Zigzag mouth for advanced enemies
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.beginPath();
+                      this.ctx.moveTo(enemy.x + 8, enemy.y + 20);
+                      this.ctx.lineTo(enemy.x + 12, enemy.y + 22);
+                      this.ctx.lineTo(enemy.x + 16, enemy.y + 18);
+                      this.ctx.lineTo(enemy.x + 20, enemy.y + 22);
+                      this.ctx.lineTo(enemy.x + 24, enemy.y + 20);
+                      this.ctx.stroke();
+                      
+                  } else if (enemy.type === 'flying') {
+                      // Flying enemy - draw as a triangle/bat shape with wings
+                      this.ctx.fillStyle = '#7851a9'; // Purple for flying enemies
+                      
+                      // Body - central triangle
+                      this.ctx.beginPath();
+                      this.ctx.moveTo(enemy.x + enemy.width/2, enemy.y);
+                      this.ctx.lineTo(enemy.x, enemy.y + enemy.height);
+                      this.ctx.lineTo(enemy.x + enemy.width, enemy.y + enemy.height);
+                      this.ctx.closePath();
+                      this.ctx.fill();
+                      
+                      // Wings - flapping based on animation frame
+                      this.ctx.fillStyle = '#9768d1';
+                      const wingSpread = 7 + (enemy.animationFrame % 2) * 5; // Wings flap
+                      
+                      // Left wing
+                      this.ctx.beginPath();
+                      this.ctx.moveTo(enemy.x + enemy.width/2, enemy.y + enemy.height/3);
+                      this.ctx.lineTo(enemy.x - wingSpread, enemy.y + enemy.height/2);
+                      this.ctx.lineTo(enemy.x + 5, enemy.y + enemy.height * 2/3);
+                      this.ctx.closePath();
+                      this.ctx.fill();
+                      
+                      // Right wing
+                      this.ctx.beginPath();
+                      this.ctx.moveTo(enemy.x + enemy.width/2, enemy.y + enemy.height/3);
+                      this.ctx.lineTo(enemy.x + enemy.width + wingSpread, enemy.y + enemy.height/2);
+                      this.ctx.lineTo(enemy.x + enemy.width - 5, enemy.y + enemy.height * 2/3);
+                      this.ctx.closePath();
+                      this.ctx.fill();
+                      
+                      // Eyes - glowing
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.beginPath();
+                      this.ctx.arc(enemy.x + enemy.width/2 - 5, enemy.y + enemy.height/3, 3, 0, Math.PI*2);
+                      this.ctx.fill();
+                      this.ctx.beginPath();
+                      this.ctx.arc(enemy.x + enemy.width/2 + 5, enemy.y + enemy.height/3, 3, 0, Math.PI*2);
+                      this.ctx.fill();
+                      
+                      // Create a glowing effect
+                      if (Math.random() < 0.05) {
+                          this.logic.createParticles(
+                              enemy.x + enemy.width/2, 
+                              enemy.y + enemy.height,
+                              1,
+                              '#9768d1',
+                              1
+                          );
+                      }
+                  }
+                  
+                  // Direction indicator - only for ground-based enemies
+                  if (enemy.type !== 'flying') {
+                      this.ctx.fillStyle = enemy.type === 'basic' ? '#e94560' : '#9c2542';
+                      if (enemy.direction > 0) {
+                          // Facing right
+                          this.ctx.fillRect(enemy.x + enemy.width - 4, enemy.y + 12, 4, 8);
+                      } else {
+                          // Facing left
+                          this.ctx.fillRect(enemy.x, enemy.y + 12, 4, 8);
+                      }
+                  }
+              }
+          }
+          
+          updateCollectibles() {
+              let collectedItem = false;
+              for (let collectible of this.collectibles) {
+                  if (!collectible.collected && this.checkCollision(this.player, collectible)) {
+                      collectible.collected = true;
+                      this.player.score += collectible.value;
+                      collectedItem = true;
+                      
+                      // Create particles
+                      this.createParticles(collectible.x + collectible.width/2, collectible.y + collectible.height/2, 8, '#ffcc00', 1);
+                      
+                      const collectSound = document.getElementById('collect-sound');
+                      if (collectSound) {
+                          collectSound.currentTime = 0; // Reset sound to start
+                          collectSound.play().catch(e => console.log("Collect sound error:", e));
+                      }
+                      if (this.debug) console.log("Item collected, score =", this.player.score);
+                  }
+              }
+              
+              // Clean up collected items
+              if (collectedItem) {
+                  this.collectibles = this.collectibles.filter(c => !c.collected);
+              }
+          }
         }
-      }
-    
-      renderBackground() {
-        this.layers.background.context.fillStyle = '#000';
-        this.layers.background.context.fillRect(0, 0, this.screenResolution.width, this.screenResolution.height);
-      }
-    
-      renderGameplay() {
-        // Placeholder for gameplay rendering logic
-      }
-    
-      renderUI() {
-        GameUI.render(this.layers.ui.context);
-      }
-    
-      combineLayers() {
-        const mainContext = document.querySelector('canvas').getContext('2d');
-        for (let key in this.layers) {
-          mainContext.drawImage(this.layers[key].canvas, 0, 0);
+        
+        class InputController {
+          constructor() {
+            this.keysPressed = {};
+            this.isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+            debug("Input controller initialized, touch device:", this.isTouchDevice);
+          }
+        
+          init() {
+            // Keyboard controls
+            window.addEventListener('keydown', this.handleKeyDown.bind(this));
+            window.addEventListener('keyup', this.handleKeyUp.bind(this));
+            
+            // Touch controls
+            if (this.isTouchDevice) {
+              this.setupTouchControls();
+            }
+            
+            debug("Input event listeners set up");
+          }
+          
+          setupTouchControls() {
+            const leftButton = document.getElementById('left-button');
+            const rightButton = document.getElementById('right-button');
+            const jumpButton = document.getElementById('jump-button');
+            
+            // Left button
+            leftButton.addEventListener('touchstart', (e) => {
+              e.preventDefault();
+              this.keysPressed['ArrowLeft'] = true;
+            });
+            
+            leftButton.addEventListener('touchend', (e) => {
+              e.preventDefault();
+              delete this.keysPressed['ArrowLeft'];
+            });
+            
+            // Right button
+            rightButton.addEventListener('touchstart', (e) => {
+              e.preventDefault();
+              this.keysPressed['ArrowRight'] = true;
+            });
+            
+            rightButton.addEventListener('touchend', (e) => {
+              e.preventDefault();
+              delete this.keysPressed['ArrowRight'];
+            });
+            
+            // Jump button
+            jumpButton.addEventListener('touchstart', (e) => {
+              e.preventDefault();
+              this.keysPressed['ArrowUp'] = true;
+              
+              // Don't immediately remove the key to allow jump detection
+              setTimeout(() => {
+                delete this.keysPressed['ArrowUp'];
+              }, 200);
+            });
+            
+            console.log("Touch controls initialized");
+          }
+        
+          handleKeyDown(event) {
+            // Prevent default action for space and arrow keys to avoid page scrolling
+            if (event.key === ' ' || 
+                event.key === 'ArrowUp' || 
+                event.key === 'ArrowDown' || 
+                event.key === 'ArrowLeft' || 
+                event.key === 'ArrowRight') {
+              event.preventDefault();
+            }
+            
+            this.keysPressed[event.key] = true;
+            debug("Key pressed:", event.key);
+          }
+        
+          handleKeyUp(event) {
+            delete this.keysPressed[event.key];
+            debug("Key released:", event.key);
+          }
         }
-      }
-    
-      startPerformanceMonitoring() {
-        console.log('Performance monitoring initiated.');
-      }
-    }
-    
-    class InputHandler {
-      constructor(game) {
-        this.game = game;
-        this.keys = new Set();
-        this.gamepadIndex = null;
-      }
-    
-      setupEventListeners() {
-        window.addEventListener('keydown', (e) => this.keys.add(e.key));
-        window.addEventListener('keyup', (e) => this.keys.delete(e.key));
-        window.addEventListener('gamepadconnected', (e) => this.handleGamepad(e));
-      }
-    
-      update(delta) {
-        this.pollGamepadInputs();
-      }
-    
-      unsubscribeAll() {
-        window.removeEventListener('keydown', this.keys);
-        window.removeEventListener('keyup', this.keys);
-      }
-    
-      handleGamepad(event) {
-        this.gamepadIndex = event.gamepad.index;
-      }
-    
-      pollGamepadInputs() {
-        const gamepad = navigator.getGamepads()[this.gamepadIndex];
-        if (!gamepad) return;
-      }
-    }
-    
-    class PhysicsEngine {
-      constructor() {}
-    
-      initialize() {
-        this.bodies = [];
-      }
-    
-      update(delta) {
-        for (const body of this.bodies) {
-          body.update(delta);
-        }
-      }
-    }
-    
-    class GameUI {
-      static render(context) {
-        context.save();
-        context.scale(Game.scaleFactor, Game.scaleFactor);
-        GameUI.renderScore(context);
-        context.restore();
-      }
-    
-      static renderScore(context) {
-        context.fillStyle = '#fff';
-        context.font = '20px Arial';
-        context.fillText('Score: 0', 10, 20);
-      }
-    }
-    
-    function logPerformanceMetrics() {
-      console.log('Logging performance metrics...');
-    }
-    
-    requestAnimationFrame(logPerformanceMetrics);
-    
-    // Main GameLogic Class with integrated extensions
-    class GameLogic {
-      constructor() {
-        this.score = 0;
-        this.levelData = {};
-        this.physicsConfig = {};
-    
-        this.initializePhysics();
-      }
-    
-      initializePhysics() {
-        this.physicsConfig.gravity = 9.8;
-        this.physicsConfig.friction = 0.1;
-      }
-    
-      update(delta) {
-        this.processPhysics(delta);
-        this.applyRules();
-        this.checkVictoryConditions();
-      }
-    
-      processPhysics(delta) {
-        this.handleMovements(delta);
-        this.checkCollisions();
-      }
-    
-      handleMovements(delta) {
-        // Placeholder for movement logic
-      }
-    
-      checkCollisions() {
-        // Placeholder for collision detection logic
-      }
-    
-      applyRules() {
-        // Placeholder for rule application logic
-      }
-    
-      evaluateConditions() {
-        // Placeholder for condition evaluation logic
-      }
-    }
-    
-    const PHYSICS_CONSTANTS = {
-      TERMINAL_VELOCITY: 53,
-      JUMP_STRENGTH: 10,
-    };
-    
-    // Documentation:
-    // This game_engine.js provides both Game and GameLogic classes, encapsulating all functionalities of the core game engine.
-    // This file is designed for standalone use, meaning it can be included directly within an HTML page without dependencies.
-    // The Game class focuses on the game's core loop, rendering, and input handling. 
-    // GameLogic class is dedicated to managing physics interactions and game rules.
-    // This setup ensures a comprehensive engine implementation while maintaining backward compatibility with earlier versions.
-    // Fallback mechanisms include key unsubscribing if certain features are unavailable (e.g., gamepads).
-    
-    // To integrate with an HTML5 game using this engine, include it before calling any Game or GameLogic methods.
-    // Ensure a canvas element exists in the DOM for rendering, as the canvas element is heavily relied upon for drawing.
-    
-    
-                    // Default Entity logic extensions
-                    createEntities() {
-                        console.log("Creating entities with fallback implementation");
-                        this.enemies = [];
-                        
-                        // Create a basic enemy
-                        this.enemies.push({
-                            x: 400,
-                            y: 300,
-                            width: 32,
-                            height: 32,
-                            speed: 2,
-                            direction: 1
-                        });
-                        
-                        // Add enemies to game objects
-                        this.gameObjects = [...this.gameObjects, ...this.enemies];
-                    }
-                    
-                    updateEntities(deltaTime) {
-                        // Basic enemy movement
-                        for (let enemy of this.enemies) {
-                            enemy.x += enemy.speed * enemy.direction;
-                            
-                            // Simple boundary check
-                            if (enemy.x <= 0 || enemy.x >= 800 - enemy.width) {
-                                enemy.direction *= -1;
-                            }
-                            
-                            // Simple collision with player
-                            if (this.checkCollision(this.player, enemy)) {
-                                console.log("Player hit enemy!");
-                            }
-                        }
-                    }
-                    
-                    checkCollision(objA, objB) {
-                        return objA.x < objB.x + objB.width &&
-                               objA.x + objA.width > objB.x &&
-                               objA.y < objB.y + objB.height &&
-                               objA.y + objA.height > objB.y;
-                    }
-                    
-    
-    // game_levels.js - Standalone Level System for Backward Compatibility
-    
-    // Standalone Game class modified to handle levels and integrate with templates as necessary
-    class Game {
-      constructor() {
-        this.currentState = null;
-        this.gameObjects = [];
-        this.currentLevel = 0; // Track the current level
-        this.levelManager = new LevelManager(this); // Initialize levelManager
-      }
-    
-      // Initialize game and load initial level data
-      init() {
-        console.log("Initializing game...");
-        this.levelManager.loadLevelData(this.currentLevel);
-        // Placeholder for other initialization logic
-      }
-    
-      // Update game logic including level progression
-      update() {
-        // Placeholder for existing update logic
-        this.levelManager.adjustDifficulty();
-        this.levelManager.checkLevelProgress();
-      }
-    }
-    
-    // LevelManager class to handle level-specific logic independently
-    class LevelManager {
-      constructor(game) {
-        this.game = game;
-        this.currentLevelData = null;
-      }
-    
-      // Load data for the specific level
-      loadLevelData(levelNumber) {
-        console.log(`Loading level ${levelNumber} data...`);
-        this.currentLevelData = {
-          levelNumber: levelNumber,
-          layout: [],
-          difficulty: 1, // Initial difficulty level
-          // Add additional level-specific data as needed
-        };
-      }
-    
-      // Check if the player can advance to the next level
-      checkLevelProgress() {
-        if (this.isLevelComplete()) {
-          this.advanceToNextLevel();
-        }
-      }
-    
-      // Adjust the level's difficulty based on player performance
-      adjustDifficulty() {
-        const performanceMetrics = this.calculatePerformanceMetrics();
-        if (performanceMetrics > 0.7) { // Arbitrary threshold
-          this.currentLevelData.difficulty++;
-        } else if (performanceMetrics < 0.3) {
-          this.currentLevelData.difficulty = Math.max(1, this.currentLevelData.difficulty - 1);
-        }
-        console.log(`Adjusted difficulty to ${this.currentLevelData.difficulty}`);
-      }
-    
-      // Placeholder for player performance calculation
-      calculatePerformanceMetrics() {
-        return Math.random(); // Use actual performance logic here
-      }
-    
-      // Determine if the level is complete
-      isLevelComplete() {
-        // Logic to decide if the current level is complete
-        return false;
-      }
-    
-      // Handle transition to the next level
-      advanceToNextLevel() {
-        console.log("Advancing to the next level...");
-        this.game.currentLevel++;
-        this.loadLevelData(this.game.currentLevel);
-      }
-    }
-    
-    // Extend GameLogic to incorporate level-specific rules and difficulty modifications
-    class GameLogic {
-      constructor() {
-        this.levelData = null;
-        this.score = 0;
-      }
-    
-      // Apply game rules and include difficulty scaling
-      applyGameRules() {
-        console.log("Applying game rules...");
-        this.applyLevelSpecificRules();
-      }
-    
-      // Implement level-specific rules using this method
-      applyLevelSpecificRules() {
-        if (this.levelData) {
-          // Implement rules affected by difficulty level
-        }
-      }
-    
-      // Handle game input and check for level completion conditions
-      processInput() {
-        // Placeholder for existing input processing logic
-        this.checkLevelCompletionCondition();
-      }
-    
-      // Check whether the level's completion condition is met
-      checkLevelCompletionCondition() {
-        // Implement logic based on player's progress
-      }
-    
-      // Load level data into game logic from level manager
-      loadLevelData(levelNumber) {
-        this.levelData = {}; // Simulated data loading
-      }
-    }
-    
-    // Serialization interfaces for level data
-    function serializeLevelData(levelData) {
-      return JSON.stringify(levelData);
-    }
-    
-    function deserializeLevelData(serializedData) {
-      return JSON.parse(serializedData);
-    }
-    
-    /**
-     * Documentation:
-     * 
-     * - This standalone 'game_levels.js' file combines the modular level system with the primary game class for backward compatibility.
-     * - The LevelManager class handles level data loading, difficulty adjustment, and progression checks.
-     * - The GameLogic class has been extended to incorporate level-specific rules that scale with difficulty.
-     * - The `serializeLevelData` and `deserializeLevelData` functions provide mechanisms for saving/loading level data.
-     * 
-     * Usage:
-     * - Include this file directly in your HTML page to add level functionality to a basic game template.
-     * - This file is designed to work in conjunction with the game's template by seamlessly integrating level management and logic.
-     * - For complete integration with an advanced template system, additional tie-ins with the game state's initialization and update flows are needed.
-     * 
-     * Note: This file emulates the integration approach used in template systems but operates independently to ensure backward compatibility and standalone operation.
-     */
-    
-    
-    // GAME_LOGIC_INSERTION_MARKER - DO NOT REMOVE
-    
-        }
+        
         class Game {
           constructor() {
             this.ui = new GameUI();
             this.logic = new GameLogic();
+            this.input = new InputController();
             this.lastFrameTime = 0;
-            this.updateInterval = 1000 / 60;
+            this.updateInterval = 1000 / 60; // 60 FPS
             this.done = false;
 			this.isPaused = false;
 			this.animationFrameId = null;
+            this.debug = true;
+            
+            // Set up game canvas
+            this.canvas = document.createElement('canvas');
+            this.canvas.width = 800;
+            this.canvas.height = 600;
+            this.canvas.id = 'gameCanvas';
+            this.canvas.style.border = '2px solid #fff';
+            this.ctx = this.canvas.getContext('2d');
+            
+            // Make canvas accessible to GameLogic for rendering
+            this.logic.ctx = this.ctx;
+            
+            debug("Game initialized");
           }
+          
           prepareGame() {
-            const gameContainer = document.getElementById('game-screen');
-            // Prepare game container DOM elements here;
-    // GAME_CLASS EXTENSIONS
-    // game_engine.js
-    // Combines Game class and GameLogic class with extensions and wrappers for standalone functionality.
-    // Requires HTML5 canvas integration and works independently with fallback functionality for key features.
-    
-    // Main Game Class with integrated extensions
-    class Game {
-      constructor() {
-        this.state = {};
-        this.settings = {};
-        this.inputHandler = new InputHandler(this);
-        this.physicsEngine = new PhysicsEngine();
-        this.layers = {};
-        this.screenResolution = { width: 800, height: 600 };
-        this.scaleFactor = 1;
-    
-        this.initializeLayers();
-      }
-    
-      initialize() {
-        this.setupPhysics();
-        this.inputHandler.setupEventListeners();
-        this.startPerformanceMonitoring();
-      }
-    
-      setupPhysics() {
-        this.physicsEngine.initialize();
-      }
-    
-      initializeLayers() {
-        this.layers.background = this.createLayer();
-        this.layers.gameplay = this.createLayer();
-        this.layers.ui = this.createLayer();
-      }
-    
-      createLayer() {
-        const canvas = document.createElement('canvas');
-        canvas.width = this.screenResolution.width;
-        canvas.height = this.screenResolution.height;
-        return {
-          context: canvas.getContext('2d'),
-          canvas: canvas
-        };
-      }
-    
-      startGameLoop() {
-        let lastTimestamp = 0;
-    
-        const gameLoop = (currentTimestamp) => {
-          const delta = (currentTimestamp - lastTimestamp) / 1000; 
-          lastTimestamp = currentTimestamp;
-    
-          this.updateGame(delta);
-          this.render();
-    
-          requestAnimationFrame(gameLoop);
-        };
-    
-        requestAnimationFrame(gameLoop);
-      }
-    
-      updateGame(delta) {
-        this.inputHandler.update(delta);
-        this.physicsEngine.update(delta);
-        this.updateGameState(delta);
-      }
-    
-      stopGameLoop() {
-        this.inputHandler.unsubscribeAll();
-      }
-    
-      updateGameState(delta) {
-        // Placeholder for game-specific logic
-      }
-    
-      render() {
-        this.clearAllLayers();
-        this.renderBackground();
-        this.renderGameplay();
-        this.renderUI();
-        this.combineLayers();
-      }
-    
-      clearAllLayers() {
-        for (let key in this.layers) {
-          const { context } = this.layers[key];
-          context.clearRect(0, 0, this.screenResolution.width, this.screenResolution.height);
-        }
-      }
-    
-      renderBackground() {
-        this.layers.background.context.fillStyle = '#000';
-        this.layers.background.context.fillRect(0, 0, this.screenResolution.width, this.screenResolution.height);
-      }
-    
-      renderGameplay() {
-        // Placeholder for gameplay rendering logic
-      }
-    
-      renderUI() {
-        GameUI.render(this.layers.ui.context);
-      }
-    
-      combineLayers() {
-        const mainContext = document.querySelector('canvas').getContext('2d');
-        for (let key in this.layers) {
-          mainContext.drawImage(this.layers[key].canvas, 0, 0);
-        }
-      }
-    
-      startPerformanceMonitoring() {
-        console.log('Performance monitoring initiated.');
-      }
-    }
-    
-    class InputHandler {
-      constructor(game) {
-        this.game = game;
-        this.keys = new Set();
-        this.gamepadIndex = null;
-      }
-    
-      setupEventListeners() {
-        window.addEventListener('keydown', (e) => this.keys.add(e.key));
-        window.addEventListener('keyup', (e) => this.keys.delete(e.key));
-        window.addEventListener('gamepadconnected', (e) => this.handleGamepad(e));
-      }
-    
-      update(delta) {
-        this.pollGamepadInputs();
-      }
-    
-      unsubscribeAll() {
-        window.removeEventListener('keydown', this.keys);
-        window.removeEventListener('keyup', this.keys);
-      }
-    
-      handleGamepad(event) {
-        this.gamepadIndex = event.gamepad.index;
-      }
-    
-      pollGamepadInputs() {
-        const gamepad = navigator.getGamepads()[this.gamepadIndex];
-        if (!gamepad) return;
-      }
-    }
-    
-    class PhysicsEngine {
-      constructor() {}
-    
-      initialize() {
-        this.bodies = [];
-      }
-    
-      update(delta) {
-        for (const body of this.bodies) {
-          body.update(delta);
-        }
-      }
-    }
-    
-    class GameUI {
-      static render(context) {
-        context.save();
-        context.scale(Game.scaleFactor, Game.scaleFactor);
-        GameUI.renderScore(context);
-        context.restore();
-      }
-    
-      static renderScore(context) {
-        context.fillStyle = '#fff';
-        context.font = '20px Arial';
-        context.fillText('Score: 0', 10, 20);
-      }
-    }
-    
-    function logPerformanceMetrics() {
-      console.log('Logging performance metrics...');
-    }
-    
-    requestAnimationFrame(logPerformanceMetrics);
-    
-    // Main GameLogic Class with integrated extensions
-    class GameLogic {
-      constructor() {
-        this.score = 0;
-        this.levelData = {};
-        this.physicsConfig = {};
-    
-        this.initializePhysics();
-      }
-    
-      initializePhysics() {
-        this.physicsConfig.gravity = 9.8;
-        this.physicsConfig.friction = 0.1;
-      }
-    
-      update(delta) {
-        this.processPhysics(delta);
-        this.applyRules();
-        this.checkVictoryConditions();
-      }
-    
-      processPhysics(delta) {
-        this.handleMovements(delta);
-        this.checkCollisions();
-      }
-    
-      handleMovements(delta) {
-        // Placeholder for movement logic
-      }
-    
-      checkCollisions() {
-        // Placeholder for collision detection logic
-      }
-    
-      applyRules() {
-        // Placeholder for rule application logic
-      }
-    
-      evaluateConditions() {
-        // Placeholder for condition evaluation logic
-      }
-    }
-    
-    const PHYSICS_CONSTANTS = {
-      TERMINAL_VELOCITY: 53,
-      JUMP_STRENGTH: 10,
-    };
-    
-    // Documentation:
-    // This game_engine.js provides both Game and GameLogic classes, encapsulating all functionalities of the core game engine.
-    // This file is designed for standalone use, meaning it can be included directly within an HTML page without dependencies.
-    // The Game class focuses on the game's core loop, rendering, and input handling. 
-    // GameLogic class is dedicated to managing physics interactions and game rules.
-    // This setup ensures a comprehensive engine implementation while maintaining backward compatibility with earlier versions.
-    // Fallback mechanisms include key unsubscribing if certain features are unavailable (e.g., gamepads).
-    
-    // To integrate with an HTML5 game using this engine, include it before calling any Game or GameLogic methods.
-    // Ensure a canvas element exists in the DOM for rendering, as the canvas element is heavily relied upon for drawing.
-    
-    
-                    // Default Level class extensions
-                    initializeLevels() {
-                        console.log("Initializing levels with fallback implementation");
-                        this.levels = [1, 2, 3];
-                        this.currentLevel = 1;
-                        this.loadLevel(this.currentLevel);
-                    }
-                    
-                    nextLevel() {
-                        if (this.currentLevel < this.levels.length) {
-                            this.currentLevel++;
-                            this.loadLevel(this.currentLevel);
-                            return true;
-                        }
-                        return false;
-                    }
-                    
-                    resetLevel() {
-                        this.loadLevel(this.currentLevel);
-                    }
-                    
-    
-    
-    // GAME_CLASS_INSERTION_MARKER - DO NOT REMOVE
-                
-            // Connect DOM element to game logic or game ui accordingly;
+            const gameContainer = document.getElementById('game-container');
+            
+            // Clear any existing content
+            gameContainer.innerHTML = '';
+            
+            // Add parallax background layers
+            for (let i = 1; i <= 3; i++) {
+                const bgLayer = document.createElement('div');
+                bgLayer.className = `parallax-bg bg-layer-${i}`;
+                bgLayer.style.transform = `translateX(0px)`;
+                gameContainer.appendChild(bgLayer);
+            }
+            
+            // Add the canvas to the game container
+            gameContainer.appendChild(this.canvas);
+            
+            // Initialize input controller
+            this.input.init();
+            
+            // Set up UI with game state
+            this.updateUIState();
+            
+            // Connect DOM elements
             this.assignButtons();
+            
+            if (this.debug) console.log("Game prepared, canvas added to container");
           }
+          
           startGame() {
             this.ui.startGame();
-            // Start game logic here;
             
-            // this.updateInterval = /* Your desired update interval */;
+            // Reset game state
+            this.logic = new GameLogic();
             
-			if(this.animationFrameId)
-			{
-				cancelAnimationFrame(this.animationFrameId);
-			}
-			this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
+            // Update UI state
+            this.updateUIState();
+            
+            // Enable sounds for mobile
+            this.enableSounds();
+            
+            // Start game loop
+            if(this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+            }
+            this.lastFrameTime = performance.now();
+            this.isPaused = false;
+            this.done = false;
+            this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
+            
+            if (this.debug) console.log("Game started");
           }
+          
+          updateUIState() {
+            // Update UI with game state
+            this.ui.score = this.logic.player.score;
+            this.ui.health = this.logic.player.health;
+            this.ui.currentLevel = this.logic.currentLevel;
+            this.ui.updateHUD();
+          }
+          
           updateGame() {
-            // Update game logic here;
+            // Process input
+            this.logic.handleInput(this.input);
+            
+            // Update game state
+            this.logic.update(this.updateInterval);
+            
+            // Update parallax background
+            this.updateParallaxBackground();
+            
+            // Update UI
+            this.updateUIState();
+            
+            // Check game conditions
+            if (this.logic.player.health <= 0) {
+                if (this.debug) console.log("Game over - health depleted");
+                this.ui.endGame();
+                this.resetGame();
+            }
+            
+            // Check level completion
+            if (this.logic.collectibles.length === 0) {
+                const levelCompleteSound = document.getElementById('level-complete-sound');
+                if (levelCompleteSound) {
+                    levelCompleteSound.currentTime = 0;
+                    levelCompleteSound.play().catch(e => console.log("Level complete sound error:", e));
+                }
+                
+                if (!this.logic.nextLevel()) {
+                    // Game completed
+                    if (this.debug) console.log("Game completed - all levels finished");
+                    this.ui.endGame();
+                    this.resetGame();
+                } else {
+                    if (this.debug) console.log("Level complete, advancing to level", this.logic.currentLevel);
+                    this.ui.showMessage(`Level ${this.logic.currentLevel} Complete!`, 2000);
+                    this.updateUIState();
+                }
+            }
+            
+            // Render game
+            this.render();
           }
+          
+          updateParallaxBackground() {
+              // Get reference to background layers
+              const layers = document.querySelectorAll('.parallax-bg');
+              if (!layers.length) return;
+              
+              // Calculate movement based on player velocity and position
+              // Different speeds for different layers create the parallax effect
+              const speeds = [0.2, 0.4, 0.6];
+              
+              // Get player direction and speed
+              const playerDirection = this.logic.player.direction;
+              const isMoving = this.logic.player.state === 'running';
+              
+              if (isMoving) {
+                  layers.forEach((layer, index) => {
+                      // Get current position
+                      const currentTransform = layer.style.transform;
+                      const currentX = parseInt(currentTransform.replace(/translateX\((.*)px\)/, '$1')) || 0;
+                      
+                      // Calculate new position
+                      let newX = currentX - (playerDirection * speeds[index]);
+                      
+                      // Update position
+                      layer.style.transform = `translateX(${newX}px)`;
+                  });
+              }
+          }
+          
+          render() {
+            // Clear canvas
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            
+            // Draw background
+            this.ctx.fillStyle = '#0f3460';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            
+            // Draw ground
+            this.ctx.fillStyle = '#283c86';
+            this.ctx.fillRect(0, this.logic.groundLevel, this.canvas.width, this.canvas.height - this.logic.groundLevel);
+            
+            // Draw platforms
+            for (let platform of this.logic.platforms) {
+                this.ctx.fillStyle = '#426dbe';
+                this.ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                
+                // Add platform details - top edge highlight
+                this.ctx.fillStyle = '#5a8ee8';
+                this.ctx.fillRect(platform.x, platform.y, platform.width, 4);
+            }
+            
+            // Draw player with animation
+            this.drawPlayer();
+            
+            // Draw enemies
+            this.drawEnemies();
+            
+            // Draw collectibles with animation
+            for (let collectible of this.logic.collectibles) {
+                this.ctx.fillStyle = '#ffcc00';
+                this.ctx.beginPath();
+                // Apply floating animation
+                let yOffset = Math.sin(Date.now() / 500) * 5;
+                this.ctx.arc(collectible.x + collectible.width/2, collectible.y + collectible.height/2 + yOffset, collectible.width/2, 0, Math.PI*2);
+                this.ctx.fill();
+                
+                // Add glow effect
+                this.ctx.shadowColor = 'rgba(255, 204, 0, 0.5)';
+                this.ctx.shadowBlur = 10;
+                this.ctx.shadowOffsetX = 0;
+                this.ctx.shadowOffsetY = 0;
+                this.ctx.fill();
+                this.ctx.shadowBlur = 0;
+            }
+            
+            // Draw powerups
+            this.drawPowerups();
+            
+            // Draw particles
+            this.drawParticles();
+            
+            // Draw active powerup indicators
+            this.drawPowerupIndicators();
+            
+            // Draw level info
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.font = '20px Arial';
+            this.ctx.fillText(`Level ${this.logic.currentLevel}`, 10, 30);
+          }
+          
+          drawPlayer() {
+              const player = this.logic.player;
+              
+              // Choose the right sprite based on player state
+              let imageSrc;
+              if (player.state === 'idle') {
+                  imageSrc = 'assets/images/student_idle_male.png';
+              } else if (player.state === 'running') {
+                  imageSrc = 'assets/images/student_running.png';
+              } else if (player.state === 'jumping') {
+                  imageSrc = 'assets/images/student_jumping.png';
+              }
+              
+              // Check if image is loaded
+              if (!this.playerImages) {
+                  this.playerImages = {
+                      idle: new Image(),
+                      running: new Image(),
+                      jumping: new Image()
+                  };
+                  
+                  this.playerImages.idle.src = 'assets/images/student_idle_male.png';
+                  this.playerImages.running.src = 'assets/images/student_running.png';
+                  this.playerImages.jumping.src = 'assets/images/student_jumping.png';
+                  
+                  // Draw a placeholder rectangle while images load
+                  this.ctx.fillStyle = '#45a247';
+                  this.ctx.fillRect(player.x, player.y, player.width, player.height);
+                  return;
+              }
+              
+              // Draw the correct image based on state
+              const image = player.state === 'idle' ? this.playerImages.idle : 
+                           player.state === 'running' ? this.playerImages.running : 
+                           this.playerImages.jumping;
+                           
+              // Check if image is loaded
+              if (!image.complete) {
+                  // Draw a placeholder rectangle while images load
+                  this.ctx.fillStyle = '#45a247';
+                  this.ctx.fillRect(player.x, player.y, player.width, player.height);
+                  return;
+              }
+              
+              // Apply direction
+              this.ctx.save();
+              if (player.direction === -1) {
+                  // Flip horizontally for left direction
+                  this.ctx.translate(player.x + player.width, player.y);
+                  this.ctx.scale(-1, 1);
+                  this.ctx.drawImage(image, 0, 0, player.width, player.height);
+              } else {
+                  this.ctx.drawImage(image, player.x, player.y, player.width, player.height);
+              }
+              this.ctx.restore();
+          }
+          
+          drawEnemies() {
+              for (let enemy of this.logic.enemies) {
+                  if (enemy.type === 'advanced' && !this.bossImage) {
+                      // Load boss image if not loaded
+                      this.bossImage = new Image();
+                      this.bossImage.src = 'assets/images/technical_interview_boss.png';
+                  }
+                  
+                  // Different appearance based on enemy type
+                  if (enemy.type === 'basic') {
+                      this.ctx.fillStyle = '#e94560';
+                      
+                      // Draw enemy body
+                      this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                      
+                      // Add eyes
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.fillRect(enemy.x + 5, enemy.y + 8, 6, 6);
+                      this.ctx.fillRect(enemy.x + enemy.width - 11, enemy.y + 8, 6, 6);
+                      
+                      // Draw angry eyebrows
+                      this.ctx.fillStyle = '#000000';
+                      this.ctx.fillRect(enemy.x + 3, enemy.y + 5, 8, 2);
+                      this.ctx.fillRect(enemy.x + enemy.width - 11, enemy.y + 5, 8, 2);
+                      
+                      // Straight angry mouth
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.fillRect(enemy.x + 8, enemy.y + 20, 16, 2);
+                      
+                  } else if (enemy.type === 'advanced') {
+                      // Draw the boss image if loaded
+                      if (this.bossImage && this.bossImage.complete) {
+                          // Apply direction
+                          this.ctx.save();
+                          if (enemy.direction === -1) {
+                              // Flip horizontally for left direction
+                              this.ctx.translate(enemy.x + enemy.width, enemy.y);
+                              this.ctx.scale(-1, 1);
+                              this.ctx.drawImage(this.bossImage, 0, 0, enemy.width, enemy.height);
+                          } else {
+                              this.ctx.drawImage(this.bossImage, enemy.x, enemy.y, enemy.width, enemy.height);
+                          }
+                          this.ctx.restore();
+                      } else {
+                          // Fallback to rectangle
+                          this.ctx.fillStyle = '#9c2542'; // Darker red for advanced enemies
+                          this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                      }
+                  } else if (enemy.type === 'flying') {
+                      // Flying enemy - draw as a triangle/bat shape with wings
+                      this.ctx.fillStyle = '#7851a9'; // Purple for flying enemies
+                      
+                      // Body - central triangle
+                      this.ctx.beginPath();
+                      this.ctx.moveTo(enemy.x + enemy.width/2, enemy.y);
+                      this.ctx.lineTo(enemy.x, enemy.y + enemy.height);
+                      this.ctx.lineTo(enemy.x + enemy.width, enemy.y + enemy.height);
+                      this.ctx.closePath();
+                      this.ctx.fill();
+                      
+                      // Wings - flapping based on animation frame
+                      this.ctx.fillStyle = '#9768d1';
+                      const wingSpread = 7 + (enemy.animationFrame % 2) * 5; // Wings flap
+                      
+                      // Left wing
+                      this.ctx.beginPath();
+                      this.ctx.moveTo(enemy.x + enemy.width/2, enemy.y + enemy.height/3);
+                      this.ctx.lineTo(enemy.x - wingSpread, enemy.y + enemy.height/2);
+                      this.ctx.lineTo(enemy.x + 5, enemy.y + enemy.height * 2/3);
+                      this.ctx.closePath();
+                      this.ctx.fill();
+                      
+                      // Right wing
+                      this.ctx.beginPath();
+                      this.ctx.moveTo(enemy.x + enemy.width/2, enemy.y + enemy.height/3);
+                      this.ctx.lineTo(enemy.x + enemy.width + wingSpread, enemy.y + enemy.height/2);
+                      this.ctx.lineTo(enemy.x + enemy.width - 5, enemy.y + enemy.height * 2/3);
+                      this.ctx.closePath();
+                      this.ctx.fill();
+                      
+                      // Eyes - glowing
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.beginPath();
+                      this.ctx.arc(enemy.x + enemy.width/2 - 5, enemy.y + enemy.height/3, 3, 0, Math.PI*2);
+                      this.ctx.fill();
+                      this.ctx.beginPath();
+                      this.ctx.arc(enemy.x + enemy.width/2 + 5, enemy.y + enemy.height/3, 3, 0, Math.PI*2);
+                      this.ctx.fill();
+                      
+                      // Create a glowing effect
+                      if (Math.random() < 0.05) {
+                          this.logic.createParticles(
+                              enemy.x + enemy.width/2, 
+                              enemy.y + enemy.height,
+                              1,
+                              '#9768d1',
+                              1
+                          );
+                      }
+                  }
+                  
+                  // Direction indicator - only for basic enemies
+                  if (enemy.type === 'basic') {
+                      this.ctx.fillStyle = '#e94560';
+                      if (enemy.direction > 0) {
+                          // Facing right
+                          this.ctx.fillRect(enemy.x + enemy.width - 4, enemy.y + 12, 4, 8);
+                      } else {
+                          // Facing left
+                          this.ctx.fillRect(enemy.x, enemy.y + 12, 4, 8);
+                      }
+                  }
+              }
+          }
+          
+          drawPowerups() {
+              for (let powerup of this.logic.powerups) {
+                  // Different color/shape based on powerup type
+                  if (powerup.type === 'health') {
+                      // Health powerup - red cross
+                      this.ctx.fillStyle = '#ff5555';
+                      this.ctx.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
+                      
+                      // Draw white cross
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.fillRect(powerup.x + 10, powerup.y + 5, 5, 15);
+                      this.ctx.fillRect(powerup.x + 5, powerup.y + 10, 15, 5);
+                  } else if (powerup.type === 'speed') {
+                      // Speed powerup - blue lightning bolt
+                      this.ctx.fillStyle = '#5555ff';
+                      this.ctx.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
+                      
+                      // Draw lightning shape
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.beginPath();
+                      this.ctx.moveTo(powerup.x + 15, powerup.y + 5);
+                      this.ctx.lineTo(powerup.x + 8, powerup.y + 13);
+                      this.ctx.lineTo(powerup.x + 12, powerup.y + 13);
+                      this.ctx.lineTo(powerup.x + 10, powerup.y + 20);
+                      this.ctx.lineTo(powerup.x + 17, powerup.y + 12);
+                      this.ctx.lineTo(powerup.x + 13, powerup.y + 12);
+                      this.ctx.lineTo(powerup.x + 15, powerup.y + 5);
+                      this.ctx.fill();
+                  } else if (powerup.type === 'jump') {
+                      // Jump powerup - green spring
+                      this.ctx.fillStyle = '#55ff55';
+                      this.ctx.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
+                      
+                      // Draw spring icon
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.fillRect(powerup.x + 8, powerup.y + 5, 9, 3);
+                      this.ctx.fillRect(powerup.x + 8, powerup.y + 11, 9, 3);
+                      this.ctx.fillRect(powerup.x + 8, powerup.y + 17, 9, 3);
+                  }
+                  
+                  // Add floating animation
+                  const floatOffset = Math.sin(Date.now() / 400) * 5;
+                  powerup.y += floatOffset - powerup.lastFloatOffset || 0;
+                  powerup.lastFloatOffset = floatOffset;
+              }
+          }
+          
+          drawPowerupIndicators() {
+              // Draw indicators for active powerups
+              if (this.logic.player.powerups.length > 0) {
+                  // Position at top right
+                  let startX = this.canvas.width - 40;
+                  const startY = 50;
+                  
+                  this.ctx.font = '12px Arial';
+                  
+                  for (let powerup of this.logic.player.powerups) {
+                      let color = '#ffffff';
+                      let label = '';
+                      
+                      if (powerup.type === 'speed') {
+                          color = '#5555ff';
+                          label = 'SPD';
+                      } else if (powerup.type === 'jump') {
+                          color = '#55ff55';
+                          label = 'JMP';
+                      }
+                      
+                      // Draw indicator
+                      this.ctx.fillStyle = color;
+                      this.ctx.fillRect(startX, startY, 30, 20);
+                      
+                      // Draw text
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.fillText(label, startX + 5, startY + 14);
+                      
+                      // Draw duration bar
+                      const durationPercent = powerup.duration / (powerup.duration + 1);
+                      this.ctx.fillStyle = '#ffffff';
+                      this.ctx.fillRect(startX, startY + 22, 30 * durationPercent, 3);
+                      
+                      // Move to next position
+                      startX -= 40;
+                  }
+              }
+          }
+          
+          drawParticles() {
+              for (let particle of this.logic.particles) {
+                  this.ctx.fillStyle = particle.color;
+                  this.ctx.globalAlpha = particle.life / 50; // Fade out as life decreases
+                  this.ctx.beginPath();
+                  this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI*2);
+                  this.ctx.fill();
+              }
+              this.ctx.globalAlpha = 1.0; // Reset alpha
+          }
+          
           resetGame() {
-            // Reset game logic here;			
+            this.done = true;
 			this.isPaused = false;
+            if (this.animationFrameId) {
 			cancelAnimationFrame(this.animationFrameId);
+                this.animationFrameId = null;
           }
+          }
+          
 		  pause() {
 			this.isPaused = true;
+            if (this.animationFrameId) {
 			cancelAnimationFrame(this.animationFrameId);
+                this.animationFrameId = null;
 		  }
+          }
+          
 		  resume() {
+            if (this.isPaused) {
 			this.isPaused = false;
-			this.gameLoop();
+                this.lastFrameTime = performance.now();
+                this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
 		  }
+          }
+          
           gameLoop(timestamp) {
-            if (this.done) return;
-            const deltaTime = timestamp - this.lastFrameTime;
+            if (this.done || this.isPaused) return;
+            
+            // Calculate delta time, but cap it to prevent issues when tab is inactive
+            const deltaTime = Math.min(timestamp - this.lastFrameTime, 100);
+            
             if (deltaTime > this.updateInterval) {
               this.updateGame();
               this.lastFrameTime = timestamp;
             }
-            if(this.animationFrameId)
-			{
-				cancelAnimationFrame(this.animationFrameId);
-			}
+            
 			this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
           }
+          
           assignButtons() {
             const playButton = document.getElementById('play-button');
 			const settingsButton = document.getElementById('settings-button');
 			const instructionsButton = document.getElementById('instructions-button');
 			const playAgainButton = document.getElementById('play-again-button');
-			const mainMenuButtons = document.querySelectorAll('#game-over-main-menu-button, #settings-back-button, #instructions-back-button');
+            const settingsBackButton = document.getElementById('settings-back-button');
+            const instructionsBackButton = document.getElementById('instructions-back-button');
 			const gameMenuButton = document.getElementById('game-menu-button');
 			const gameRestartButton = document.getElementById('game-restart-button');
 			const gameInstructionsButton = document.getElementById('game-instructions-button');
+            const mainMenuButton = document.getElementById('main-menu-button');
 
 			playButton.addEventListener('click', this.startGame.bind(this));
+            
+            if (settingsButton) {
 			settingsButton.addEventListener('click', this.ui.settings.bind(this.ui));
+            }
+            
+            if (instructionsButton) {
 			instructionsButton.addEventListener('click', this.ui.instructions.bind(this.ui));
+            }
+            
+            if (playAgainButton) {
 			playAgainButton.addEventListener('click', this.startGame.bind(this));
-			mainMenuButtons.forEach(button => button.addEventListener('click', () => {
-				this.ui.mainMenu();
-			}));
-			gameMenuButton.addEventListener('click', () => {
-				this.ui.mainMenu();
-			});
+            }
+            
+            if (settingsBackButton) {
+                settingsBackButton.addEventListener('click', this.ui.mainMenu.bind(this.ui));
+            }
+            
+            if (instructionsBackButton) {
+                instructionsBackButton.addEventListener('click', this.ui.mainMenu.bind(this.ui));
+            }
+            
+            if (mainMenuButton) {
+                mainMenuButton.addEventListener('click', this.ui.mainMenu.bind(this.ui));
+            }
+            
+            if (gameMenuButton) {
+                gameMenuButton.addEventListener('click', this.ui.mainMenu.bind(this.ui));
+            }
+            
+            if (gameRestartButton) {
 			gameRestartButton.addEventListener('click', this.startGame.bind(this));
+            }
+            
+            if (gameInstructionsButton) {
 			gameInstructionsButton.addEventListener('click', () => {
 						this.pause();						
 						this.ui.swapToScreen(this.ui.instructionsScreen);
-						document.getElementById('instructions-back-button').addEventListener('click', () => {
+                    
+                    const handleBack = () => {
 							this.ui.swapToScreen(this.ui.gameContainer);
 							this.resume();
-						}, { once: true });
-					});
+                        instructionsBackButton.removeEventListener('click', handleBack);
+                    };
+                    
+                    instructionsBackButton.addEventListener('click', handleBack);
+                });
+            }
+          }
+          
+          enableSounds() {
+            // Function to enable audio playback on mobile devices
+            const enableAudio = () => {
+              const sounds = document.querySelectorAll('audio');
+              sounds.forEach(sound => {
+                sound.muted = false;
+                sound.load(); // Make sure audio is loaded
+                
+                // Try to play and immediately pause to enable audio
+                const playPromise = sound.play();
+                
+                if (playPromise !== undefined) {
+                  playPromise.then(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                    
+                    // If it's background music, keep it playing
+                    if (sound.id === 'background-music') {
+                      sound.volume = 0.3; // Lower background music volume
+                      sound.play().catch(e => console.error("Background music error:", e));
+                    }
+                  }).catch(e => console.error("Audio enable error:", e));
+                }
+              });
+              
+              // Remove the event listeners once used
+              document.removeEventListener('touchstart', enableAudio);
+              document.removeEventListener('click', enableAudio);
+            };
             
-			// Your button event listeners here
+            document.addEventListener('touchstart', enableAudio, { once: true });
+            document.addEventListener('click', enableAudio, { once: true });
           }
         }
+        
+        // Initialize the game
         const game = new Game();
         game.prepareGame();
+        
+        // Add global keyboard listener for game-wide controls
+        window.addEventListener('keydown', (e) => {
+          if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+            debug("Global jump key detected:", e.key);
+            
+            // Prevent default browser scrolling on space/arrow keys
+            e.preventDefault();
+            
+            // Manually add to keysPressed to ensure it's registered
+            game.input.keysPressed[e.key] = true;
+            
+            // Directly trigger jump if appropriate
+            if (!game.logic.player.isJumping && !game.logic.player.jumpCooldown) {
+              debug("Direct jump triggered from global handler");
+              game.logic.jump();
+            }
+          }
+          
+          // Debug key
+          if (e.key === 'F8') {
+            console.log("DEBUG STATE:", {
+              player: game.logic.player,
+              isJumping: game.logic.player.isJumping,
+              jumpCooldown: game.logic.player.jumpCooldown,
+              keysPressed: game.input.keysPressed
+            });
+          }
+        });
       });
     </script>
   </body>

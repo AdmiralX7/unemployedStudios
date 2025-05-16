@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, root_validator
 from typing import List, Dict, Optional, Union
 
 class GameplayMechanic(BaseModel):
@@ -93,11 +93,42 @@ class GameDesignDocument(BaseModel):
     game_systems: List[GameSystem] = Field(..., description="Core game systems/mechanics")
     levels: List[Dict[str, str]] = Field(..., description="Level descriptions and objectives")
     ui_design: List[UIElement] = Field(..., description="UI elements and their function")
-    controls: Dict[str, str] = Field(..., description="Control mappings and responsiveness")
-    audio_design: Dict[str, str] = Field(..., description="Music and sound effect specifications")
-    asset_requirements: Dict[str, List[str]] = Field(..., description="Required assets by category")
+    controls: Dict[str, Union[str, List[str]]] = Field(..., description="Control mappings and responsiveness")
+    audio_design: Union[Dict[str, str], str] = Field(..., description="Music and sound effect specifications")
+    asset_requirements: Union[Dict[str, List[str]], str] = Field(..., description="Required assets by category")
     technical_requirements: List[str] = Field(..., description="Technical requirements and constraints")
     development_roadmap: List[Milestone] = Field(..., description="Development milestones")
+    
+    @validator('controls', pre=True)
+    def validate_controls(cls, value):
+        """Convert controls to appropriate format"""
+        if isinstance(value, list):
+            # If agent returns a list instead of a dictionary, convert to a dictionary
+            # with a 'controls_list' key
+            return {"controls_list": value}
+        elif isinstance(value, str):
+            # If agent returns a string, convert to a simple dictionary
+            return {"description": value}
+        elif isinstance(value, dict) and 'types' in value and isinstance(value['types'], list):
+            # Convert list to string for types field
+            value['types'] = ', '.join(value['types'])
+        return value
+    
+    @validator('audio_design', pre=True)
+    def validate_audio_design(cls, value):
+        """Convert string audio_design to dictionary if needed"""
+        if isinstance(value, str):
+            # Convert string to simple dictionary
+            return {"description": value}
+        return value
+    
+    @validator('asset_requirements', pre=True)
+    def validate_asset_requirements(cls, value):
+        """Convert string asset_requirements to dictionary if needed"""
+        if isinstance(value, str):
+            # Convert string to simple dictionary with default list
+            return {"general": [value]}
+        return value
 
 class SystemComponent(BaseModel):
     """A component in the technical architecture"""
@@ -158,6 +189,24 @@ class StyleGuide(BaseModel):
     technical_constraints: List[str] = Field(..., description="Technical constraints for assets")
     style_references: List[str] = Field(..., description="Reference materials and inspirations")
     
+    @root_validator(pre=True)
+    def ensure_required_fields(cls, values):
+        """Ensure all required fields are present"""
+        # Provide defaults for commonly missing fields
+        if 'audio_style' not in values:
+            # Check if it's nested deeper in the data
+            if isinstance(values.get('audio_style', None), dict):
+                values['audio_style'] = values['audio_style']
+            else:
+                values['audio_style'] = {
+                    "background_music": "Energetic pixel art style music with chiptunes",
+                    "sound_effects": "Retro 8-bit sound effects for game actions",
+                    "voice_overs": "None or minimal"
+                }
+        
+        # Similar handling for other required fields if needed
+        return values
+    
     @validator('typography', pre=True)
     def validate_typography(cls, value):
         """Convert string typography to dictionary if needed"""
@@ -179,4 +228,21 @@ class StyleGuide(BaseModel):
                 result = {"default": value}
                 
             return result
+        return value
+        
+    @validator('audio_style', pre=True)
+    def validate_audio_style(cls, value):
+        """Handle various formats of audio_style data"""
+        # If audio_style was provided in another structure of the JSON
+        if isinstance(value, str):
+            return {"description": value}
+        
+        # If the field is missing, return a default
+        if value is None:
+            return {
+                "background_music": "Energetic pixel art style music with chiptunes",
+                "sound_effects": "Retro 8-bit sound effects for game actions",
+                "voice_overs": "None or minimal"
+            }
+        
         return value 

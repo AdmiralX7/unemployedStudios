@@ -5,7 +5,7 @@ research_task:
     the current year is {current_year}.
   expected_output: >
     A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+  agent: asset_specification_agent
 
 reporting_task:
   description: >
@@ -14,7 +14,7 @@ reporting_task:
   expected_output: >
     A fully fledged report with the main topics, each with a full section of information.
     Formatted as markdown without '```'
-  agent: reporting_analyst
+  agent: asset_specification_agent
 
 analyze_asset_requirements:
   description: >
@@ -55,11 +55,15 @@ specify_visual_assets:
     - The visual style description (pixel art with specific color scheme)
     - An importance level (1-5)
     - A clear description of the asset's purpose in the game
+    - The size MUST be one of: "1024x1024", "1792x1024", or "1024x1792" (standard is "1024x1024")
+    - The model MUST be one of: "gpt-image-1", "dall-e-2", or "dall-e-3" (recommended is "dall-e-3")
     
     Remember: you are ONLY creating the specifications, not generating the actual images.
+    IMPORTANT: The size and model fields MUST use one of the allowed values listed above or the validation will fail.
   expected_output: >
     A JSON array of ImageAssetSpec objects containing detailed specifications for all
     required visual assets in the game, structured according to the Pydantic model.
+    Each object MUST have valid size and model fields with values from the allowed options.
   agent: visual_asset_agent
 
 specify_ui_assets:
@@ -81,11 +85,15 @@ specify_ui_assets:
     - The visual style description matching the game's style
     - An importance level (1-5)
     - A clear description of the UI element's purpose and placement in the game
+    - The size MUST be one of: "1024x1024", "1792x1024", or "1024x1792" (standard is "1024x1024")
+    - The model MUST be one of: "gpt-image-1", "dall-e-2", or "dall-e-3" (recommended is "dall-e-3")
     
     Remember: you are ONLY creating the specifications, not generating the actual images.
+    IMPORTANT: The size and model fields MUST use one of the allowed values listed above or the validation will fail.
   expected_output: >
     A JSON array of ImageAssetSpec objects containing detailed specifications for all
     required UI assets in the game, structured according to the Pydantic model.
+    Each object MUST have valid size and model fields with values from the allowed options.
   agent: ui_asset_agent
 
 specify_audio_assets:
@@ -106,12 +114,17 @@ specify_audio_assets:
     - Specific search terms that would find an appropriate sound on Freesound
     - A clear description of the sound and its purpose in the game
     - An importance level (1-5)
-    - If applicable, a desired duration for the audio clip
+    - For the "duration" field, provide a numeric value in seconds (e.g., 0.5 for half a second, 120 for 2 minutes)
+    - Optionally, you can include a text description of the duration in the description field
+    
+    IMPORTANT: The duration field must be a numeric value in seconds, not a text string.
+    For example, use 0.5 for half a second, 120 for 2 minutes, etc.
     
     Remember: you are ONLY creating the specifications, not sourcing the actual audio files.
   expected_output: >
     A JSON array of AudioAssetSpec objects containing detailed specifications for all
     required audio assets in the game, structured according to the Pydantic model.
+    Each duration value MUST be a numeric value in seconds (or null if not applicable).
   agent: audio_asset_agent
 
 compile_asset_specifications:
@@ -127,10 +140,16 @@ compile_asset_specifications:
     5. Verify all specifications are complete and valid
     6. Organize assets by importance (ensure critical assets are prioritized)
     
+    CRITICAL VALIDATION:
+    - For all image assets, verify the "size" field is one of: "1024x1024", "1792x1024", or "1024x1792"
+    - For all image assets, verify the "model" field is one of: "gpt-image-1", "dall-e-2", or "dall-e-3"
+    - If any image asset has invalid values, correct them to "1024x1024" for size and "dall-e-3" for model
+    
     The resulting collection will be used by the main program to generate and download
     the actual assets for the game.
   expected_output: >
     A complete JSON representation of an AssetSpecCollection object containing arrays of
     both image_assets and audio_assets, following the Pydantic model structure. This collection
-    should represent all assets needed for the "Code Quest" game.
+    should represent all assets needed for the "Code Quest" game, with all image assets having
+    valid size and model values.
   agent: asset_specification_agent

@@ -2277,6 +2277,7 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
         print("Starting Asset Generation Phase")
         
         # Create output directories if they don't exist
+        os.makedirs("GameGenerationOutput", exist_ok=True)
         os.makedirs("GameGenerationOutput/assets/images", exist_ok=True)
         os.makedirs("GameGenerationOutput/assets/audio", exist_ok=True)
         
@@ -2435,6 +2436,20 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                     full_path = f"GameGenerationOutput/{img_spec.filename}"
                     os.makedirs(os.path.dirname(full_path), exist_ok=True)
                     
+                    # Ensure size is one of the allowed values
+                    size = getattr(img_spec, 'size', "1024x1024")
+                    allowed_sizes = ["1024x1024", "1792x1024", "1024x1792"]
+                    if size not in allowed_sizes:
+                        print(f"Warning: Invalid size '{size}' for {img_spec.asset_id}, defaulting to 1024x1024")
+                        size = "1024x1024"
+                    
+                    # Ensure model is one of the allowed values
+                    model = getattr(img_spec, 'model', "dall-e-3")
+                    allowed_models = ["gpt-image-1", "dall-e-2", "dall-e-3"]
+                    if model not in allowed_models:
+                        print(f"Warning: Invalid model '{model}' for {img_spec.asset_id}, defaulting to dall-e-3")
+                        model = "dall-e-3"
+                    
                     # Add retry logic
                     retry_count = 0
                     max_retries = 3
@@ -2445,8 +2460,8 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                             result = image_tool._run(
                                 prompt=img_spec.prompt,
                                 file_name=full_path,
-                                size=getattr(img_spec, 'size', "1024x1024"),
-                                model=getattr(img_spec, 'model', "dall-e-3")
+                                size=size,
+                                model=model
                             )
                             
                             # Check if file was actually created
@@ -2455,7 +2470,8 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                                 generated_images[img_spec.asset_id] = {
                                     "filename": img_spec.filename,
                                     "full_path": full_path,
-                                    "size": img_spec.size,
+                                    "size": size,
+                                    "model": model,
                                     "prompt": img_spec.prompt,
                                     "result": result
                                 }
@@ -2526,17 +2542,27 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                     os.makedirs(os.path.dirname(full_path), exist_ok=True)
                     
                     # Determine the search query - prioritize query field if available
-                    query = audio_spec.query or audio_spec.search_terms
-                    if not query:
-                        # Construct a more effective search query based on our testing
-                        if audio_spec.asset_type == "effect":
-                            query = f"game sound effect {audio_spec.asset_id} 8-bit"
-                        elif audio_spec.asset_type == "music":
-                            query = f"8-bit {audio_spec.asset_id} loop game music"
-                        else:
-                            query = f"game sound {audio_spec.asset_id} {audio_spec.asset_type}"
+                    query = audio_spec.query if hasattr(audio_spec, 'query') else audio_spec.search_terms
+                    
+                    # Improve query based on asset type for better search results
+                    if query and not "search term enhanced" in query:
+                        asset_type = audio_spec.asset_type.lower()
+                        if asset_type == "effect" and "sound effect" not in query.lower():
+                            query = f"{query}, sound effect"
+                        elif asset_type == "music" and "8-bit" not in query.lower():
+                            query = f"{query}, 8-bit"
+                        elif "game sound" not in query.lower():
+                            query = f"{query}, game sound"
+                        # Mark as enhanced
+                        query = f"{query} (search term enhanced)"
+                    
+                    # Prepare simplified query for fallback
+                    simplified_query = query.split(',')[0].strip()
+                    if len(simplified_query) > 3:
+                        simplified_query += " sound"
                     
                     print(f"Using search query: '{query}'")
+                    print(f"Fallback query if needed: '{simplified_query}'")
                     
                     # Add retry logic
                     retry_count = 0
@@ -2555,8 +2581,48 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                             result = audio_tool._run(
                                 query=query,
                                 output_path=full_path,
-                                **extra_params  # Pass any additional parameters
+                                **extra_params
                             )
+                            
+                            # If no results found, try with simplified query
+                            if isinstance(result, dict) and result.get('success') is False and "No results found" in result.get('message', ''):
+                                print(f"No results found with original query. Trying simplified query: '{simplified_query}'")
+                                result = audio_tool._run(
+                                    query=simplified_query,
+                                    output_path=full_path,
+                                    **extra_params
+                                )
+                                
+                                # If still no results, try a very basic search term
+                                if isinstance(result, dict) and result.get('success') is False and "No results found" in result.get('message', ''):
+                                    basic_term = ""
+                                    if "jump" in query.lower():
+                                        basic_term = "jump"
+                                    elif "collect" in query.lower() or "item" in query.lower():
+                                        basic_term = "collect"
+                                    elif "enemy" in query.lower() or "defeat" in query.lower():
+                                        basic_term = "hit"
+                                    elif "button" in query.lower() or "click" in query.lower():
+                                        basic_term = "click"
+                                    elif "menu" in query.lower() or "transition" in query.lower():
+                                        basic_term = "transition"
+                                    elif "university" in query.lower() or "ambient" in query.lower():
+                                        basic_term = "ambient"
+                                    elif "office" in query.lower() or "internship" in query.lower():
+                                        basic_term = "office"
+                                    elif "city" in query.lower() or "job" in query.lower():
+                                        basic_term = "city"
+                                    else:
+                                        basic_term = audio_spec.asset_type.lower()
+                                        
+                                    if basic_term:
+                                        very_basic_query = f"{basic_term} sound"
+                                        print(f"Still no results. Trying very basic query: '{very_basic_query}'")
+                                        result = audio_tool._run(
+                                            query=very_basic_query,
+                                            output_path=full_path,
+                                            **extra_params
+                                        )
                             
                             # Verify file was actually created
                             if os.path.exists(full_path) and os.path.getsize(full_path) > 0:
@@ -2572,24 +2638,16 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                                 print(f"File size: {os.path.getsize(full_path) / 1024:.2f} KB")
                                 success = True
                             else:
-                                # Check for "no results found" in the result
-                                if isinstance(result, dict) and result.get("message") == "No results found":
-                                    print(f"No audio results found for query: '{query}'")
-                                    # Try a more general query on retry
-                                    if retry_count < max_retries - 1:
-                                        if "8-bit" in query:
-                                            query = query.replace("8-bit", "").strip()
-                                        elif audio_spec.asset_type in query:
-                                            # Make query more general
-                                            query = f"game {audio_spec.asset_type} sound"
-                                        else:
-                                            query = "game sound effect"
-                                        print(f"Retrying with more general query: '{query}'")
-                                    else:
-                                        print("Exhausted all retry attempts with different queries")
-                                        break
-                                else:
-                                    raise Exception(f"Audio file was not created or is empty: {full_path}")
+                                # If we've tried all fallbacks and still failed
+                                if retry_count >= max_retries - 1:
+                                    print(f"Failed to download audio after multiple attempts with different queries")
+                                    break
+                                
+                                retry_count += 1
+                                wait_time = 2 * retry_count
+                                print(f"Audio file not created. Waiting {wait_time}s before retry {retry_count}/{max_retries}...")
+                                import time
+                                time.sleep(wait_time)
                             
                         except Exception as retry_error:
                             retry_count += 1
@@ -2602,20 +2660,6 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                                 print(f"Rate limit encountered. Waiting {wait_time}s before retry...")
                                 import time
                                 time.sleep(wait_time)
-                            elif "no results found" in error_str or "no sounds found" in error_str:
-                                # Try a more general query
-                                if retry_count < max_retries - 1:
-                                    if "8-bit" in query:
-                                        query = query.replace("8-bit", "").strip()
-                                    else:
-                                        # Make query more general
-                                        query = f"game sound {audio_spec.asset_type}"
-                                    print(f"No results found. Retrying with more general query: '{query}'")
-                                    import time
-                                    time.sleep(1)
-                                else:
-                                    print("Exhausted all retry attempts with different queries")
-                                    break
                             else:
                                 wait_time = 3 * retry_count
                                 print(f"Error downloading audio (attempt {retry_count}/{max_retries}): {str(retry_error)}")
@@ -2663,7 +2707,9 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 prompt="A computer science student character for a pixel art platformer game, wearing casual clothes with a laptop backpack",
                 style="minimalist pixel art",
                 importance=1,
-                description="The main player character for Code Quest"
+                description="The main player character for Code Quest",
+                size="1024x1024",
+                model="dall-e-3"
             ),
             ImageAssetSpec(
                 asset_id="syntax_error_enemy",
@@ -2672,7 +2718,9 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 prompt="A glitchy, error-like monster character in pixel art style with red highlights",
                 style="minimalist pixel art",
                 importance=1,
-                description="A standard enemy character representing syntax errors"
+                description="A standard enemy character representing syntax errors",
+                size="1024x1024",
+                model="dall-e-3"
             ),
             ImageAssetSpec(
                 asset_id="university_background",
@@ -2681,7 +2729,9 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 prompt="A pixel art university campus background with computer labs and classrooms",
                 style="minimalist pixel art",
                 importance=1,
-                description="The background for the University level"
+                description="The background for the University level",
+                size="1792x1024",
+                model="dall-e-3"
             ),
             ImageAssetSpec(
                 asset_id="code_collectible",
@@ -2690,7 +2740,9 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 prompt="A glowing pixel art code snippet or programming symbol that can be collected",
                 style="minimalist pixel art",
                 importance=2,
-                description="Collectible item representing code knowledge"
+                description="Collectible item representing code knowledge",
+                size="1024x1024",
+                model="dall-e-3"
             ),
             ImageAssetSpec(
                 asset_id="health_bar",
@@ -2699,7 +2751,9 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 prompt="A simple pixel art health/energy bar with a code or programming theme",
                 style="minimalist pixel art",
                 importance=1,
-                description="UI element showing player health/energy"
+                description="UI element showing player health/energy",
+                size="1024x1024",
+                model="dall-e-3"
             )
         ]
         
@@ -2717,7 +2771,7 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 asset_id="collect_code",
                 asset_type="effect",
                 filename="assets/audio/collect_code.mp3",
-                search_terms="game collect item sound positive 8-bit",
+                search_terms="game collect item sound effect positive 8-bit",
                 description="Sound effect when the player collects a code snippet",
                 importance=1
             ),

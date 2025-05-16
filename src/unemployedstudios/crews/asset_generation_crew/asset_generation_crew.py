@@ -188,6 +188,22 @@ class AssetGenerationCrew:
                         err_msg = f"Image asset '{asset.asset_id}' has invalid size: {asset.size}. Must be one of: {', '.join(allowed_sizes)}"
                         validation_results["errors"].append(err_msg)
                         validation_results["image_assets"]["invalid_count"] += 1
+                        
+                        # Auto-fix the size by setting it to 1024x1024
+                        print(f"Auto-fixing invalid size for {asset.asset_id} to 1024x1024")
+                        asset.size = "1024x1024"
+                        continue
+                    
+                    # Validate model name
+                    allowed_models = ["gpt-image-1", "dall-e-2", "dall-e-3"]
+                    if asset.model not in allowed_models:
+                        err_msg = f"Image asset '{asset.asset_id}' has invalid model: {asset.model}. Must be one of: {', '.join(allowed_models)}"
+                        validation_results["errors"].append(err_msg)
+                        validation_results["image_assets"]["invalid_count"] += 1
+                        
+                        # Auto-fix the model by setting it to dall-e-3
+                        print(f"Auto-fixing invalid model for {asset.asset_id} to dall-e-3")
+                        asset.model = "dall-e-3"
                         continue
                     
                     # Validate filename
@@ -222,6 +238,11 @@ class AssetGenerationCrew:
                         err_msg = f"Audio asset '{asset.asset_id}' missing both search_terms and query"
                         validation_results["errors"].append(err_msg)
                         validation_results["audio_assets"]["invalid_count"] += 1
+                        
+                        # Add fallback search terms
+                        fallback_terms = f"game sound {asset.asset_id} {asset.asset_type}"
+                        print(f"Auto-adding fallback search terms for {asset.asset_id}: {fallback_terms}")
+                        asset.search_terms = fallback_terms
                         continue
                     
                     # Validate filename
@@ -236,18 +257,42 @@ class AssetGenerationCrew:
                         validation_results["warnings"].append(
                             f"Audio asset '{asset.asset_id}' has short search string ({len(search_string)} chars) which may not return good results"
                         )
+                        
+                        # Add more descriptive search terms
+                        enhanced_terms = f"game sound {asset.asset_id} {asset.asset_type}"
+                        print(f"Auto-enhancing short search terms for {asset.asset_id}: {enhanced_terms}")
+                        asset.search_terms = enhanced_terms
                     
                     # Make search terms more effective based on our testing
-                    if search_string:
-                        # Suggest improvements to search terms based on what worked in testing
-                        if asset.asset_type == "music" and "8-bit" not in search_string.lower():
-                            validation_results["warnings"].append(
-                                f"Audio asset '{asset.asset_id}' may benefit from adding '8-bit' to search terms for better game music results"
-                            )
-                        elif asset.asset_type == "effect" and "sound effect" not in search_string.lower():
+                    if search_string and "search term enhanced" not in search_string:
+                        # Enhance search terms based on asset type
+                        asset_type = asset.asset_type.lower()
+                        if asset_type == "effect" and "sound effect" not in search_string.lower():
                             validation_results["warnings"].append(
                                 f"Audio asset '{asset.asset_id}' may benefit from adding 'sound effect' to search terms"
                             )
+                            # Auto-enhance the search terms
+                            enhanced_terms = f"{asset.search_terms}, sound effect (search term enhanced)"
+                            print(f"Auto-enhancing search terms for {asset.asset_id}: {enhanced_terms}")
+                            asset.search_terms = enhanced_terms
+                            
+                        elif asset_type == "music" and "8-bit" not in search_string.lower():
+                            validation_results["warnings"].append(
+                                f"Audio asset '{asset.asset_id}' may benefit from adding '8-bit' to search terms for better game music results"
+                            )
+                            # Auto-enhance the search terms
+                            enhanced_terms = f"{asset.search_terms}, 8-bit (search term enhanced)"
+                            print(f"Auto-enhancing search terms for {asset.asset_id}: {enhanced_terms}")
+                            asset.search_terms = enhanced_terms
+                            
+                        elif "game sound" not in search_string.lower():
+                            validation_results["warnings"].append(
+                                f"Audio asset '{asset.asset_id}' may benefit from adding 'game sound' to search terms"
+                            )
+                            # Auto-enhance the search terms
+                            enhanced_terms = f"{asset.search_terms}, game sound (search term enhanced)"
+                            print(f"Auto-enhancing search terms for {asset.asset_id}: {enhanced_terms}")
+                            asset.search_terms = enhanced_terms
                     
                     # Mark as valid
                     validation_results["audio_assets"]["valid_count"] += 1
@@ -256,9 +301,10 @@ class AssetGenerationCrew:
                     validation_results["errors"].append(f"Error validating audio asset #{idx}: {str(e)}")
                     validation_results["audio_assets"]["invalid_count"] += 1
         
-        # Update overall validation status
+        # Update overall validation status - still return errors but many are now fixed
         if validation_results["errors"]:
             validation_results["valid"] = False
+            validation_results["warnings"].append("Auto-fixed some validation issues, but manual review recommended")
         
         return validation_results
     
@@ -278,6 +324,13 @@ class AssetGenerationCrew:
                 # Try direct JSON parsing first
                 try:
                     specs_data = json.loads(output.raw)
+                    
+                    # Fix search_terms arrays by converting them to strings
+                    if isinstance(specs_data, dict) and 'audio_assets' in specs_data:
+                        for audio in specs_data.get('audio_assets', []):
+                            if isinstance(audio, dict) and 'search_terms' in audio and isinstance(audio['search_terms'], list):
+                                audio['search_terms'] = ' '.join(audio['search_terms'])
+                    
                     return AssetSpecCollection(**specs_data)
                 except Exception as json_err:
                     print(f"Error parsing raw output as JSON: {str(json_err)}")
@@ -288,13 +341,35 @@ class AssetGenerationCrew:
                         if json_match:
                             json_content = json_match.group(1)
                             specs_data = json.loads(json_content)
+                            
+                            # Fix search_terms arrays by converting them to strings
+                            if isinstance(specs_data, dict) and 'audio_assets' in specs_data:
+                                for audio in specs_data.get('audio_assets', []):
+                                    if isinstance(audio, dict) and 'search_terms' in audio and isinstance(audio['search_terms'], list):
+                                        audio['search_terms'] = ' '.join(audio['search_terms'])
+                            
                             return AssetSpecCollection(**specs_data)
                     except Exception as md_err:
                         print(f"Error extracting JSON from markdown: {str(md_err)}")
             
             # If all else fails, try to convert to a string and parse
             try:
-                return AssetSpecCollection.parse_raw(str(output))
+                # Try to fix the string representation if it might contain lists for search_terms
+                str_output = str(output)
+                
+                # This is a crude approach but might help in some cases - try to detect and fix list patterns
+                # Example: search_terms=['a', 'b', 'c'] -> search_terms='a b c'
+                list_pattern = r"search_terms=\[(.*?)\]"
+                
+                def replace_list_with_string(match):
+                    list_content = match.group(1)
+                    # Split by commas and clean up quotes
+                    items = [item.strip().strip("'\"") for item in list_content.split(',')]
+                    return f"search_terms='{' '.join(items)}'"
+                
+                fixed_output = re.sub(list_pattern, replace_list_with_string, str_output)
+                
+                return AssetSpecCollection.parse_raw(fixed_output)
             except Exception as parse_err:
                 print(f"Error parsing output as string: {str(parse_err)}")
                 

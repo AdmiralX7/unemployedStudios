@@ -1,0 +1,13 @@
+{
+  "error": "cannot import name 'ValidationCrew' from 'unemployedstudios.crews.validation_crew' (unknown location)",
+  "error_count": 1,
+  "warning_count": 0,
+  "issues": [
+    {
+      "type": "system",
+      "severity": "error",
+      "message": "Validation crew failed: cannot import name 'ValidationCrew' from 'unemployedstudios.crews.validation_crew' (unknown location)",
+      "responsible_crew": null
+    }
+  ]
+}
