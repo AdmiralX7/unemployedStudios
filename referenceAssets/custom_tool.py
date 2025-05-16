@@ -118,28 +118,16 @@ class SearchAndSaveSoundToolArgs(BaseModel):
         5,
         description="Maximum number of results to consider (the first hit will be downloaded)"
     )
-    api_key: Optional[str] = Field(
-        None, 
-        description="Freesound API key - will use environment FREESOUND_API_KEY if not provided"
-    )
-    client_id: Optional[str] = Field(
-        None, 
-        description="Freesound client ID - will use environment FREESOUND_CLIENT_ID if not provided"
-    )
 
 class SearchAndSaveSoundTool(BaseTool):
     """
     Searches Freesound for the query, scrapes the first result using BeautifulSoup,
     and downloads the preview audio file.
-    
-    Note: This tool can use both FREESOUND_API_KEY and FREESOUND_CLIENT_ID from 
-    environment variables. Both credentials may be needed for successful API access.
     """
     name: str = "search_and_save_sound"
     description: str = (
         "Search Freesound for an audio clip and save the first preview to disk. "
-        "Returns a JSON blob describing the saved file. "
-        "Uses both FREESOUND_API_KEY and FREESOUND_CLIENT_ID if available."
+        "Returns a JSON blob describing the saved file."
     )
     args_schema = SearchAndSaveSoundToolArgs
 
@@ -149,8 +137,6 @@ class SearchAndSaveSoundTool(BaseTool):
         query: str,
         output_path: str,
         max_results: int = 5,
-        api_key: str = None,
-        client_id: str = None,
         **_
     ) -> Any:
         import os
@@ -162,27 +148,15 @@ class SearchAndSaveSoundTool(BaseTool):
             # Fallback to direct API requests
             print("Using direct API requests for Freesound")
             try:
-                # Check for API key in parameters first, then environment
-                api_key = api_key or os.getenv("FREESOUND_API_KEY")
-                client_id = client_id or os.getenv("FREESOUND_CLIENT_ID")
-                
+                api_key = os.getenv("FREESOUND_API_KEY")
                 if not api_key:
-                    return json.dumps({"error": "FREESOUND_API_KEY not set in environment or parameters."})
-                
-                # Log availability of credentials
-                print(f"Using Freesound API Key: {'Available' if api_key else 'Not Available'}")
-                print(f"Using Freesound Client ID: {'Available' if client_id else 'Not Available'}")
+                    return json.dumps({"error": "FREESOUND_API_KEY not set in environment."})
                 
                 # Direct API request to search
                 search_url = f"https://freesound.org/apiv2/search/text/"
                 headers = {
                     "Authorization": f"Token {api_key}"
                 }
-                
-                # Add client_id to headers if available
-                if client_id:
-                    headers["X-API-Client"] = client_id
-                
                 params = {
                     "query": query,
                     "page_size": max_results,

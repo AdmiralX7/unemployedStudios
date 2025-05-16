@@ -1,0 +1,101 @@
+{
+  "images": {
+    "main_character": {
+      "prompt": "A computer science student character for a pixel art platformer game, wearing casual clothes with a laptop backpack",
+      "file_path": "test_output/images/main_character.png",
+      "size": "1024x1024",
+      "success": true,
+      "result": {
+        "message": "Image generated and saved as test_output/images/main_character.png.",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-aVqdQtVsIu4Bd4jm6fOYS4ih.png?st=2025-05-16T03%3A55%3A33Z&se=2025-05-16T05%3A55%3A33Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T22%3A39%3A21Z&ske=2025-05-16T22%3A39%3A21Z&sks=b&skv=2024-08-04&sig=NVkjWDisNQBaHWbt83hIR2dG7jrRgsARiLl3PjAQn0w%3D"
+      }
+    },
+    "game_background": {
+      "prompt": "A university campus background with computer labs for a pixel art game",
+      "file_path": "test_output/images/university_background.png",
+      "size": "1024x1024",
+      "success": true,
+      "result": {
+        "message": "Image generated and saved as test_output/images/university_background.png.",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-DA9nk03PZoX9xLVgJBcGjcqj.png?st=2025-05-16T03%3A55%3A48Z&se=2025-05-16T05%3A55%3A48Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T20%3A27%3A15Z&ske=2025-05-16T20%3A27%3A15Z&sks=b&skv=2024-08-04&sig=u1/zNQb/4phZxuQEv9g4GvrOyggvZQi1Ngc5V7hhc24%3D"
+      }
+    },
+    "game_enemy": {
+      "prompt": "A small bug-like computer virus monster for a pixel art platformer game",
+      "file_path": "test_output/images/enemy_virus.png",
+      "size": "1024x1024",
+      "success": true,
+      "result": {
+        "message": "Image generated and saved as test_output/images/enemy_virus.png.",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-XyJfICb000QeY8MUtOn0NFg1.png?st=2025-05-16T03%3A56%3A05Z&se=2025-05-16T05%3A56%3A05Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T23%3A09%3A40Z&ske=2025-05-16T23%3A09%3A40Z&sks=b&skv=2024-08-04&sig=F8bOHEqqnYJ5nxEUssQsP0zs9ZVEi6262YcjUVcgixI%3D"
+      }
+    },
+    "game_collectible": {
+      "prompt": "A glowing USB drive powerup item for a pixel art game, wide format",
+      "file_path": "test_output/images/powerup_usb.png",
+      "size": "1792x1024",
+      "success": true,
+      "result": {
+        "message": "Image generated and saved as test_output/images/powerup_usb.png.",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-Ds14ytXlb8zX8Ov2C3a3SiHh.png?st=2025-05-16T03%3A56%3A21Z&se=2025-05-16T05%3A56%3A21Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T15%3A56%3A36Z&ske=2025-05-16T15%3A56%3A36Z&sks=b&skv=2024-08-04&sig=x8B6%2BCz4RPpNY7JbLvgqrGbQm98dCP1nPejoG2utClk%3D"
+      }
+    },
+    "game_ui_button": {
+      "prompt": "A start button with pixel art style for a computer science themed game interface, vertical format",
+      "file_path": "test_output/images/ui_button.png",
+      "size": "1024x1792",
+      "success": true,
+      "result": {
+        "message": "Image generated and saved as test_output/images/ui_button.png.",
+        "url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-jyp4jgwKnaxtm2UcHFPbyJqW.png?st=2025-05-16T03%3A56%3A39Z&se=2025-05-16T05%3A56%3A39Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T21%3A18%3A35Z&ske=2025-05-16T21%3A18%3A35Z&sks=b&skv=2024-08-04&sig=Ifxl2PvipUuhU0vYABS43hPoZo2gj0ZF0cZsJdWouYM%3D"
+      }
+    }
+  },
+  "audio": {
+    "jump_sound": {
+      "query": "game jump sound effect 8-bit",
+      "file_path": "test_output/audio/jump_sound.mp3",
+      "description": "Short jumping effect",
+      "success": true,
+      "result": {
+        "file": "test_output/audio/jump_sound.mp3",
+        "original_url": "https://freesound.org/people/SomeGuy22/sounds/519005/",
+        "preview_url": "https://cdn.freesound.org/previews/519/519005_2711716-hq.mp3",
+        "message": "Audio saved as test_output/audio/jump_sound.mp3"
+      }
+    },
+    "background_music": {
+      "query": "8-bit university campus background music loop",
+      "file_path": "test_output/audio/background_music.mp3",
+      "description": "Longer background music",
+      "success": false,
+      "error": "Audio file was not created despite successful API response"
+    },
+    "collect_item": {
+      "query": "coin collect sound effect pixel game",
+      "file_path": "test_output/audio/collect_item.mp3",
+      "description": "Very short collection sound",
+      "success": false,
+      "error": "Audio file was not created despite successful API response"
+    },
+    "game_over": {
+      "query": "8-bit game over sound effect",
+      "file_path": "test_output/audio/game_over.mp3",
+      "description": "Medium length game over jingle",
+      "success": true,
+      "result": {
+        "file": "test_output/audio/game_over.mp3",
+        "original_url": "https://freesound.org/people/Soundholder/sounds/425340/",
+        "preview_url": "https://cdn.freesound.org/previews/425/425340_4421503-hq.mp3",
+        "message": "Audio saved as test_output/audio/game_over.mp3"
+      }
+    },
+    "menu_click": {
+      "query": "ui menu click sound minimal clean",
+      "file_path": "test_output/audio/menu_click.mp3",
+      "description": "Extremely short UI interaction sound",
+      "success": false,
+      "error": "Audio file was not created despite successful API response"
+    }
+  }
+}

@@ -2281,17 +2281,22 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
         os.makedirs("GameGenerationOutput/assets/audio", exist_ok=True)
         
         try:
-            # Parse the concept expansion output if available
-            concept_data = {}
-            if self.state.concept_expansion:
-                if isinstance(self.state.concept_expansion, dict):
-                    concept_data = self.state.concept_expansion
-                else:
-                    try:
-                        # Try to parse as JSON if it's a string
-                        concept_data = json.loads(str(self.state.concept_expansion))
-                    except:
-                        print("Warning: Could not parse concept expansion data")
+            # Import the tools
+            from unemployedstudios.tools.custom_tool import GenerateAndDownloadImageTool, SearchAndSaveSoundTool
+            
+            # Test if API keys are available
+            print(f"OPENAI_API_KEY available: {bool(os.getenv('OPENAI_API_KEY'))}")
+            # Check for both Freesound credentials - both may be needed depending on API access method
+            print(f"FREESOUND_API_KEY available: {bool(os.getenv('FREESOUND_API_KEY'))}")
+            print(f"FREESOUND_CLIENT_ID available: {bool(os.getenv('FREESOUND_CLIENT_ID'))}")
+            
+            # Note about Freesound credentials
+            if not os.getenv('FREESOUND_API_KEY') or not os.getenv('FREESOUND_CLIENT_ID'):
+                print("WARNING: One or both Freesound credentials missing. Both FREESOUND_API_KEY and FREESOUND_CLIENT_ID may be required for audio asset generation.")
+            
+            # Initialize the tools
+            image_tool = GenerateAndDownloadImageTool()
+            audio_tool = SearchAndSaveSoundTool()
             
             # Prepare inputs for the asset generation crew
             asset_inputs = {
@@ -2300,22 +2305,33 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 "game_design_document": self.state.game_design_document
             }
             
-            # Add concept data if available
-            if concept_data:
-                if "main_character" in concept_data:
-                    asset_inputs["main_character"] = concept_data["main_character"]
-                if "supporting_characters" in concept_data:
-                    asset_inputs["supporting_characters"] = concept_data["supporting_characters"]
-                if "world_building" in concept_data:
-                    asset_inputs["world_building"] = concept_data["world_building"]
-                if "levels" in concept_data:
-                    asset_inputs["levels"] = concept_data["levels"]
-                if "visual_style" in concept_data:
-                    asset_inputs["visual_style"] = concept_data["visual_style"]
-                if "audio_style" in concept_data:
-                    asset_inputs["audio_style"] = concept_data["audio_style"]
-                if "title" in concept_data:
-                    asset_inputs["title"] = concept_data["title"]
+            # Add concept data if available from concept expansion
+            if self.state.concept_expansion:
+                concept_data = {}
+                if isinstance(self.state.concept_expansion, dict):
+                    concept_data = self.state.concept_expansion
+                else:
+                    try:
+                        # Try to parse as JSON if it's a string
+                        concept_data = json.loads(str(self.state.concept_expansion))
+                    except:
+                        print("Warning: Could not parse concept expansion data")
+                
+                if concept_data:
+                    if "main_character" in concept_data:
+                        asset_inputs["main_character"] = concept_data["main_character"]
+                    if "supporting_characters" in concept_data:
+                        asset_inputs["supporting_characters"] = concept_data["supporting_characters"]
+                    if "world_building" in concept_data:
+                        asset_inputs["world_building"] = concept_data["world_building"]
+                    if "levels" in concept_data:
+                        asset_inputs["levels"] = concept_data["levels"]
+                    if "visual_style" in concept_data:
+                        asset_inputs["visual_style"] = concept_data["visual_style"]
+                    if "audio_style" in concept_data:
+                        asset_inputs["audio_style"] = concept_data["audio_style"]
+                    if "title" in concept_data:
+                        asset_inputs["title"] = concept_data["title"]
             
             print(f"Prepared asset inputs with keys: {list(asset_inputs.keys())}")
             
@@ -2329,53 +2345,48 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
             
             # Process and store the asset specifications
             try:
-                # Access the structured output (AssetSpecCollection)
-                asset_specs = asset_output.compile_asset_specifications
-                
-                # Save the structured output to a file
-                with open(self._get_output_path("asset_specifications.json"), "w") as f:
-                    if isinstance(asset_specs, AssetSpecCollection):
-                        f.write(asset_specs.json(indent=2))
-                        self.state.asset_specifications = asset_specs
-                    else:
-                        # Try to parse the raw output if not already a Pydantic model
-                        try:
-                            if hasattr(asset_output, 'raw'):
-                                raw_json = json.loads(asset_output.raw)
-                                # Try to parse into our AssetSpecCollection model
-                                asset_specs = AssetSpecCollection.parse_obj(raw_json)
-                                f.write(asset_specs.json(indent=2))
-                                self.state.asset_specifications = asset_specs
-                            else:
-                                f.write(json.dumps({"error": "No structured output available"}, indent=2))
-                        except Exception as e:
-                            # Try to extract JSON from markdown code blocks
-                            if hasattr(asset_output, 'raw'):
-                                import re
-                                json_match = re.search(r'```json\n(.*?)\n```', asset_output.raw, re.DOTALL)
-                                if json_match:
-                                    try:
-                                        json_content = json_match.group(1)
-                                        asset_specs = AssetSpecCollection.parse_obj(json.loads(json_content))
-                                        f.write(asset_specs.json(indent=2))
-                                        self.state.asset_specifications = asset_specs
-                                    except Exception as e2:
-                                        f.write(json.dumps({"error": str(e2), "raw": str(asset_output)}, indent=2))
-                                else:
-                                    f.write(json.dumps({"error": str(e), "raw": str(asset_output)}, indent=2))
-                            else:
-                                f.write(json.dumps({"error": str(e), "raw": str(asset_output)}, indent=2))
-                
-                print("Asset specifications successfully generated and saved")
-                
-                # Generate/download the actual assets
-                if self.state.asset_specifications:
-                    self._generate_assets()
+                # Access the structured output
+                if hasattr(asset_output, 'compile_asset_specifications'):
+                    asset_specs = asset_output.compile_asset_specifications
+                    print(f"Successfully extracted asset specifications directly from crew output")
+                elif hasattr(asset_output, 'raw'):
+                    # Try to parse the raw output as JSON
+                    try:
+                        asset_specs_data = json.loads(asset_output.raw)
+                        asset_specs = AssetSpecCollection(**asset_specs_data)
+                        print(f"Successfully parsed asset specifications from raw JSON")
+                    except Exception as parse_err:
+                        print(f"Error parsing asset specs JSON: {parse_err}")
+                        # Try to extract JSON from markdown code blocks
+                        import re
+                        json_match = re.search(r'```json\n(.*?)\n```', asset_output.raw, re.DOTALL)
+                        if json_match:
+                            try:
+                                json_content = json_match.group(1)
+                                asset_specs_data = json.loads(json_content)
+                                asset_specs = AssetSpecCollection(**asset_specs_data)
+                                print(f"Successfully parsed asset specifications from markdown code block")
+                            except Exception as e2:
+                                print(f"Error parsing asset specs from markdown: {e2}")
+                                # Create fallback specifications
+                                asset_specs = self._create_fallback_asset_specs()
+                        else:
+                            # Create fallback specifications
+                            asset_specs = self._create_fallback_asset_specs()
                 else:
-                    print("No valid asset specifications found. Creating fallback assets.")
-                    fallback_specs = self._create_fallback_asset_specs()
-                    self.state.asset_specifications = fallback_specs
-                    self._generate_assets()
+                    print("Warning: No structured asset specifications found in crew output")
+                    # Create fallback specifications
+                    asset_specs = self._create_fallback_asset_specs()
+                
+                # Save the specifications to a file
+                with open(self._get_output_path("asset_specifications.json"), "w") as f:
+                    json.dump(asset_specs.dict() if hasattr(asset_specs, 'dict') else asset_specs.model_dump(), f, indent=2)
+                
+                # Store in state
+                self.state.asset_specifications = asset_specs
+                
+                # Generate the actual assets
+                self._generate_assets_with_retry(asset_specs, image_tool, audio_tool)
                 
             except Exception as e:
                 print(f"Error processing asset specifications: {str(e)}")
@@ -2386,14 +2397,195 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 print("Creating fallback asset specifications")
                 fallback_specs = self._create_fallback_asset_specs()
                 self.state.asset_specifications = fallback_specs
-                self._generate_assets()
+                self._generate_assets_with_retry(fallback_specs, image_tool, audio_tool)
             
         except Exception as e:
             print(f"Error in asset generation phase: {str(e)}")
             import traceback
             traceback.print_exc()
         
+        # Mark asset generation as complete
+        self.state.asset_generation_complete = True
+        
+        print("Asset Generation Phase completed")
+        
         return "Asset Generation Phase completed"
+
+    def _generate_assets_with_retry(self, asset_specs, image_tool, audio_tool):
+        """
+        Generate assets with robust error handling and retry logic.
+        This method is more reliable than the previous implementation.
+        """
+        # Track successful generations
+        generated_images = {}
+        generated_audio = {}
+        
+        # Process image assets
+        if asset_specs and hasattr(asset_specs, 'image_assets') and asset_specs.image_assets:
+            print(f"Generating {len(asset_specs.image_assets)} image assets...")
+            
+            # Limit to a reasonable number of images to avoid rate limiting
+            max_images_to_generate = min(5, len(asset_specs.image_assets))
+            
+            for i, img_spec in enumerate(asset_specs.image_assets[:max_images_to_generate]):
+                try:
+                    print(f"Generating image {i+1}/{max_images_to_generate}: {img_spec.asset_id}")
+                    
+                    # Add delay between requests to avoid rate limiting
+                    if i > 0:
+                        import time
+                        print("Waiting to avoid rate limiting...")
+                        time.sleep(2)  # 2 second delay between requests
+                    
+                    # Ensure the directory exists for the image
+                    full_path = f"GameGenerationOutput/{img_spec.filename}"
+                    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                    
+                    # Add retry logic
+                    retry_count = 0
+                    max_retries = 3
+                    success = False
+                    
+                    while retry_count < max_retries and not success:
+                        try:
+                            result = image_tool._run(
+                                prompt=img_spec.prompt,
+                                file_name=full_path,
+                                size=getattr(img_spec, 'size', "1024x1024")
+                            )
+                            
+                            # Store the result
+                            generated_images[img_spec.asset_id] = {
+                                "filename": img_spec.filename,
+                                "full_path": full_path,
+                                "result": result
+                            }
+                            
+                            print(f"Generated image: {img_spec.asset_id}")
+                            success = True
+                            
+                        except Exception as retry_error:
+                            retry_count += 1
+                            if "429" in str(retry_error) and retry_count < max_retries:
+                                # Rate limit error, wait longer and retry
+                                wait_time = 5 * retry_count  # Progressive backoff
+                                print(f"Rate limit encountered. Waiting {wait_time}s before retry {retry_count}/{max_retries}...")
+                                import time
+                                time.sleep(wait_time)
+                            else:
+                                print(f"Error generating image (attempt {retry_count}/{max_retries}): {str(retry_error)}")
+                                if retry_count >= max_retries:
+                                    print(f"Failed to generate image after {max_retries} attempts")
+                                    break
+                    
+                except Exception as e:
+                    print(f"Error generating image {img_spec.asset_id}: {str(e)}")
+        
+        # Process audio assets
+        if asset_specs and hasattr(asset_specs, 'audio_assets') and asset_specs.audio_assets:
+            print(f"Downloading {len(asset_specs.audio_assets)} audio assets...")
+            
+            # Check for Freesound credentials before trying to download audio
+            freesound_api_key = os.getenv('FREESOUND_API_KEY')
+            freesound_client_id = os.getenv('FREESOUND_CLIENT_ID')
+            
+            if not freesound_api_key:
+                print("WARNING: FREESOUND_API_KEY not found in environment. Audio generation may fail.")
+            
+            if not freesound_client_id:
+                print("WARNING: FREESOUND_CLIENT_ID not found in environment. Audio generation may fail.")
+            
+            # Limit to a reasonable number of audio files during testing
+            # Limit to a reasonable number of audio files during testing
+            max_audio_to_generate = min(5, len(asset_specs.audio_assets))
+            
+            for i, audio_spec in enumerate(asset_specs.audio_assets[:max_audio_to_generate]):
+                try:
+                    print(f"Downloading audio {i+1}/{max_audio_to_generate}: {audio_spec.asset_id}")
+                    
+                    # Add delay between requests
+                    if i > 0:
+                        import time
+                        time.sleep(1)  # 1 second delay between requests
+                    
+                    # Ensure the directory exists
+                    full_path = f"GameGenerationOutput/{audio_spec.filename}"
+                    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                    
+                    # Determine the search query
+                    query = getattr(audio_spec, 'search_terms', None) or getattr(audio_spec, 'query', None)
+                    if not query:
+                        query = f"game sound {audio_spec.asset_id} {audio_spec.asset_type}"
+                    
+                    # Add retry logic
+                    retry_count = 0
+                    max_retries = 3
+                    success = False
+                    
+                    while retry_count < max_retries and not success:
+                        try:
+                            # Create a dictionary of optional params that might be needed
+                            extra_params = {}
+                            if freesound_api_key:
+                                extra_params['api_key'] = freesound_api_key
+                            if freesound_client_id:
+                                extra_params['client_id'] = freesound_client_id
+                                
+                            # Note: The SearchAndSaveSoundTool may not directly use these parameters
+                            # in its current implementation, but we're providing them for future compatibility
+                            
+                            result = audio_tool._run(
+                                query=query,
+                                output_path=full_path,
+                                **extra_params  # Pass any additional parameters
+                            )
+                            
+                            # Store the result
+                            generated_audio[audio_spec.asset_id] = {
+                                "filename": audio_spec.filename,
+                                "full_path": full_path,
+                                "result": result
+                            }
+                            
+                            print(f"Downloaded audio: {audio_spec.asset_id}")
+                            success = True
+                            
+                        except Exception as retry_error:
+                            retry_count += 1
+                            if retry_count < max_retries:
+                                # Any error, wait and retry
+                                wait_time = 3 * retry_count  # Progressive backoff
+                                print(f"Error encountered. Waiting {wait_time}s before retry {retry_count}/{max_retries}...")
+                                import time
+                                time.sleep(wait_time)
+                            else:
+                                print(f"Failed to download audio after {max_retries} attempts")
+                                break
+                    
+                except Exception as e:
+                    print(f"Error downloading audio {audio_spec.asset_id}: {str(e)}")
+        
+        # Save the generation results
+        with open(self._get_output_path("generated_assets.json"), "w") as f:
+            json.dump({
+                "images": generated_images,
+                "audio": generated_audio
+            }, f, indent=2)
+        
+        # Update the state
+        self.state.generated_image_assets = generated_images
+        self.state.generated_audio_assets = generated_audio
+        
+        # Create asset manifests for easier access
+        if generated_images:
+            with open(self._get_output_path("assets/manifest_images.json"), "w") as f:
+                json.dump(generated_images, f, indent=2)
+        
+        if generated_audio:
+            with open(self._get_output_path("assets/manifest_audio.json"), "w") as f:
+                json.dump(generated_audio, f, indent=2)
+        
+        print(f"Asset generation complete: {len(generated_images)} images and {len(generated_audio)} audio files")
 
     def _create_fallback_asset_specs(self):
         """Create fallback asset specifications if the crew output can't be parsed."""
@@ -2475,169 +2667,6 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
         ]
         
         return AssetSpecCollection(image_assets=image_assets, audio_assets=audio_assets)
-
-    def _generate_assets(self):
-        """
-        Generate/download assets based on the asset specifications.
-        This method processes all assets in the asset specifications collection
-        using the appropriate tools.
-        """
-        print("Generating assets from specifications...")
-        
-        # Import the tools
-        from unemployedstudios.tools.custom_tool import GenerateAndDownloadImageTool, SearchAndSaveSoundTool
-        
-        # Initialize the tools
-        image_tool = GenerateAndDownloadImageTool()
-        audio_tool = SearchAndSaveSoundTool()
-        
-        # Initialize tracking dictionaries
-        generated_images = {}
-        generated_audio = {}
-        
-        # Process image assets
-        if self.state.asset_specifications and self.state.asset_specifications.image_assets:
-            print(f"Generating {len(self.state.asset_specifications.image_assets)} image assets...")
-            
-            # Limit to a smaller number of images to avoid rate limiting during testing
-            max_images_to_generate = min(10, len(self.state.asset_specifications.image_assets))
-            
-            for i, img_spec in enumerate(self.state.asset_specifications.image_assets[:max_images_to_generate]):
-                try:
-                    print(f"Generating image {i+1}/{max_images_to_generate}: {img_spec.asset_id}")
-                    
-                    # Add delay between requests to avoid rate limiting
-                    if i > 0:
-                        import time
-                        print("Waiting to avoid rate limiting...")
-                        time.sleep(2)  # 2 second delay between requests
-                    
-                    # Ensure the directory exists
-                    full_path = f"GameGenerationOutput/{img_spec.filename}"
-                    os.makedirs(os.path.dirname(full_path), exist_ok=True)
-                    
-                    # Add retry logic
-                    retry_count = 0
-                    max_retries = 3
-                    success = False
-                    
-                    while retry_count < max_retries and not success:
-                        try:
-                            result = image_tool._run(
-                                prompt=img_spec.prompt,
-                                file_name=full_path,
-                                size=img_spec.size
-                            )
-                            
-                            # Store the result
-                            generated_images[img_spec.asset_id] = {
-                                "filename": img_spec.filename,
-                                "full_path": full_path,
-                                "result": result
-                            }
-                            
-                            print(f"Generated image: {img_spec.asset_id}")
-                            success = True
-                            
-                        except Exception as retry_error:
-                            retry_count += 1
-                            if "429" in str(retry_error) and retry_count < max_retries:
-                                # Rate limit error, wait longer and retry
-                                wait_time = 5 * retry_count  # Progressive backoff
-                                print(f"Rate limit encountered. Waiting {wait_time}s before retry {retry_count}/{max_retries}...")
-                                import time
-                                time.sleep(wait_time)
-                            else:
-                                print(f"Error generating image (attempt {retry_count}/{max_retries}): {str(retry_error)}")
-                                if retry_count >= max_retries:
-                                    print(f"Failed to generate image after {max_retries} attempts")
-                                    break
-                    
-                except Exception as e:
-                    print(f"Error generating image {img_spec.asset_id}: {str(e)}")
-        
-        # Process audio assets
-        if self.state.asset_specifications and self.state.asset_specifications.audio_assets:
-            print(f"Downloading {len(self.state.asset_specifications.audio_assets)} audio assets...")
-            
-            # Limit to a smaller number of audio files during testing
-            max_audio_to_generate = min(10, len(self.state.asset_specifications.audio_assets))
-            
-            for i, audio_spec in enumerate(self.state.asset_specifications.audio_assets[:max_audio_to_generate]):
-                try:
-                    print(f"Downloading audio {i+1}/{max_audio_to_generate}: {audio_spec.asset_id}")
-                    
-                    # Add delay between requests
-                    if i > 0:
-                        import time
-                        time.sleep(1)  # 1 second delay between requests
-                    
-                    # Ensure the directory exists
-                    full_path = f"GameGenerationOutput/{audio_spec.filename}"
-                    os.makedirs(os.path.dirname(full_path), exist_ok=True)
-                    
-                    # Add retry logic
-                    retry_count = 0
-                    max_retries = 3
-                    success = False
-                    
-                    while retry_count < max_retries and not success:
-                        try:
-                            result = audio_tool._run(
-                                query=audio_spec.search_terms,
-                                output_path=full_path
-                            )
-                            
-                            # Store the result
-                            generated_audio[audio_spec.asset_id] = {
-                                "filename": audio_spec.filename,
-                                "full_path": full_path,
-                                "result": result
-                            }
-                            
-                            print(f"Downloaded audio: {audio_spec.asset_id}")
-                            success = True
-                            
-                        except Exception as retry_error:
-                            retry_count += 1
-                            if retry_count < max_retries:
-                                # Any error, wait and retry
-                                wait_time = 3 * retry_count  # Progressive backoff
-                                print(f"Error encountered. Waiting {wait_time}s before retry {retry_count}/{max_retries}...")
-                                import time
-                                time.sleep(wait_time)
-                            else:
-                                print(f"Failed to download audio after {max_retries} attempts")
-                                break
-                    
-                except Exception as e:
-                    print(f"Error downloading audio {audio_spec.asset_id}: {str(e)}")
-        
-        # Save the generation results
-        with open(self._get_output_path("generated_assets.json"), "w") as f:
-            json.dump({
-                "images": generated_images,
-                "audio": generated_audio
-            }, f, indent=2)
-        
-        # Update the state
-        self.state.generated_image_assets = generated_images
-        self.state.generated_audio_assets = generated_audio
-        self.state.asset_generation_complete = True
-        
-        # Create asset manifests for easier access
-        if generated_images:
-            with open(self._get_output_path("assets/manifest_images.json"), "w") as f:
-                json.dump(generated_images, f, indent=2)
-        
-        if generated_audio:
-            with open(self._get_output_path("assets/manifest_audio.json"), "w") as f:
-                json.dump(generated_audio, f, indent=2)
-        
-        # Copy assets to game directory for easier access
-        self._organize_generated_assets()
-        
-        print(f"Asset generation complete: {len(generated_images)} images and {len(generated_audio)} audio files")
 
     def _organize_generated_assets(self):
         """
