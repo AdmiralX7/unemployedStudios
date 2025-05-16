@@ -1,0 +1,148 @@
+template_analysis_task:
+  description: >
+    Analyze the provided HTML5 game template to identify key integration points and understand the existing structure.
+    Your analysis should include:
+    
+    • Complete breakdown of the template's HTML, CSS, and JavaScript components
+    • Detailed analysis of the Game, GameLogic, and GameUI classes
+    • Identification of all extension points and insertion locations
+    • Documentation of the template's event system and game loop
+    • Categorization of template components by function (UI, logic, rendering, etc.)
+    • Assessment of the template's performance characteristics
+    • Recommendations for integration approaches
+    
+    The template can be found at: {game_template_path}
+    
+    You should create a comprehensive map of the template structure including all classes, methods, and properties,
+    with special focus on how our game concept can be integrated into this existing structure.
+  expected_output: >
+    A detailed template analysis document that serves as a guide for all other crews to understand how
+    to integrate their code with the template. Include class diagrams (in text form), method signatures,
+    integration points with comments, and a clear map of the template's architecture.
+  agent: template_analyzer
+
+core_systems_design_task:
+  description: >
+    Design the core systems for the HTML5 game that can be integrated with the provided template.
+    Your design should include:
+    
+    • System designs that extend the template's Game class and game loop
+    • Input handling extensions that work with the template's event system
+    • Physics systems that integrate with the template's update cycle
+    • Rendering approaches that leverage the template's display methods
+    • Memory management that respects the template's structure
+    • Error handling strategies compatible with the template
+    • Extension methods for the Game, GameLogic, and GameUI classes
+    
+    Base your design on the game concept: {game_concept}
+    
+    Include support for these gameplay mechanics: {mechanic_names}
+    
+    Your design must specifically address the template structure identified in the analysis.
+    
+    Ensure your systems can handle these game levels: {level_names}
+  expected_output: >
+    A comprehensive technical design document for the core systems, with detailed specifications for
+    how each system integrates with the template. Include code samples showing integration points,
+    extension methods, and clearly mark which template classes and methods will be enhanced.
+  agent: core_systems_designer
+
+interface_definition_task:
+  description: >
+    Define the interfaces between all game components that will integrate with the template classes.
+    Your interface definitions should include:
+    
+    • Interface extensions for the Game, GameLogic, and GameUI classes
+    • Data formats for integration with template methods
+    • Event system extensions that build on the template's event handling
+    • Proper dependency management between template components and new code
+    • Clear documentation of how each game component interfaces with the template
+    • Specific integration points for each game system
+    
+    Be sure to define interfaces for these game systems: {system_names}
+    
+    Include interfaces to handle these enemy types: {enemy_names}
+    
+    Ensure your interfaces enable loose coupling while maintaining cohesion within the template structure.
+    For each interface, specify the template class it extends and how it should be integrated.
+  expected_output: >
+    A detailed interface specification document that defines how all game components will communicate
+    within the template structure. Include TypeScript-style interface definitions, specific integration
+    points within the template, and clear guidance on how to extend the template classes.
+  agent: interface_designer
+
+integration_mapping_task:
+  description: >
+    Create a detailed mapping of exactly where and how each game component will integrate with the template.
+    Your mapping should include:
+    
+    • Code insertion points for each component (with line numbers or method names)
+    • CSS extensions and their placement in the template
+    • HTML elements that need to be added or modified
+    • Asset loading and integration approach
+    • Dependencies between components and their integration order
+    • Potential conflicts or overlap between components
+    • Integration testing approach
+    
+    This map will guide all development crews in creating code that fits seamlessly into the template.
+    Be extremely specific about where code should be inserted and how it should be formatted.
+    
+    Include detailed integration guidance for:
+    - Engine components: {system_names}
+    - Entity systems for: {enemy_names}
+    - Level systems for: {level_names}
+    - UI extensions for game mechanics: {mechanic_names}
+  expected_output: >
+    A comprehensive integration map that serves as the blueprint for all crews to follow when creating
+    their code components. Include specific template insertion points, code examples showing proper
+    integration syntax, and a clear strategy for combining all components into a cohesive whole.
+  agent: interface_designer
+
+design_validation_task:
+  description: >
+    Thoroughly validate the template integration design including core systems, interfaces, and integration mapping.
+    Your validation should check for:
+    
+    • Completeness: Are all required integration points covered?
+    • Consistency: Do components integrate harmoniously with the template?
+    • Performance: Are there potential bottlenecks in the integration approach?
+    • Maintainability: Is the design clear and easy to implement?
+    • Browser compatibility: Will the integrated code work across target browsers?
+    • Technical feasibility: Can all components be properly integrated with the template?
+    
+    Carefully validate the interfaces for these game systems: {system_names}
+    
+    Validate that the design properly handles these game environments: {level_names}
+    
+    Verify that all required gameplay mechanics can be integrated: {mechanic_names}
+    
+    Identify any issues, risks, or improvements in the template integration design.
+  expected_output: >
+    A validation report that assesses the strengths and weaknesses of the technical design for template integration.
+    For each issue identified, provide a clear explanation of the problem, its potential impact,
+    and a suggested approach for resolution. Focus particularly on integration challenges.
+  agent: design_validator
+
+design_refinement_task:
+  description: >
+    Refine the template integration design based on the validation feedback.
+    Your refinement should:
+    
+    • Address all critical integration issues identified in the validation
+    • Enhance areas where template integration was weak or incomplete
+    • Optimize elements with performance concerns
+    • Improve documentation of integration points
+    • Ensure all components work together cohesively within the template
+    • Provide updated integration guidance for all crews
+    
+    Make sure your refined design fully supports integration of these gameplay mechanics: {mechanic_names}
+    
+    Ensure it adequately handles all enemy types within the template: {enemy_names}
+    
+    Focus on pragmatic improvements that maintain the original design intent while resolving
+    the identified integration issues. Document your changes and the rationale behind them.
+  expected_output: >
+    A refined technical design document that incorporates all the necessary improvements for template integration.
+    Include a change log that explains what was modified and why. The final document should
+    provide clear, implementation-ready guidance for all crews on how to integrate with the template.
+  agent: design_refiner

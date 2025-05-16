@@ -1,0 +1,129 @@
+integration_planning_task:
+  description: >
+    Analyze the HTML5 game template and plan integration points for entity system functionality. Your analysis should include:
+    
+    1. Detailed review of the GameLogic class in the template
+    2. Identification of specific methods and properties to extend
+    3. Assessment of how entity system features can be integrated into the template
+    4. Planning for integrating entity, component, physics, and behavior systems
+    5. Potential conflicts or issues to address
+    
+    The template can be found at: {game_template_path}
+    
+    Review the template_analysis provided by the Technical Design crew for additional insights.
+    
+    Base your planning on the core_systems_design and component_interfaces documents.
+  expected_output: >
+    A comprehensive integration plan that maps specific entity system functionality to template insertion points.
+    Include recommendations for method extensions, new properties, and integration approach for each
+    component of the entity system.
+  agent: template_integrator
+
+entity_framework_task:
+  description: >
+    Design the core entity framework as an extension to the template's GameLogic class. Your implementation should include:
+    
+    1. Entity class definitions that integrate with the template
+    2. Entity management system that works with GameLogic
+    3. Entity lifecycle hooks that integrate with the game loop
+    4. Integration points with the existing template code
+    5. Serialization/deserialization for entity state
+    
+    Ensure your framework extends the template's code rather than replacing it based on the integration plan.
+    Your code should follow the structure, naming conventions, and patterns established in the template.
+    
+    Review the template analysis and integration mapping provided by the Technical Design crew.
+  expected_output: >
+    Clean, well-documented JavaScript code designed to extend the GameLogic class entity handling.
+    Include clear comments indicating where each block should be inserted and how it extends the
+    existing functionality.
+  agent: entity_framework_developer
+
+component_system_task:
+  description: >
+    Based on the integration plan and entity framework, create a modular component system that extends the template. Your implementation should include:
+    
+    1. Components designed to work with the template's existing patterns
+    2. Component registration and management integrated with GameLogic
+    3. Component communication mechanism that works with the template
+    4. Component lifecycle hooks tied to the template's game loop
+    5. Common component implementations that extend existing functionality
+    
+    Ensure your component system integrates properly with the template and the entity framework.
+    Your extensions should be carefully designed to avoid conflicts with the existing code.
+  expected_output: >
+    Well-structured JavaScript code ready to be inserted into the GameLogic class of the template.
+    Include clear comments marking insertion points and explaining how components interact with
+    the existing template code.
+  agent: component_system_designer
+
+physics_system_task:
+  description: >
+    Create a physics system that extends the template's existing physics handling. Your implementation should:
+    
+    1. Integrate with the template's update cycle in GameLogic
+    2. Extend collision detection to work with entity components
+    3. Support different collision shapes while maintaining template compatibility
+    4. Enhance the template's physics properties
+    5. Ensure proper interaction with the template's game loop timing
+    
+    Your physics system should enhance the template's capabilities without replacing its core functionality.
+    Base your implementation on the integration plan, entity framework, and component system.
+  expected_output: >
+    Physics system extensions for the GameLogic class that improve physics capabilities
+    while maintaining compatibility with the template structure.
+  agent: physics_implementation_expert
+
+entity_behavior_task:
+  description: >
+    Implement behavior systems that extend the template's logic for game entities. Your implementation should:
+    
+    1. Create behavior components that integrate with the template's update cycle
+    2. Implement AI patterns that work within the template's structure
+    3. Design patterns for interactive objects that leverage the template's existing systems
+    4. Ensure behaviors can be triggered by the template's event system
+    5. Optimize behavior updates to work with the template's performance patterns
+    
+    Pay special attention to implementing behaviors for enemies while maintaining compatibility with the template.
+    Your code should enhance the template's capabilities without replacing its core functionality.
+  expected_output: >
+    Entity behavior extensions that enhance the template's GameLogic class with additional
+    behavior patterns and improved AI for game entities.
+  agent: entity_behavior_specialist
+
+game_logic_extensions:
+  description: >
+    Finalize all extensions for the GameLogic class by combining entity framework, component system, physics, and behavior code. Your task includes:
+    
+    1. Integrating all entity system components into a cohesive set of GameLogic class additions
+    2. Ensuring all extensions work together correctly
+    3. Organizing the code for clear insertion into the template
+    4. Adding comments to indicate insertion points and dependencies
+    5. Verifying compatibility with the template structure
+    
+    The final output should be ready for insertion into the GameLogic class of the template at the
+    specified insertion point: {template_game_logic_insertion_point}
+    
+    Format the output as a single JavaScript code block with clear integration instructions.
+  expected_output: >
+    A complete, well-organized set of GameLogic class extensions for the entity system ready for template integration.
+    Include clear comments marking each extension and explaining its integration with the template.
+  agent: entity_framework_developer
+
+legacy_integration_task:
+  description: >
+    For backward compatibility, create a standalone game_entities.js file that combines all the entity system extensions
+    and could function if directly included in an HTML page. Your task includes:
+    
+    1. Combining all entity system code
+    2. Adding any necessary wrapper code or context
+    3. Ensuring the file could work independently if needed
+    4. Providing clear documentation on how this file relates to the template integration
+    5. Including fallback approaches for critical functionality
+    
+    This file is primarily for reference and backward compatibility, as the actual implementation
+    will use the template integration approach with GameLogic extensions.
+  expected_output: >
+    A complete game_entities.js file that contains all entity system functionality in a standalone format.
+    Include clear documentation explaining how the code relates to the template integration approach.
+  agent: template_integrator

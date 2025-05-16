@@ -1,0 +1,325 @@
+{
+  "image_assets": [
+    {
+      "asset_id": "student_idle_male",
+      "asset_type": "character_asset",
+      "filename": "assets/images/student_idle_male.png",
+      "prompt": "A minimalist pixel art of a male Computer Science student standing still, wearing casual university attire, glasses, and holding a laptop, slightly animated in 3 frames for idle state.",
+      "style": "Pixel art with a light color palette including blues and greens for a calm university look",
+      "importance": 5,
+      "description": "Represents the male protagonist in idle animation within the game.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "student_idle_female",
+      "asset_type": "character_asset",
+      "filename": "assets/images/student_idle_female.png",
+      "prompt": "A minimalist pixel art of a female Computer Science student standing still, with her hair up, wearing casual university attire, and holding a tablet, slightly animated in 3 frames for idle state.",
+      "style": "Pixel art with pastel color tones including pinks and purples",
+      "importance": 5,
+      "description": "Represents the female protagonist in idle animation within the game.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "student_running",
+      "asset_type": "character_asset",
+      "filename": "assets/images/student_running.png",
+      "prompt": "A minimalist pixel art of a Computer Science student running, depicted in 6 frames. Features a dynamic pose with hair flowing, showing movement across the screen.",
+      "style": "Pixel art with a mix of vibrant colors to indicate fast movement",
+      "importance": 5,
+      "description": "Animation of the protagonist running, used during movement sequences.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "student_jumping",
+      "asset_type": "character_asset",
+      "filename": "assets/images/student_jumping.png",
+      "prompt": "A minimalist pixel art of a Computer Science student jumping mid-air, with a determined look. Showcases 3 frames of animation to illustrate the jump arc.",
+      "style": "Pixel art with contrasting color to highlight action",
+      "importance": 5,
+      "description": "Used to depict the student character jumping obstacles in the game.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "technical_interview_boss",
+      "asset_type": "enemy_asset",
+      "filename": "assets/images/technical_interview_boss.png",
+      "prompt": "Intimidating pixel art character depicting a boss for technical interviews. Includes idle, attacking, and defeated animations across 10 frames.",
+      "style": "Pixel art with dark reds and blacks for a formidable presence",
+      "importance": 5,
+      "description": "Main boss enemy character in technical interview levels, engaging in battles.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "algorithm_puzzle",
+      "asset_type": "enemy_asset",
+      "filename": "assets/images/algorithm_puzzle.png",
+      "prompt": "Floating image of a pixel art code snippet, representing algorithm puzzles within the game. Static in nature with focus on coding elements.",
+      "style": "Pixel art with bright contrasting colors like orange and teal for puzzle visibility",
+      "importance": 3,
+      "description": "Static puzzle obstacles that players must solve to proceed.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "university_bg",
+      "asset_type": "environment_asset",
+      "filename": "assets/images/university_bg.png",
+      "prompt": "A pixel art university campus background featuring buildings, trees, and benches, lightly animated with blowing leaves.",
+      "style": "Pixel art with earthy tones and greens, emphasizing a tranquil campus setting",
+      "importance": 5,
+      "description": "Background for university level, setting the scene for early game segments.",
+      "size": "1792x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "internship_bg",
+      "asset_type": "environment_asset",
+      "filename": "assets/images/internship_bg.png",
+      "prompt": "An office setting depicted in pixel art, with desks, computers, and workers, elements infuse life with faint computer glows.",
+      "style": "Pixel art with corporate color schemes like greys and blues",
+      "importance": 4,
+      "description": "Background for internship levels, portraying a corporate office environment.",
+      "size": "1792x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "job_hunt_bg",
+      "asset_type": "environment_asset",
+      "filename": "assets/images/job_hunt_bg.png",
+      "prompt": "Urban pixel art background showing a cityscape with tall buildings and passersby, clouds drifting by add depth.",
+      "style": "Pixel art with vivid urban colors to enhance a bustling city feel",
+      "importance": 4,
+      "description": "Used as the setting for job hunting levels, reflecting the busy city atmosphere.",
+      "size": "1792x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "coding_collectible",
+      "asset_type": "collectible_asset",
+      "filename": "assets/images/coding_collectible.png",
+      "prompt": "Various pixel art items themed around coding, such as books and USB drives, twinkling animation showing desirability.",
+      "style": "Pixel art with a bright, eye-catching palette including yellows and blues",
+      "importance": 5,
+      "description": "Collectible items essential for progression and skill development in the game.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "code_bug_obstacle",
+      "asset_type": "obstacle_asset",
+      "filename": "assets/images/code_bug_obstacle.png",
+      "prompt": "A pixel art depiction of a computer code bug appearing as a glitchy element or virus, creating an obstacle for players.",
+      "style": "Pixel art with contrasting colors such as purples and reds to signify danger",
+      "importance": 5,
+      "description": "Obstacle that needs to be debugged or avoided, representing coding errors.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "health_bar",
+      "asset_type": "ui",
+      "filename": "assets/images/ui/health_bar.png",
+      "prompt": "Create a minimalist pixel art health bar for a coding-themed game. The design should feature small pixel hearts that diminish with health loss, set against a simple horizontal bar gradient background. The style should be reminiscent of the retro 8-bit era, using a color palette of red for health and grey for the border.",
+      "style": "Minimalist Pixel Art",
+      "importance": 3,
+      "description": "The health bar displays player's remaining health using pixel hearts. Positioned at the top left of the HUD for easy visibility.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "score_indicator",
+      "asset_type": "ui",
+      "filename": "assets/images/ui/score_indicator.png",
+      "prompt": "Design a pixel art score indicator for a computer science themed game. The element should use a digital font style, typical of classic arcade games, displaying numerical scores in a vibrant yellow against a dark pixelated background.",
+      "style": "Minimalist Pixel Art",
+      "importance": 3,
+      "description": "This UI element shows the player's current score. Located at the top right of the HUD.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "skill_level_indicator",
+      "asset_type": "ui",
+      "filename": "assets/images/ui/skill_level_indicator.png",
+      "prompt": "Create a skill level progression bar in a pixel art style representing the player's coding abilities. It should look like a skill tree with distinct nodes indicating different levels, connected by lines. Use a palette of green for progression and grey for unachieved levels, all in pixel art style.",
+      "style": "Minimalist Pixel Art",
+      "importance": 5,
+      "description": "Indicates player's progress in skill acquisition, resembling a tree with nodes to represent levels. Displays at the side of the HUD.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "menu_button",
+      "asset_type": "ui",
+      "filename": "assets/images/ui/menu_button.png",
+      "prompt": "A rectangular pixel art button for the game's menu system. It should have a pressed and unpressed state, animations when selected, and a retro-style border. Use colors like blue and light grey for an inviting interface experience.",
+      "style": "Minimalist Pixel Art",
+      "importance": 4,
+      "description": "Standard menu button for various in-game menus, including Start, Options, and Exit. Positioned within the menu panels.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "title_screen",
+      "asset_type": "ui",
+      "filename": "assets/images/ui/title_screen.png",
+      "prompt": "Design the main title screen of a coding-themed game. It should feature a stylized 8-bit text with the game\u2019s name 'Code Quest: CS Student Journey' overlaid on a pixelated background depicting a coding environment.",
+      "style": "Minimalist Pixel Art",
+      "importance": 5,
+      "description": "Main title screen displaying the game's name and initial start buttons, providing first impression when game launches.",
+      "size": "1792x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "dialog_box",
+      "asset_type": "ui",
+      "filename": "assets/images/ui/dialog_box.png",
+      "prompt": "A pixel art dialog box for character interactions and tutorials. Design should follow a classical speech bubble with a retro pixel border aesthetic and a clean interior to display text. Use neutral colors like white and black with sharp pixel edges.",
+      "style": "Minimalist Pixel Art",
+      "importance": 4,
+      "description": "Used for character dialogues and tutorial messages. Appears at the lower third of the screen during interactions.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    },
+    {
+      "asset_id": "programming_skills_icon",
+      "asset_type": "ui",
+      "filename": "assets/images/ui/programming_skills_icon.png",
+      "prompt": "Design icons representing different programming skills in a pixel art style, such as a pixelated book for theory, a chip for hardware, and brackets for coding. Each should have a distinctive vibrant color.",
+      "style": "Minimalist Pixel Art",
+      "importance": 5,
+      "description": "Icons for distinct programming skills, used within the skill progression system. Positioned alongside skill bars and trees in the UI.",
+      "size": "1024x1024",
+      "model": "dall-e-3"
+    }
+  ],
+  "audio_assets": [
+    {
+      "asset_id": "jump_sound",
+      "asset_type": "effect",
+      "filename": "assets/audio/jump_sound.mp3",
+      "search_terms": "jump sound effect game jump soft jump, game sound (search term enhanced)",
+      "description": "Quick, soft sound effect for player jumping - essential for character movement.",
+      "importance": 5,
+      "duration": 0.5,
+      "query": "jump sound effect game jump soft jump",
+      "duration_description": null
+    },
+    {
+      "asset_id": "collect_item_sound",
+      "asset_type": "effect",
+      "filename": "assets/audio/collect_item_sound.mp3",
+      "search_terms": "item collect sparkle pickup item sound, sound effect (search term enhanced)",
+      "description": "Sparkling sound that signifies collecting an item, reinforcing core gameplay loop.",
+      "importance": 5,
+      "duration": 1.0,
+      "query": "item collect sparkle pickup item sound, sound effect (search term enhanced)",
+      "duration_description": null
+    },
+    {
+      "asset_id": "enemy_defeat_sound",
+      "asset_type": "effect",
+      "filename": "assets/audio/enemy_defeat_sound.mp3",
+      "search_terms": "enemy defeat sound enemy pop sound victory sound, sound effect (search term enhanced)",
+      "description": "A satisfying pop or crack sound when enemies are defeated, providing feedback for player success.",
+      "importance": 5,
+      "duration": 0.7,
+      "query": "enemy defeat sound enemy pop sound victory sound, sound effect (search term enhanced)",
+      "duration_description": null
+    },
+    {
+      "asset_id": "university_music",
+      "asset_type": "music",
+      "filename": "assets/audio/university_music.mp3",
+      "search_terms": "calm motivational music light instrumentation study music, 8-bit (search term enhanced)",
+      "description": "Calm, motivational tune with light instrumentation for the University level, setting the mood.",
+      "importance": 5,
+      "duration": 120.0,
+      "query": "calm motivational music light instrumentation study music, 8-bit (search term enhanced)",
+      "duration_description": null
+    },
+    {
+      "asset_id": "internship_music",
+      "asset_type": "music",
+      "filename": "assets/audio/internship_music.mp3",
+      "search_terms": "steady office music work-life balance music medium-paced, 8-bit (search term enhanced)",
+      "description": "Steady, medium-paced track representing work-life balance for the Internship level.",
+      "importance": 3,
+      "duration": 120.0,
+      "query": "steady office music work-life balance music medium-paced, 8-bit (search term enhanced)",
+      "duration_description": null
+    },
+    {
+      "asset_id": "job_hunt_music",
+      "asset_type": "music",
+      "filename": "assets/audio/job_hunt_music.mp3",
+      "search_terms": "upbeat tense music job search hustle music, 8-bit (search term enhanced)",
+      "description": "Upbeat and slightly tense track representing the hustle of job hunting, supporting story tension.",
+      "importance": 3,
+      "duration": 120.0,
+      "query": "upbeat tense music job search hustle music, 8-bit (search term enhanced)",
+      "duration_description": null
+    },
+    {
+      "asset_id": "button_click_sound",
+      "asset_type": "ui",
+      "filename": "assets/audio/button_click_sound.mp3",
+      "search_terms": "ui button click interface click sound, game sound (search term enhanced)",
+      "description": "Crisp sound effect for button clicks to enhance UI interaction.",
+      "importance": 4,
+      "duration": 0.2,
+      "query": "ui button click interface click sound, game sound (search term enhanced)",
+      "duration_description": null
+    },
+    {
+      "asset_id": "menu_transition_sound",
+      "asset_type": "ui",
+      "filename": "assets/audio/menu_transition_sound.mp3",
+      "search_terms": "menu transition sound ui slide sound, game sound (search term enhanced)",
+      "description": "Gentle swish or slide sound for transitions in and out of menus.",
+      "importance": 4,
+      "duration": 0.5,
+      "query": "menu transition sound ui slide sound, game sound (search term enhanced)",
+      "duration_description": null
+    },
+    {
+      "asset_id": "university_ambient",
+      "asset_type": "ambient",
+      "filename": "assets/audio/university_ambient.mp3",
+      "search_terms": "campus ambient university background sound, game sound (search term enhanced)",
+      "description": "Background ambient noise of a campus setting with mild chatter and faint walking.",
+      "importance": 4,
+      "duration": 120.0,
+      "query": "campus ambient university background sound, game sound (search term enhanced)",
+      "duration_description": null
+    },
+    {
+      "asset_id": "internship_ambient",
+      "asset_type": "ambient",
+      "filename": "assets/audio/internship_ambient.mp3",
+      "search_terms": "office ambient sound workplace background noise, game sound (search term enhanced)",
+      "description": "Office ambient sounds including keyboards, distant conversations, and machine hums.",
+      "importance": 3,
+      "duration": 120.0,
+      "query": "office ambient sound workplace background noise, game sound (search term enhanced)",
+      "duration_description": null
+    },
+    {
+      "asset_id": "job_hunt_ambient",
+      "asset_type": "ambient",
+      "filename": "assets/audio/job_hunt_ambient.mp3",
+      "search_terms": "city ambient noise urban background sound, game sound (search term enhanced)",
+      "description": "Urban ambient soundscapes with city traffic, distant car horns, and foot traffic.",
+      "importance": 3,
+      "duration": 120.0,
+      "query": "city ambient noise urban background sound, game sound (search term enhanced)",
+      "duration_description": null
+    }
+  ]
+}

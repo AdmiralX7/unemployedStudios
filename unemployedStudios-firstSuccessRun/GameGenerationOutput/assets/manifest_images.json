@@ -1,0 +1,60 @@
+{
+  "student_idle_male": {
+    "filename": "assets/images/student_idle_male.png",
+    "full_path": "GameGenerationOutput/assets/images/student_idle_male.png",
+    "size": "1024x1024",
+    "model": "dall-e-3",
+    "prompt": "A minimalist pixel art of a male Computer Science student standing still, wearing casual university attire, glasses, and holding a laptop, slightly animated in 3 frames for idle state.",
+    "result": "{\n  \"message\": \"Image generated and saved as GameGenerationOutput/assets/images/student_idle_male.png.\",\n  \"url\": \"https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-SA6j6Nafy43b7nrN9LBUkE2l.png?st=2025-05-16T07%3A12%3A53Z&se=2025-05-16T09%3A12%3A53Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T20%3A19%3A46Z&ske=2025-05-16T20%3A19%3A46Z&sks=b&skv=2024-08-04&sig=I8TTmgcnM9AlSuMvtUHVi9ujEywYSSr0D72HL9Zoffs%3D\"\n}"
+  },
+  "student_idle_female": {
+    "filename": "assets/images/student_idle_female.png",
+    "full_path": "GameGenerationOutput/assets/images/student_idle_female.png",
+    "size": "1024x1024",
+    "model": "dall-e-3",
+    "prompt": "A minimalist pixel art of a female Computer Science student standing still, with her hair up, wearing casual university attire, and holding a tablet, slightly animated in 3 frames for idle state.",
+    "result": "{\n  \"message\": \"Image generated and saved as GameGenerationOutput/assets/images/student_idle_female.png.\",\n  \"url\": \"https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-YUxdVz0Xj2oWyKlrQl7IMVAa.png?st=2025-05-16T07%3A13%3A09Z&se=2025-05-16T09%3A13%3A09Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T22%3A59%3A49Z&ske=2025-05-16T22%3A59%3A49Z&sks=b&skv=2024-08-04&sig=I5/i1f9Mz80Kqn/MoZfq/d%2B5vMNo0DN2n180uNyKprY%3D\"\n}"
+  },
+  "student_running": {
+    "filename": "assets/images/student_running.png",
+    "full_path": "GameGenerationOutput/assets/images/student_running.png",
+    "size": "1024x1024",
+    "model": "dall-e-3",
+    "prompt": "A minimalist pixel art of a Computer Science student running, depicted in 6 frames. Features a dynamic pose with hair flowing, showing movement across the screen.",
+    "result": "{\n  \"message\": \"Image generated and saved as GameGenerationOutput/assets/images/student_running.png.\",\n  \"url\": \"https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-kJUBNzmeP8smYh3K40uEdkPt.png?st=2025-05-16T07%3A13%3A23Z&se=2025-05-16T09%3A13%3A23Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T20%3A16%3A49Z&ske=2025-05-16T20%3A16%3A49Z&sks=b&skv=2024-08-04&sig=4V3/XUW5kH/enVEpgPglou2Ckay5%2BVPIB4TIv3dsQok%3D\"\n}"
+  },
+  "student_jumping": {
+    "filename": "assets/images/student_jumping.png",
+    "full_path": "GameGenerationOutput/assets/images/student_jumping.png",
+    "size": "1024x1024",
+    "model": "dall-e-3",
+    "prompt": "A minimalist pixel art of a Computer Science student jumping mid-air, with a determined look. Showcases 3 frames of animation to illustrate the jump arc.",
+    "result": "{\n  \"message\": \"Image generated and saved as GameGenerationOutput/assets/images/student_jumping.png.\",\n  \"url\": \"https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-yTQVLQqrGtD7kdW4gf3WdA8w.png?st=2025-05-16T07%3A13%3A38Z&se=2025-05-16T09%3A13%3A38Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T20%3A36%3A23Z&ske=2025-05-16T20%3A36%3A23Z&sks=b&skv=2024-08-04&sig=Ym6FC2%2BmX0jVRNNX9GMMjzOriAKBlDt5li1Yx7nCpdM%3D\"\n}"
+  },
+  "technical_interview_boss": {
+    "filename": "assets/images/technical_interview_boss.png",
+    "full_path": "GameGenerationOutput/assets/images/technical_interview_boss.png",
+    "size": "1024x1024",
+    "model": "dall-e-3",
+    "prompt": "Intimidating pixel art character depicting a boss for technical interviews. Includes idle, attacking, and defeated animations across 10 frames.",
+    "result": "{\n  \"message\": \"Image generated and saved as GameGenerationOutput/assets/images/technical_interview_boss.png.\",\n  \"url\": \"https://oaidalleapiprodscus.blob.core.windows.net/private/org-eRynkXBvnus3ZX92v7pI1fI6/user-h1lbQu5moNjQd6iRNdHAAx0k/img-kr4nRqZFlUsq9m823cTKI0gN.png?st=2025-05-16T07%3A13%3A54Z&se=2025-05-16T09%3A13%3A54Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=cc612491-d948-4d2e-9821-2683df3719f5&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-15T23%3A20%3A16Z&ske=2025-05-16T23%3A20%3A16Z&sks=b&skv=2024-08-04&sig=kosRsDmZVrABUzXdHgPcHd6svzu8H05pkchRKdxVwRY%3D\"\n}"
+  },
+  "background": {
+    "filename": "assets/images/background.png",
+    "full_path": "GameGenerationOutput/assets/images/background.png",
+    "size": "1024x1024",
+    "description": "Game background image with proper layering and transparency for enhanced visual appeal"
+  },
+  "enemy": {
+    "filename": "assets/images/enemy.png",
+    "full_path": "GameGenerationOutput/assets/images/enemy.png",
+    "size": "1024x1024",
+    "description": "Enemy character sprite with directional flipping and glow effects"
+  },
+  "fireball": {
+    "filename": "assets/images/fireball.png",
+    "full_path": "GameGenerationOutput/assets/images/fireball.png",
+    "size": "1024x1024",
+    "description": "Projectile sprite for enemy attacks and visual effects"
+  }
+}

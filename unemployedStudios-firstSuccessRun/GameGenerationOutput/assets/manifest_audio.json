@@ -1,0 +1,77 @@
+{
+  "jump_sound": {
+    "filename": "assets/audio/jump_sound.mp3",
+    "full_path": "GameGenerationOutput/assets/audio/jump_sound.mp3",
+    "query": "jump sound effect game jump soft jump, game sound (search term enhanced)",
+    "result": {
+      "success": true,
+      "sound_id": 564166,
+      "filename": "jump_sound.mp3",
+      "duration": 307.947,
+      "path": "GameGenerationOutput/assets/audio/jump_sound.mp3",
+      "preview_url": "https://cdn.freesound.org/previews/564/564166_1445263-hq.mp3",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "file_size_bytes": 7138272
+    }
+  },
+  "collect_item_sound": {
+    "filename": "assets/audio/collect_item_sound.mp3",
+    "full_path": "GameGenerationOutput/assets/audio/collect_item_sound.mp3",
+    "query": "item collect sparkle pickup item sound, sound effect (search term enhanced)",
+    "result": {
+      "success": true,
+      "sound_id": 337436,
+      "filename": "collect_item_sound.mp3",
+      "duration": 3.81546,
+      "path": "GameGenerationOutput/assets/audio/collect_item_sound.mp3",
+      "preview_url": "https://cdn.freesound.org/previews/337/337436_321967-hq.mp3",
+      "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "file_size_bytes": 91831
+    }
+  },
+  "enemy_defeat_sound": {
+    "filename": "assets/audio/enemy_defeat_sound.mp3",
+    "full_path": "GameGenerationOutput/assets/audio/enemy_defeat_sound.mp3",
+    "query": "enemy defeat sound enemy pop sound victory sound, sound effect (search term enhanced)",
+    "result": {
+      "success": true,
+      "sound_id": 678424,
+      "filename": "enemy_defeat_sound.mp3",
+      "duration": 7.41878,
+      "path": "GameGenerationOutput/assets/audio/enemy_defeat_sound.mp3",
+      "preview_url": "https://cdn.freesound.org/previews/678/678424_14161761-hq.mp3",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "file_size_bytes": 176582
+    }
+  },
+  "university_music": {
+    "filename": "assets/audio/university_music.mp3",
+    "full_path": "GameGenerationOutput/assets/audio/university_music.mp3",
+    "query": "calm motivational music light instrumentation study music, 8-bit (search term enhanced)",
+    "result": {
+      "success": true,
+      "sound_id": 367603,
+      "filename": "university_music.mp3",
+      "duration": 2.89188,
+      "path": "GameGenerationOutput/assets/audio/university_music.mp3",
+      "preview_url": "https://cdn.freesound.org/previews/367/367603_6324381-hq.mp3",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "file_size_bytes": 87558
+    }
+  },
+  "internship_music": {
+    "filename": "assets/audio/internship_music.mp3",
+    "full_path": "GameGenerationOutput/assets/audio/internship_music.mp3",
+    "query": "steady office music work-life balance music medium-paced, 8-bit (search term enhanced)",
+    "result": {
+      "success": true,
+      "sound_id": 334980,
+      "filename": "internship_music.mp3",
+      "duration": 21.1331,
+      "path": "GameGenerationOutput/assets/audio/internship_music.mp3",
+      "preview_url": "https://cdn.freesound.org/previews/334/334980_5863857-hq.mp3",
+      "license": "http://creativecommons.org/publicdomain/zero/1.0/",
+      "file_size_bytes": 397597
+    }
+  }
+}

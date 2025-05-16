@@ -1,0 +1,174 @@
+ui_framework_task:
+  description: >
+    Review the core_systems_design.md, component_interfaces.md, and style_guide.md documents, and design the core UI framework for
+    the HTML5 game. Your implementation should include:
+    
+    1. A flexible UI component architecture
+    2. Core rendering system for UI elements
+    3. Event handling and input management for UI
+    4. Layout management system
+    5. UI state management
+    
+    Your code should be well-commented, follow JavaScript best practices, and align with the interfaces defined
+    in the technical design documents. The UI system should adhere to the visual guidelines in the style guide.
+    
+    The resulting code should be saved in 'game_ui.js' as specified in the flow architecture document.
+  expected_output: >
+    A complete, well-structured game_ui.js file implementing the UI framework with all essential components.
+    The output should include documentation of the UI system architecture and any design decisions made.
+  agent: ui_framework_developer
+
+user_experience_task:
+  description: >
+    Based on the style_guide.md and the UI framework implementation, create components and screens for the game's 
+    user interface. Your implementation should include:
+    
+    1. Main menu screen and navigation
+    2. HUD elements (score, health, collectibles, etc.)
+    3. Pause menu and settings screens
+    4. Dialog and notification systems
+    5. Game over and level completion screens
+    
+    Ensure your UI components are intuitive, visually consistent with the style guide, and provide clear feedback
+    to player actions. Add your code to the game_ui.js file.
+  expected_output: >
+    UI components and screens added to game_ui.js that implement all necessary game interfaces
+    in an intuitive, engaging manner that follows the game's visual style.
+  agent: user_experience_designer
+
+responsive_design_task:
+  description: >
+    Create responsive layout systems for the UI framework that adapt to different screen sizes and device capabilities.
+    Your implementation should:
+    
+    1. Implement a scaling system for UI elements
+    2. Create dynamic layout containers for different aspect ratios
+    3. Design touch-friendly interfaces with appropriate hit areas
+    4. Implement resizing and repositioning logic for UI elements
+    5. Create fallbacks for different device capabilities
+    
+    Ensure the UI remains functional and visually appealing across different devices and screen orientations.
+    Add your implementation to the game_ui.js file.
+  expected_output: >
+    Responsive design system added to game_ui.js that ensures the UI adapts appropriately to different
+    screen sizes, aspect ratios, and input methods.
+  agent: responsive_design_expert
+
+animation_task:
+  description: >
+    Implement animations and transitions for UI elements based on the style guide and UI framework.
+    Your implementation should:
+    
+    1. Create a flexible animation system for UI elements
+    2. Implement transitions between UI states and screens
+    3. Add feedback animations for buttons and interactive elements
+    4. Create loading and progress animations
+    5. Ensure animations are performant and don't impact gameplay
+    
+    The animations should enhance usability while maintaining the visual style defined in the style guide.
+    Add your implementation to the game_ui.js file.
+  expected_output: >
+    Animation system and specific UI animations added to game_ui.js, creating a polished, 
+    responsive feel for all UI interactions.
+  agent: animation_specialist
+
+final_integration_task:
+  description: >
+    Review all components of the UI system (framework, screens, responsiveness, animations) and ensure they work
+    together coherently. Your task includes:
+    
+    1. Validating that all components interact properly according to the component interfaces
+    2. Ensuring consistent styling across all UI elements
+    3. Testing integration with game systems (input, rendering, game state)
+    4. Documenting the complete UI system architecture
+    5. Providing usage examples for each major UI component
+    
+    Finalize the game_ui.js file to ensure it's complete, well-structured, and ready for integration with
+    the game engine and other game systems.
+  expected_output: >
+    A finalized game_ui.js file that integrates all UI components into a cohesive system. Include API documentation
+    explaining how to use the UI system, create new UI elements, and integrate with the game flow.
+  agent: ui_framework_developer
+
+integration_planning_task:
+  description: >
+    Analyze the HTML5 game template structure to identify UI integration points and plan the approach for extending the UI system.
+    Your task includes:
+    
+    1. Identifying the GameUI class structure and methods
+    2. Locating insertion points for UI components and styles
+    3. Planning how to extend existing UI functionality
+    4. Determining dependencies between UI components
+    5. Creating a clear integration strategy for all UI extensions
+    
+    The output should provide a detailed plan for how the UI system will be integrated into the template,
+    including specific insertion points for GameUI extensions, CSS styles, and audio elements.
+  expected_output: >
+    A comprehensive integration plan with detailed mapping of UI components to template insertion points,
+    clear extension strategies, and guidelines for maintaining template compatibility.
+  agent: template_integrator
+
+game_ui_extensions:
+  description: >
+    Finalize the GameUI class extensions for the UI system. Your task includes:
+    
+    1. Combining all UI framework components into coherent GameUI extensions
+    2. Enhancing the GameUI class with new methods and properties
+    3. Ensuring compatibility with the existing template structure
+    4. Adding proper documentation for all extensions
+    5. Creating a clean, maintainable code structure
+    
+    The output should be ready for insertion into the GameUI class in the template at the specified insertion point.
+  expected_output: >
+    A complete set of GameUI class extensions that implement all UI functionality required by the game,
+    properly formatted for template integration.
+  agent: ui_framework_developer
+
+css_extensions:
+  description: >
+    Create the CSS style extensions needed for the UI system. Your task includes:
+    
+    1. Defining styles for all UI components and screens
+    2. Following the visual guidelines from the style guide
+    3. Creating responsive styles for different screen sizes
+    4. Optimizing styles for performance
+    5. Ensuring compatibility with the template's existing styles
+    
+    The output should be ready for insertion into the template's CSS section at the specified insertion point.
+  expected_output: >
+    A complete set of CSS style definitions for all UI components, properly formatted for template integration.
+  agent: user_experience_designer
+
+audio_extensions:
+  description: >
+    Create the audio element extensions needed for UI sound effects. Your task includes:
+    
+    1. Defining audio elements for UI interactions
+    2. Creating loading and management code for audio resources
+    3. Linking audio effects to UI components
+    4. Ensuring proper audio handling across browsers
+    5. Optimizing audio loading and playback
+    
+    The output should be ready for insertion into the template's audio section at the specified insertion point.
+  expected_output: >
+    A complete set of audio element definitions and handling code for UI sound effects,
+    properly formatted for template integration.
+  agent: animation_specialist
+
+legacy_integration_task:
+  description: >
+    For backward compatibility, create a standalone game_ui.js file that combines all the UI system
+    extensions and could function if directly included in an HTML page. Your task includes:
+    
+    1. Combining all UI system code
+    2. Adding any necessary wrapper code or context
+    3. Ensuring the file could work independently if needed
+    4. Providing clear documentation on how this file relates to the template integration
+    5. Including fallback approaches for critical functionality
+    
+    This file is primarily for reference and backward compatibility, as the actual implementation
+    will use the template integration approach with GameUI, CSS, and audio extensions.
+  expected_output: >
+    A standalone game_ui.js file that combines all UI system functionality and could work
+    independently of the template integration approach.
+  agent: template_integrator

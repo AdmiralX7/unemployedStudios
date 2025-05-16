@@ -1,0 +1,172 @@
+integration_planning_task:
+  description: >
+    Analyze the HTML5 game template and plan integration points for engine functionality. Your analysis should include:
+    
+    1. Detailed review of the Game, GameLogic, and GameUI classes in the template
+    2. Identification of specific methods and properties to extend
+    3. Assessment of the existing game loop and update cycle
+    4. Planning for how physics, input, and rendering extensions will integrate
+    5. Potential conflicts or concerns to address
+    
+    The template can be found at: {game_template_path}
+    
+    Review the template_analysis provided by the Technical Design crew for additional insights.
+    
+    Base your planning on the core_systems_design.md, component_interfaces.md, and integration_mapping.md documents.
+  expected_output: >
+    A comprehensive integration plan that maps specific engine functionality to template insertion points.
+    Include recommendations for method extensions, new properties, and integration approach for each
+    component of the game engine.
+  agent: template_integrator
+
+game_loop_extension_task:
+  description: >
+    Create extensions for the template's Game class to enhance the game loop functionality. Your implementation should include:
+    
+    1. Extensions to Game.constructor() for initialization
+    2. Enhancements to Game.gameLoop() for timing and delta calculations
+    3. Additions to Game.updateGame() for physics and state updates
+    4. Helper methods for managing game state
+    5. Event handling extensions for game control
+    
+    Ensure your extensions integrate seamlessly with the existing template code based on the integration plan.
+    Your code should follow the structure, naming conventions, and patterns established in the template.
+    
+    Review the template analysis and integration mapping provided by the Technical Design crew.
+  expected_output: >
+    Clean, well-documented JavaScript code ready to be inserted into the Game class of the template.
+    Include clear comments indicating where each block should be inserted and how it extends the
+    existing functionality.
+  agent: game_loop_architect
+
+game_logic_extension_task:
+  description: >
+    Create extensions for the template's GameLogic class to add physics and core game systems. Your implementation should include:
+    
+    1. Extensions to GameLogic.constructor() for initializing physics systems
+    2. Additions to GameLogic.update() for physics calculations
+    3. Helper methods for handling collisions and movement
+    4. Constants and configuration for physics behavior
+    5. Core game mechanics implementations
+    
+    Ensure your code integrates properly with the Game class extensions and follows the template's patterns.
+    Your extensions should be carefully designed to avoid conflicts with the existing code.
+    
+    Review the template analysis and integration mapping provided by the Technical Design crew.
+  expected_output: >
+    Well-structured JavaScript code ready to be inserted into the GameLogic class of the template.
+    Include clear comments marking insertion points and explaining the purpose of each addition.
+  agent: game_loop_architect
+
+rendering_system_task:
+  description: >
+    Enhance the rendering capabilities of the template by extending the appropriate classes. Your implementation should include:
+    
+    1. Extensions to the rendering methods in the Game and GameUI classes
+    2. Sprite and animation rendering functions that work with the template's canvas context
+    3. Layer management for background, gameplay elements, and UI
+    4. Screen resolution and scaling management compatible with the template
+    5. Visual effects and optimization techniques
+    
+    Ensure your rendering extensions integrate properly with the game loop and GameLogic extensions.
+    Your code should respect the template's established rendering patterns while enhancing them.
+    
+    Review the template analysis and integration mapping provided by the Technical Design crew.
+  expected_output: >
+    Rendering system extensions for both the Game and GameUI classes that improve visual capabilities
+    while maintaining compatibility with the template structure.
+  agent: rendering_engine_developer
+
+input_system_task:
+  description: >
+    Enhance the input handling capabilities of the template. Your implementation should:
+    
+    1. Extend the Game.setupEventListeners() method
+    2. Add support for keyboard, mouse, touch, and gamepad controls
+    3. Implement a flexible input mapping system that works with the template
+    4. Handle multi-touch for mobile devices while maintaining template compatibility
+    5. Ensure consistent cross-browser behavior
+    
+    Design your extensions to integrate seamlessly with the existing event system in the template.
+    Your code should enhance the template's capabilities without replacing its core functionality.
+    
+    Review the template analysis and integration mapping provided by the Technical Design crew.
+  expected_output: >
+    Input system extensions that enhance the template's event handling with additional input methods
+    and improved responsiveness across different devices and browsers.
+  agent: input_system_specialist
+
+performance_optimization_task:
+  description: >
+    Review the Game and GameLogic extensions for performance optimization opportunities. Your task includes:
+    
+    1. Identifying potential performance issues in the extensions
+    2. Implementing memory management best practices
+    3. Optimizing render calls and physics updates
+    4. Ensuring efficient interaction between extensions and template code
+    5. Adding performance monitoring capabilities compatible with the template
+    
+    Refine the extensions to improve performance while maintaining compatibility with the template structure.
+    Focus on optimizations that specifically address the integration of new code with existing template code.
+    
+    Review the template analysis and integration mapping provided by the Technical Design crew.
+  expected_output: >
+    Optimized versions of the Game and GameLogic extensions with clear documentation of the
+    performance improvements made and their expected impact on game performance.
+  agent: performance_optimizer
+
+game_class_extensions:
+  description: >
+    Finalize all extensions for the Game class by combining and optimizing the previous task outputs. Your task includes:
+    
+    1. Integrating game loop, rendering, and input extensions into a cohesive set of Game class additions
+    2. Ensuring all extensions work together correctly
+    3. Organizing the code for clear insertion into the template
+    4. Adding comments to indicate insertion points and dependencies
+    5. Verifying compatibility with the template structure
+    
+    The final output should be ready for insertion into the Game class of the template at the
+    specified insertion points: {template_game_class_insertion_point}
+    
+    Format the output as a single JavaScript code block with clear integration instructions.
+  expected_output: >
+    A complete, well-organized set of Game class extensions ready for template integration.
+    Include clear comments marking each extension and explaining its integration with the template.
+  agent: game_loop_architect
+
+game_logic_extensions:
+  description: >
+    Finalize all extensions for the GameLogic class by combining and optimizing the previous task outputs. Your task includes:
+    
+    1. Integrating physics, state management, and helper method extensions
+    2. Ensuring all GameLogic extensions work correctly with Game class extensions
+    3. Organizing the code for clear insertion into the template
+    4. Adding comments to indicate insertion points and dependencies
+    5. Verifying compatibility with the template structure
+    
+    The final output should be ready for insertion into the GameLogic class of the template at the
+    specified insertion points: {template_game_logic_insertion_point}
+    
+    Format the output as a single JavaScript code block with clear integration instructions.
+  expected_output: >
+    A complete, well-organized set of GameLogic class extensions ready for template integration.
+    Include clear comments marking each extension and explaining its integration with the template.
+  agent: game_loop_architect
+
+legacy_integration_task:
+  description: >
+    For backward compatibility, create a standalone game_engine.js file that combines all the extensions
+    and could function if directly included in an HTML page. Your task includes:
+    
+    1. Combining Game class and GameLogic class extensions
+    2. Adding any necessary wrapper code or context
+    3. Ensuring the file could work independently if needed
+    4. Providing clear documentation on how this file relates to the template integration
+    5. Including fallback approaches for critical functionality
+    
+    This file is primarily for reference and backward compatibility, as the actual implementation
+    will use the template integration approach.
+  expected_output: >
+    A complete game_engine.js file that contains all engine functionality in a standalone format.
+    Include clear documentation explaining how the code relates to the template integration approach.
+  agent: template_integrator
