@@ -1,0 +1,136 @@
+research_task:
+  description: >
+    Conduct a thorough research about {topic}
+    Make sure you find any interesting and relevant information given
+    the current year is {current_year}.
+  expected_output: >
+    A list with 10 bullet points of the most relevant information about {topic}
+  agent: researcher
+
+reporting_task:
+  description: >
+    Review the context you got and expand each topic into a full section for a report.
+    Make sure the report is detailed and contains any and all relevant information.
+  expected_output: >
+    A fully fledged report with the main topics, each with a full section of information.
+    Formatted as markdown without '```'
+  agent: reporting_analyst
+
+analyze_asset_requirements:
+  description: >
+    You need to analyze the game concept, style guide, and game design document to create a
+    comprehensive list of assets required for the game "Code Quest: CS Student Journey".
+    
+    Consider the following requirements:
+    - The game has a minimalist pixel art style
+    - Character assets: CS student protagonist, various enemy types like "technical interview" bosses
+    - Environment assets: University, Internship, and Job Hunt level backgrounds
+    - Collectible assets: Coding-themed collectibles and obstacles
+    - UI elements: Programming skills progression system, health/score indicators
+    - Sound effects: For jumping, collecting items, defeating enemies
+    - Music: Background tracks for different levels
+    
+    Organize your findings into categories and indicate priority levels for each asset.
+  expected_output: >
+    A detailed asset requirements document organized by categories (characters, environments, UI, audio)
+    with descriptions of each required asset and their importance to gameplay.
+  agent: asset_specification_agent
+
+specify_visual_assets:
+  description: >
+    Based on the asset requirements analysis, create detailed specifications for all visual assets
+    needed for the "Code Quest" game using the ImageAssetSpec Pydantic model. Create at least 10-15
+    image asset specifications covering:
+    
+    1. Character assets: Protagonist in different states (idle, running, jumping), enemies
+    2. Environment assets: Level backgrounds for University, Internship, and Job Hunt
+    3. Collectibles: Various coding-themed items
+    4. Obstacles: Coding challenges and bugs to avoid
+    
+    For each asset specification, ensure you include:
+    - A unique asset_id (e.g., "student_idle", "university_bg")
+    - The asset_type category
+    - A specific filename (e.g., "assets/images/student_idle.png")
+    - A highly detailed DALL-E prompt that will generate a pixel art style image
+    - The visual style description (pixel art with specific color scheme)
+    - An importance level (1-5)
+    - A clear description of the asset's purpose in the game
+    
+    Remember: you are ONLY creating the specifications, not generating the actual images.
+  expected_output: >
+    A JSON array of ImageAssetSpec objects containing detailed specifications for all
+    required visual assets in the game, structured according to the Pydantic model.
+  agent: visual_asset_agent
+
+specify_ui_assets:
+  description: >
+    Based on the asset requirements analysis, create detailed specifications for all UI elements
+    needed for the "Code Quest" game using the ImageAssetSpec Pydantic model. Create at least 5-8
+    UI asset specifications covering:
+    
+    1. HUD elements: Health bar, score indicator, skill level indicators
+    2. Menu elements: Buttons, panels, title screen
+    3. Dialog boxes: For tutorials and character interactions
+    4. Icons: For different programming skills and abilities
+    
+    For each UI asset specification, ensure you include:
+    - A unique asset_id (e.g., "health_bar", "menu_button")
+    - The asset_type should be "ui"
+    - A specific filename (e.g., "assets/images/ui/health_bar.png")
+    - A highly detailed DALL-E prompt that will generate a pixel art style UI element
+    - The visual style description matching the game's style
+    - An importance level (1-5)
+    - A clear description of the UI element's purpose and placement in the game
+    
+    Remember: you are ONLY creating the specifications, not generating the actual images.
+  expected_output: >
+    A JSON array of ImageAssetSpec objects containing detailed specifications for all
+    required UI assets in the game, structured according to the Pydantic model.
+  agent: ui_asset_agent
+
+specify_audio_assets:
+  description: >
+    Based on the asset requirements analysis, create detailed specifications for all audio assets
+    needed for the "Code Quest" game using the AudioAssetSpec Pydantic model. Create at least 8-12
+    audio asset specifications covering:
+    
+    1. Sound effects: Jumping, collecting items, defeating enemies, completing levels
+    2. Background music: For each level environment (University, Internship, Job Hunt)
+    3. UI sounds: Button clicks, menu transitions
+    4. Ambient sounds: Environmental background sounds for each level
+    
+    For each audio asset specification, ensure you include:
+    - A unique asset_id (e.g., "jump_sound", "university_music")
+    - The asset_type (effect, music, ambient, ui)
+    - A specific filename (e.g., "assets/audio/jump_sound.mp3")
+    - Specific search terms that would find an appropriate sound on Freesound
+    - A clear description of the sound and its purpose in the game
+    - An importance level (1-5)
+    - If applicable, a desired duration for the audio clip
+    
+    Remember: you are ONLY creating the specifications, not sourcing the actual audio files.
+  expected_output: >
+    A JSON array of AudioAssetSpec objects containing detailed specifications for all
+    required audio assets in the game, structured according to the Pydantic model.
+  agent: audio_asset_agent
+
+compile_asset_specifications:
+  description: >
+    As the Asset Specification Agent, your task is to compile all the specified assets into a
+    single comprehensive AssetSpecCollection that follows the Pydantic model structure.
+    
+    You will:
+    1. Take all ImageAssetSpec objects from the visual asset and UI asset specification tasks
+    2. Take all AudioAssetSpec objects from the audio asset specification task
+    3. Combine them into a single AssetSpecCollection object
+    4. Ensure there are no duplicate asset_ids
+    5. Verify all specifications are complete and valid
+    6. Organize assets by importance (ensure critical assets are prioritized)
+    
+    The resulting collection will be used by the main program to generate and download
+    the actual assets for the game.
+  expected_output: >
+    A complete JSON representation of an AssetSpecCollection object containing arrays of
+    both image_assets and audio_assets, following the Pydantic model structure. This collection
+    should represent all assets needed for the "Code Quest" game.
+  agent: asset_specification_agent

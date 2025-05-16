@@ -29,16 +29,18 @@ GameDevelopmentFlow
 │   └── [Feedback Loop] Design Refinement
 │
 ├── Code Generation Phase [PARALLEL CREWS, SEQUENTIAL INTEGRATION]
-│   ├── Engine Crew Development   ─┐
+│   ├── Engine Crew Development  ─┐
 │   ├── Entity Crew Development   │
 │   ├── Level Crew Development    ├─→ Template Integration ─→ [Feedback Loop] Code Refinement
 │   └── UI Crew Development       │
 │
-├── Asset Generation Phase [PARALLEL]
-│   ├── Asset Specification
-│   ├── Visual Asset Creation ───┐
-│   ├── Audio Asset Creation ────┼─→ Asset Integration
-│   └── UI Asset Creation ───────┘
+├── Asset Generation Phase [SEQUENTIAL SPECIFICATION, PARALLEL GENERATION]
+│   ├── Asset Requirements Analysis
+│   ├── Visual Asset Specification
+│   ├── UI Asset Specification
+│   ├── Audio Asset Specification
+│   ├── Asset Specification Compilation
+│   └── Asset Generation/Download
 │
 └── Testing & Finalization Phase [SEQUENTIAL]
     ├── Playwright Testing
@@ -101,6 +103,15 @@ This flow uses a mix of sequential and parallel execution patterns:
 - Code Consolidation Expert
 - Template Compliance Validator
 - Performance Optimization Engineer
+
+### 6. Asset Generation Crew
+**Purpose**: Specify and generate visual and audio assets for the game
+**Integration Point**: Asset references in HTML, CSS, and JavaScript code
+**Agents**:
+- Asset Specification Agent
+- Visual Asset Agent
+- UI Asset Agent
+- Audio Asset Agent
 
 ## Template Integration Strategy
 
@@ -202,3 +213,17 @@ def evaluate_integration(self):
     else:
         return self.proceed_to_asset_generation
 ```
+
+## Asset Generation Strategy
+
+The Asset Generation Phase follows a two-step approach:
+
+1. **Specification Creation**: The Asset Generation Crew creates detailed specifications for all required assets using structured Pydantic models:
+   - `ImageAssetSpec` - For visual assets with DALL-E prompts
+   - `AudioAssetSpec` - For audio assets with Freesound search terms
+
+2. **Asset Generation**: The main flow processes these specifications to generate/download the actual assets:
+   - Visual assets are generated using the `GenerateAndDownloadImageTool` with DALL-E
+   - Audio assets are sourced using the `SearchAndSaveSoundTool` with Freesound
+
+All assets are saved to structured directories (`GameGenerationOutput/assets/images` and `GameGenerationOutput/assets/audio`) and can be referenced in the game HTML.
