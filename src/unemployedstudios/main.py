@@ -143,7 +143,7 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 except json.JSONDecodeError:
                     # If not valid JSON, wrap it in a content field
                     concept_data = {"content": concept_output.raw}
-                
+                    
                 # Save the complete data to a single file
                 with open(self._get_output_path("concept_phase_output.json"), "w") as f:
                     json.dump(concept_data, f, indent=2)
@@ -913,6 +913,182 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
         
         return "UI System Development Phase completed successfully with template integration"
 
+    def _validate_code_segment(self, segment_type, content, required_patterns=None):
+        """
+        Validates a code segment before integration into the template.
+        
+        Args:
+            segment_type: The type of code segment (game_ui, game_logic, game_class, css, audio)
+            content: The code segment to validate
+            required_patterns: Optional list of patterns that must be present in valid code
+            
+        Returns:
+            tuple: (is_valid, sanitized_content, error_message)
+        """
+        if not content or not isinstance(content, str):
+            return False, "", f"Invalid {segment_type} segment: content is empty or not a string"
+        
+        # Trim whitespace
+        sanitized_content = content.strip()
+        if not sanitized_content:
+            return False, "", f"Invalid {segment_type} segment: content is empty after trimming whitespace"
+        
+        # Check for minimum length based on segment type
+        min_lengths = {
+            "game_ui": 10,
+            "game_logic": 10,
+            "game_class": 10,
+            "css": 5,
+            "audio": 5
+        }
+        
+        min_length = min_lengths.get(segment_type, 10)
+        if len(sanitized_content) < min_length:
+            return False, "", f"Invalid {segment_type} segment: content too short (min {min_length} chars)"
+        
+        # JavaScript segment validation
+        if segment_type in ["game_ui", "game_logic", "game_class"]:
+            # Check for basic syntax issues
+            js_syntax_errors = self._check_js_syntax(sanitized_content)
+            if js_syntax_errors:
+                return False, "", f"Invalid {segment_type} JS segment: {js_syntax_errors}"
+            
+            # Check if the segment contains function definitions
+            if "function" not in sanitized_content and "=>" not in sanitized_content and "class" not in sanitized_content:
+                return False, "", f"Invalid {segment_type} segment: Missing expected function or class definitions"
+            
+            # Check for balanced braces/parentheses
+            if not self._has_balanced_delimiters(sanitized_content):
+                return False, "", f"Invalid {segment_type} segment: Unbalanced braces, brackets, or parentheses"
+        
+        # CSS segment validation
+        elif segment_type == "css":
+            # Check for CSS syntax (basic validation)
+            if "{" not in sanitized_content or "}" not in sanitized_content:
+                return False, "", "Invalid CSS segment: Missing curly braces for style rules"
+            
+            # Check for balanced braces
+            if not self._has_balanced_delimiters(sanitized_content):
+                return False, "", "Invalid CSS segment: Unbalanced braces"
+        
+        # Audio segment validation
+        elif segment_type == "audio":
+            # Simple validation for audio (HTML tags)
+            if "<audio" not in sanitized_content.lower() and "<source" not in sanitized_content.lower():
+                return False, "", "Invalid audio segment: Missing audio or source tags"
+        
+        # Check for required patterns if specified
+        if required_patterns:
+            for pattern in required_patterns:
+                if pattern not in sanitized_content:
+                    return False, "", f"Invalid {segment_type} segment: Missing required pattern '{pattern}'"
+        
+        return True, sanitized_content, ""
+
+    def _check_js_syntax(self, js_content):
+        """
+        Performs basic JavaScript syntax validation.
+        
+        Args:
+            js_content: JavaScript code content to validate
+            
+        Returns:
+            str: Error message if validation fails, empty string if valid
+        """
+        # Check for unclosed strings
+        in_single_quote = False
+        in_double_quote = False
+        in_template_literal = False
+        escaped = False
+        
+        for i, char in enumerate(js_content):
+            if escaped:
+                escaped = False
+                continue
+            
+            if char == '\\':
+                escaped = True
+                continue
+            
+            if char == "'" and not in_double_quote and not in_template_literal:
+                in_single_quote = not in_single_quote
+            elif char == '"' and not in_single_quote and not in_template_literal:
+                in_double_quote = not in_double_quote
+            elif char == '`' and not in_single_quote and not in_double_quote:
+                in_template_literal = not in_template_literal
+        
+        if in_single_quote:
+            return "Unclosed single quote string"
+        if in_double_quote:
+            return "Unclosed double quote string"
+        if in_template_literal:
+            return "Unclosed template literal"
+        
+        # Check for common syntax errors
+        if js_content.count('//') > js_content.count('\n'):
+            return "Too many single-line comments, possible syntax error"
+        
+        return ""
+
+    def _has_balanced_delimiters(self, content):
+        """
+        Check if code has balanced delimiters (parentheses, braces, brackets).
+        
+        Args:
+            content: Code content to check
+            
+        Returns:
+            bool: True if delimiters are balanced
+        """
+        stack = []
+        pairs = {')': '(', '}': '{', ']': '['}
+        
+        # Skip strings and comments for accurate validation
+        i = 0
+        in_string = False
+        string_char = None
+        in_comment = False
+        in_multiline_comment = False
+        
+        while i < len(content):
+            char = content[i]
+            
+            # Handle string literals
+            if not in_comment and not in_multiline_comment and char in ["'", '"', '`'] and (i == 0 or content[i-1] != '\\'):
+                if not in_string:
+                    in_string = True
+                    string_char = char
+                elif string_char == char:
+                    in_string = False
+            
+            # Handle comments
+            elif not in_string:
+                if not in_comment and not in_multiline_comment and char == '/' and i+1 < len(content):
+                    if content[i+1] == '/':
+                        in_comment = True
+                        i += 1
+                    elif content[i+1] == '*':
+                        in_multiline_comment = True
+                        i += 1
+                elif in_comment and char == '\n':
+                    in_comment = False
+                elif in_multiline_comment and char == '*' and i+1 < len(content) and content[i+1] == '/':
+                    in_multiline_comment = False
+                    i += 1
+                
+                # Process delimiters only if not in comment or string
+                elif not in_comment and not in_multiline_comment:
+                    if char in '({[':
+                        stack.append(char)
+                    elif char in ')}]':
+                        if not stack or stack.pop() != pairs[char]:
+                            return False
+            
+            i += 1
+        
+        # If stack is empty, delimiters are balanced
+        return len(stack) == 0
+
     @listen(and_(engine_crew_generation, entity_crew_generation, level_crew_generation, ui_crew_generation))
     def template_integration(self):
         """
@@ -920,6 +1096,8 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
         
         This phase is responsible for:
         - Integrating all code segments into the final game
+        - Validating and sanitizing code segments before integration
+        - Handling errors gracefully with meaningful feedback
         - Generating the final game executable
         """
         print("Starting Template Integration Phase - All Code Generation Crews Have Completed")
@@ -935,45 +1113,135 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
         if not all(required_phases):
             print("Warning: Not all code generation phases are complete. Integration proceeding anyway.")
         
-        # Ensure all code segments are defined
-        if not self.state.game_engine_segments:
-            print("Warning: Engine code segments are missing. Using legacy file if available.")
+        # Create validation report containers
+        validation_results = {
+            "game_class": {"valid": False, "message": "Not processed yet"},
+            "game_logic": {"valid": False, "message": "Not processed yet"},
+            "game_ui": {"valid": False, "message": "Not processed yet"},
+            "css": {"valid": False, "message": "Not processed yet"},
+            "audio": {"valid": False, "message": "Not processed yet"}
+        }
         
-        if not self.state.game_entities_segments:
-            print("Warning: Entity code segments are missing. Using legacy file if available.")
+        # Collect all code segments into structured containers for validation
+        integration_content = {
+            "css": "",
+            "audio": "",
+            "game_ui": "",
+            "game_logic": "",
+            "game_class": ""
+        }
         
-        if not self.state.game_levels_segments:
-            print("Warning: Level code segments are missing. Using legacy file if available.")
+        # Collect segments from engine code
+        if self.state.game_engine_segments:
+            if 'game_logic' in self.state.game_engine_segments:
+                integration_content["game_logic"] += self.state.game_engine_segments['game_logic'] + "\n\n"
+            if 'game_class' in self.state.game_engine_segments:
+                integration_content["game_class"] += self.state.game_engine_segments['game_class'] + "\n\n"
         
-        if not self.state.game_ui_segments:
-            print("Warning: UI code segments are missing. Using legacy file if available.")
+        # Collect segments from entity code
+        if self.state.game_entities_segments:
+            if 'game_logic' in self.state.game_entities_segments:
+                integration_content["game_logic"] += self.state.game_entities_segments['game_logic'] + "\n\n"
+        
+        # Collect segments from level code
+        if self.state.game_levels_segments:
+            if 'game_logic' in self.state.game_levels_segments:
+                integration_content["game_logic"] += self.state.game_levels_segments['game_logic'] + "\n\n"
+            if 'game_class' in self.state.game_levels_segments:
+                integration_content["game_class"] += self.state.game_levels_segments['game_class'] + "\n\n"
+        
+        # Collect segments from UI code
+        if self.state.game_ui_segments:
+            if 'game_ui' in self.state.game_ui_segments:
+                integration_content["game_ui"] += self.state.game_ui_segments['game_ui'] + "\n\n"
+            if 'css' in self.state.game_ui_segments:
+                integration_content["css"] += self.state.game_ui_segments['css'] + "\n\n"
+            if 'audio' in self.state.game_ui_segments:
+                integration_content["audio"] += self.state.game_ui_segments['audio'] + "\n\n"
+        
+        # Define required patterns for each segment type
+        required_patterns = {
+            "game_class": [],  # Example: ["update", "render"]
+            "game_logic": [],  # Example: ["update", "collision"]
+            "game_ui": [],     # Example: ["draw", "update"]
+            "css": [],         # Example: ["game-container", "player"]
+            "audio": []        # Example: ["<audio", "src="]
+        }
+        
+        # Validate each segment before integration
+        for segment_type, content in integration_content.items():
+            if content:
+                is_valid, sanitized_content, error = self._validate_code_segment(
+                    segment_type, 
+                    content, 
+                    required_patterns.get(segment_type)
+                )
+                
+                if is_valid:
+                    integration_content[segment_type] = sanitized_content
+                    validation_results[segment_type] = {"valid": True, "message": "Validation passed"}
+                    print(f"✅ {segment_type} code segment validation passed")
+                else:
+                    print(f"⚠️ {segment_type} validation failed: {error}")
+                    validation_results[segment_type] = {"valid": False, "message": error}
+                    
+                    # Attempt to recover by using legacy files if available
+                    if segment_type == "game_class" or segment_type == "game_logic":
+                        if self.state.game_engine_file:
+                            print(f"Attempting recovery of {segment_type} from legacy engine file")
+                            # For simplicity, using the whole file (in a real system, you'd extract relevant parts)
+                            is_valid, sanitized_content, error = self._validate_code_segment(
+                                segment_type, 
+                                self.state.game_engine_file
+                            )
+                            if is_valid:
+                                integration_content[segment_type] = sanitized_content
+                                validation_results[segment_type] = {"valid": True, "message": "Recovered from legacy file"}
+                                print(f"✅ Recovered {segment_type} from legacy file")
+        else:
+            print(f"⚠️ No content available for {segment_type} segment")
+            validation_results[segment_type] = {"valid": False, "message": "No content available"}
+        
+        # Save validation report
+        with open(self._get_output_path("validation_report.json"), "w") as f:
+            json.dump(validation_results, f, indent=2)
         
         # Integrate all code segments into the final game executable
         try:
             # Read the template HTML file
-            with open(self.state.game_template_path, "r") as f:
-                template_content = f.read()
+            try:
+                with open(self.state.game_template_path, "r") as f:
+                    template_content = f.read()
+                print(f"Successfully loaded template from {self.state.game_template_path}")
+            except Exception as e:
+                print(f"Error reading template file: {str(e)}")
+                # Try to find the template in alternative locations
+                alternative_paths = [
+                    "game_template.html",
+                    os.path.join("src", "game_template.html"),
+                    os.path.join("GameGenerationOutput", "template.html"),
+                    "backup/game_template.html"
+                ]
+                
+                template_content = None
+                backup_template_path = None
+                
+                for path in alternative_paths:
+                    try:
+                        if os.path.exists(path):
+                            with open(path, "r") as f:
+                                template_content = f.read()
+                            backup_template_path = path
+                            print(f"Successfully loaded template from alternate location: {path}")
+                            break
+                    except Exception as e2:
+                        print(f"Error loading from {path}: {str(e2)}")
+                
+                if template_content is None:
+                    print("Failed to load template from any location. Integration cannot proceed.")
+                    return "Template Integration Failed: No template found"
             
-            # Verify that the template has the necessary insertion points
-            css_marker_exists = "/*Your style goes here */" in template_content
-            audio_marker_exists = "<!--Extra audio tags for sound effects-->" in template_content
-            gameui_marker_exists = "class GameUI {" in template_content
-            gamelogic_marker_exists = "class GameLogic {" in template_content
-            game_marker_exists = "class Game {" in template_content
-            
-            # Log verification results
-            if not css_marker_exists:
-                print("Warning: CSS insertion marker not found in template. Integration may fail.")
-            if not audio_marker_exists:
-                print("Warning: Audio insertion marker not found in template. Integration may fail.")
-            if not gameui_marker_exists:
-                print("Warning: GameUI class marker not found in template. Integration may fail.")
-            if not gamelogic_marker_exists:
-                print("Warning: GameLogic class marker not found in template. Integration may fail.")
-            if not game_marker_exists:
-                print("Warning: Game class marker not found in template. Integration may fail.")
-            
-            # Create integration points dictionary
+            # Verify that the template has the necessary markers
             integration_points = {
                 "css": self.state.template_css_insertion_point or "/*Your style goes here */",
                 "audio": self.state.template_audio_insertion_point or "<!--Extra audio tags for sound effects-->",
@@ -982,94 +1250,137 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
                 "game_class": self.state.template_game_class_insertion_point or "class Game {"
             }
             
-            # Prepare integration content
-            integration_content = {
-                "css": "",
-                "audio": "",
-                "game_ui": "",
-                "game_logic": "",
-                "game_class": ""
-            }
+            # Verify each marker exists in the template
+            missing_markers = []
+            for point_type, marker in integration_points.items():
+                if marker not in template_content:
+                    missing_markers.append(f"{point_type} ({marker})")
+                    print(f"⚠️ Warning: {point_type} insertion marker '{marker}' not found in template")
             
-            # Add engine extensions
-            if self.state.game_engine_segments:
-                if 'game_logic' in self.state.game_engine_segments:
-                    integration_content["game_logic"] += self.state.game_engine_segments['game_logic'] + "\n\n"
-                if 'game_class' in self.state.game_engine_segments:
-                    integration_content["game_class"] += self.state.game_engine_segments['game_class'] + "\n\n"
+            if missing_markers:
+                print(f"Some insertion markers are missing: {', '.join(missing_markers)}")
+                print("Integration will proceed but some code segments may not be properly inserted")
             
-            # Add entity extensions
-            if self.state.game_entities_segments:
-                if 'game_logic' in self.state.game_entities_segments:
-                    integration_content["game_logic"] += self.state.game_entities_segments['game_logic'] + "\n\n"
+            # Clone the template for integration
+            updated_template = template_content
             
-            # Add level extensions
-            if self.state.game_levels_segments:
-                if 'game_logic' in self.state.game_levels_segments:
-                    integration_content["game_logic"] += self.state.game_levels_segments['game_logic'] + "\n\n"
-                if 'game_class' in self.state.game_levels_segments:
-                    integration_content["game_class"] += self.state.game_levels_segments['game_class'] + "\n\n"
-            
-            # Add UI extensions
-            if self.state.game_ui_segments:
-                if 'game_ui' in self.state.game_ui_segments:
-                    integration_content["game_ui"] += self.state.game_ui_segments['game_ui'] + "\n\n"
-                if 'css' in self.state.game_ui_segments:
-                    integration_content["css"] += self.state.game_ui_segments['css'] + "\n\n"
-                if 'audio' in self.state.game_ui_segments:
-                    integration_content["audio"] += self.state.game_ui_segments['audio'] + "\n\n"
-            
-            # Perform the actual integration
-            for point, marker in integration_points.items():
-                content = integration_content[point]
-                if content:
+            # Perform integration for each validated segment
+            for point_type, marker in integration_points.items():
+                content = integration_content[point_type]
+                if content and validation_results[point_type]["valid"]:
+                    print(f"Integrating {point_type} code segment...")
+                    
                     # Handle class definitions differently - need to insert after class declaration, not replace it
-                    if point in ["game_ui", "game_logic", "game_class"]:
+                    if point_type in ["game_ui", "game_logic", "game_class"]:
                         # Find the class declaration and add our content after it but before the constructor
-                        insert_after = marker
-                        template_content = template_content.replace(
-                            insert_after, 
-                            insert_after + "\n    // " + point.upper() + " EXTENSIONS\n" + content
-                        )
-                    else:
-                        # For CSS, use proper CSS comment syntax
-                        if point == "css":
-                            # Make sure we're using CSS comment format
-                            template_content = template_content.replace(
-                                marker, 
+                        # Look for the class opening brace and constructor
+                        class_pattern = marker
+                        if class_pattern in updated_template:
+                            # Find the position after the class declaration
+                            class_pos = updated_template.find(class_pattern)
+                            if class_pos >= 0:
+                                # Find the opening brace after the class declaration
+                                open_brace_pos = updated_template.find("{", class_pos)
+                                if open_brace_pos >= 0:
+                                    # Find the constructor (if any) or the position to insert
+                                    constructor_pattern = "constructor"
+                                    constructor_pos = updated_template.find(constructor_pattern, open_brace_pos)
+                                    
+                                    insertion_point = None
+                                    
+                                    if constructor_pos >= 0:
+                                        # Find the end of the constructor (balanced braces)
+                                        pos = constructor_pos
+                                        brace_count = 0
+                                        in_constructor = False
+                                        
+                                        # Skip past the constructor keyword
+                                        pos = updated_template.find("(", pos)
+                                        if pos >= 0:
+                                            # Find the opening brace of the constructor
+                                            pos = updated_template.find("{", pos)
+                                            if pos >= 0:
+                                                brace_count = 1
+                                                in_constructor = True
+                                                pos += 1
+                                                
+                                                # Find the matching closing brace
+                                                while pos < len(updated_template) and brace_count > 0:
+                                                    if updated_template[pos] == "{":
+                                                        brace_count += 1
+                                                    elif updated_template[pos] == "}":
+                                                        brace_count -= 1
+                                                    pos += 1
+                                                    
+                                                if brace_count == 0:
+                                                    # We found the end of the constructor, insert after it
+                                                    insertion_point = pos
+                                                    updated_template = (
+                                                        updated_template[:insertion_point] + 
+                                                        "\n    // " + point_type.upper() + " EXTENSIONS\n    " + 
+                                                        content.replace("\n", "\n    ") + 
+                                                        updated_template[insertion_point:]
+                                                    )
+                                                    print(f"Inserted {point_type} content after constructor")
+                                
+                                    # If we couldn't find or process the constructor, insert after the opening brace
+                                    if insertion_point is None:
+                                        insertion_point = open_brace_pos + 1
+                                        updated_template = (
+                                            updated_template[:insertion_point] + 
+                                            "\n    // " + point_type.upper() + " EXTENSIONS\n    " + 
+                                            content.replace("\n", "\n    ") + 
+                                            updated_template[insertion_point:]
+                                        )
+                                        print(f"Inserted {point_type} content at beginning of class")
+                        else:
+                            print(f"Warning: Could not find {point_type} marker in template")
+                    
+                    elif point_type == "css":
+                        # For CSS, use proper CSS comment syntax and indentation
+                        if marker in updated_template:
+                            updated_template = updated_template.replace(
+                                marker,
                                 marker + "\n\n/* GENERATED CSS EXTENSIONS */\n" + content
                             )
-                        # For audio, use HTML comment format
-                        elif point == "audio":
-                            template_content = template_content.replace(
-                                marker, 
+                            print(f"Inserted CSS content at marker: {marker}")
+                        else:
+                            print(f"Warning: CSS marker '{marker}' not found in template")
+                    
+                    elif point_type == "audio":
+                        # For audio tags, use HTML comment syntax
+                        if marker in updated_template:
+                            updated_template = updated_template.replace(
+                                marker,
                                 marker + "\n\n<!-- GENERATED AUDIO EXTENSIONS -->\n" + content
                             )
+                            print(f"Inserted audio content at marker: {marker}")
                         else:
-                            # For any other integration points
-                            template_content = template_content.replace(
-                                marker, 
-                                marker + "\n" + content
-                            )
+                            print(f"Warning: Audio marker '{marker}' not found in template")
             
             # Save the integrated template as the final game
             final_game_path = self._get_output_path("final_game.html")
             with open(final_game_path, "w") as f:
-                f.write(template_content)
+                f.write(updated_template)
             
-            print(f"Successfully integrated all code into final game HTML file at {final_game_path}")
+            print(f"Successfully integrated all valid code into final game HTML file at {final_game_path}")
+            
+            # Also save a backup copy
+            backup_path = self._get_output_path("final_game_backup.html")
+            with open(backup_path, "w") as f:
+                f.write(updated_template)
             
             # Also generate a legacy JavaScript file for reference
             with open(self._get_output_path("final_game_executable.js"), "w") as f:
                 f.write("// COMBINED GAME CODE FOR REFERENCE\n\n")
-                f.write("// ENGINE EXTENSIONS\n")
-                f.write(self.state.game_engine_file or "// No engine code available\n\n")
-                f.write("// ENTITY EXTENSIONS\n")
-                f.write(self.state.game_entities_file or "// No entity code available\n\n")
-                f.write("// LEVEL EXTENSIONS\n")
-                f.write(self.state.game_levels_file or "// No level code available\n\n")
-                f.write("// UI EXTENSIONS\n")
-                f.write(self.state.game_ui_file or "// No UI code available\n\n")
+                
+                # Only include segments that passed validation
+                for segment_type, result in validation_results.items():
+                    if result["valid"]:
+                        f.write(f"// {segment_type.upper()} EXTENSIONS\n")
+                        f.write(integration_content[segment_type] + "\n\n")
+                    else:
+                        f.write(f"// {segment_type.upper()} EXTENSIONS - VALIDATION FAILED: {result['message']}\n\n")
             
             print(f"Also generated legacy combined JavaScript file for reference")
             
@@ -1077,13 +1388,14 @@ class GameDevelopmentFlow(Flow[GameDevelopmentState]):
             print(f"Error integrating code segments: {str(e)}")
             import traceback
             traceback.print_exc()
+            return "Template Integration Failed with error: " + str(e)
         
         # Mark the template integration phase as complete
         self.state.template_integration_complete = True
         
-        print("Template Integration Phase completed successfully")
+        print("Template Integration Phase completed successfully with validation")
         
-        return "Template Integration Phase completed successfully"
+        return "Template Integration Phase completed successfully with validation"
 
 def kickoff():
     """Start the Game Development Flow"""
